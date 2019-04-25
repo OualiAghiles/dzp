@@ -1,0 +1,50 @@
+{
+  "name": "gulp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/preset-env": "^7.3.4",
+    "@babel/register": "^7.0.0",
+    "@pixi/jsdoc-template": "^2.4.2",
+    "babel-eslint": "^10.0.1",
+    "better-docs": "^1.1.5",
+    "del": "^3.0.0",
+    "docdash": "^1.0.3",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-airbnb-es5": "^1.2.0",
+    "eslint-config-prettier": "^4.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "foodoc": "0.0.9",
+    "gulp-babel": "^8.0.0",
+    "gulp-clean-css": "^4.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-jsdoc3": "^2.0.0",
+    "gulp-plumber": "^1.2.1",
+    "gulp-rename": "^1.4.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-uglify": "^3.0.1",
+    "ink-docstrap": "^1.3.2",
+    "jsdoc-rtd": "^1.0.15",
+    "prettier": "^1.16.4",
+    "tidy-jsdoc": "^0.3.0",
+    "tui-jsdoc-template": "^1.2.2"
+  },
+  "dependencies": {
+    "browser-sync": "^2.26.3",
+    "bulma": "^0.7.4",
+    "eslint": "^5.14.1",
+    "eslint-plugin-prettier": "^3.0.1",
+    "fontawesome": "^5.6.3",
+    "gulp": "^4.0.0",
+    "gulp-imagemin": "^5.0.3",
+    "gulp-pug": "^4.0.1",
+    "imagemin": "^6.1.0"
+  }
+}

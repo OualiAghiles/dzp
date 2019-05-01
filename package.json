@@ -37,6 +37,7 @@
     "tui-jsdoc-template": "^1.2.2"
   },
   "dependencies": {
+    "bower": "^1.8.8",
     "browser-sync": "^2.26.3",
     "bulma": "^0.7.4",
     "eslint": "^5.14.1",
@@ -45,6 +46,7 @@
     "gulp": "^4.0.0",
     "gulp-imagemin": "^5.0.3",
     "gulp-pug": "^4.0.1",
-    "imagemin": "^6.1.0"
+    "imagemin": "^6.1.0",
+    "materialize-css": "^1.0.0-rc.2"
   }
 }

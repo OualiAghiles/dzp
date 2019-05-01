@@ -17,28 +17,20 @@ const docs = browserSync.create()
 // paths
 const paths = {
   styles: {
-    src: 'source/assets/sass/*.scss',
+    src: 'source/assets/sass/**/*.sass',
     dest: 'dist/assets/styles/',
   },
   scripts: {
-    src: 'source/assets/scripts/**/*.js',
+    src: 'source/assets/js/**/*.js',
     dest: 'dist/assets/scripts/',
   },
   images: {
-    src: 'source/assets/images/**/*.{jpg,jpeg,png,svg}',
+    src: 'source/assets/images/**/*.{jpg,jpeg,png}',
     dest: 'dist/assets/img/',
   },
   views: {
     src: 'source/template/**/*.pug',
     dest: 'dist',
-  },
-  vendor: {
-    src: 'source/assets/vendors/**/*.*',
-    dest: 'dist/assets/vendors',
-  },
-  fonts: {
-    src: 'source/assets/fonts/**/*.*',
-    dest: 'dist/assets/fonts',
   }
 };
 
@@ -47,8 +39,16 @@ function reload(done) {
   done();
 }
 
-
-
+// function docReload(done) {
+//   docs.reload();
+//   done();
+// }
+function copy() {
+  return(
+    gulp
+    .src('bower_components/materialize/dist/js/materialize.js')
+    .pipe(gulp.dest(paths.scripts.dest)))
+}
 function serve(done) {
   server.init({
     port: 5500,
@@ -58,7 +58,18 @@ function serve(done) {
     },
   });
 
-
+  // docs.init({
+  //   notify: true,
+  //   port: 9090,
+  //   ui: {
+  //     port: 9090
+  //   },
+  //   server: {
+  //     baseDir: ['./docs/'],
+  //     index: 'index.html',
+  //     directory: false,
+  //   }
+  // });
   watchFiles();
   done();
 }
@@ -67,21 +78,14 @@ function serve(done) {
  */
 export const clean = () => del(['dist']);
 
-export function copy() {
-  return (
-    gulp
-      .src(paths.vendor.src)
-      .pipe(gulp.dest(paths.vendor.dest))
-  );
-}
-
-export function font() {
-  return (
-    gulp
-      .src(paths.fonts.src)
-      .pipe(gulp.dest(paths.fonts.dest))
-  );
-}
+// function doc(cb) {
+//   const config = require('./jsdoc.json');
+//   gulp
+//     .src(['README.md', './source/assets/js/**/*.js'], {
+//       read: true,
+//     })
+//     .pipe(jsdoc(config, cb));
+// }
 /*
  * You can also declare named functions and export them as tasks
  */
@@ -92,12 +96,12 @@ export function styles() {
     .pipe(sass())
     .pipe(cleanCSS())
     // pass in options to the stream
-    // .pipe(
-    //   rename({
-    //     basename: 'main',
-    //     suffix: '.min',
-    //   }),
-    // )
+    .pipe(
+      rename({
+        basename: 'main',
+        suffix: '.min',
+      }),
+    )
     .pipe(server.stream())
 
     .pipe(gulp.dest(paths.styles.dest))
@@ -149,7 +153,7 @@ function images() {
  */
 function watchFiles() {
   gulp.watch(paths.scripts.src, gulp.series(scripts, reload));
-  //gulp.watch([paths.jsDoc.src, paths.jsDoc.read], gulp.series(docReload, doc));
+  // gulp.watch([paths.jsDoc.src, paths.jsDoc.read], gulp.series(docReload, doc));
   gulp.watch(paths.views.src, gulp.series(views, reload));
   gulp.watch(paths.styles.src, gulp.series(styles, reload));
   gulp.watch(paths.images.src, gulp.series(images, reload));
@@ -162,11 +166,9 @@ const build = gulp.series(
   clean,
   views,
   copy,
-  font,
   gulp.parallel(styles, scripts),
   images,
   serve,
-
 );
 /*
  * Export a default task

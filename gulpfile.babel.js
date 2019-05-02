@@ -44,11 +44,12 @@ function reload(done) {
 //   done();
 // }
 function copy() {
-  return(
+  return (
     gulp
-    .src('bower_components/materialize/dist/js/materialize.js')
-    .pipe(gulp.dest(paths.scripts.dest)))
+    .src('node_modules/startbootstrap-sb-admin-2/vendor/**/*.*')
+    .pipe(gulp.dest('dist/assets/vendor/')))
 }
+
 function serve(done) {
   server.init({
     port: 5500,

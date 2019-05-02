@@ -1,24 +1,23 @@
-M.AutoInit();
 /* ********
  *
  * Coupons Plugin
  *
  * **********
  * */
-var CouponController = (function() {
+var CouponController = (function () {
 
 })()
 
-var UICoupon = (function() {
+var UICoupon = (function () {
   var DOMstrings = {
     addModal: '.add-coupons'
   }
 
   return {
-    showArticles: function(cat) {
+    showArticles: function (cat) {
 
     },
-    todayDate: function() {
+    todayDate: function () {
       var today = new Date();
       var dd = today.getDate();
       var mm = today.getMonth() + 1; //January is 0!
@@ -37,7 +36,7 @@ var UICoupon = (function() {
   }
 })()
 
-var CoupnCenter = (function(UICoup, CouponCtrl) {
+var CoupnCenter = (function (UICoup, CouponCtrl) {
 
   window.onload = function () {
     var arrCoupn = []
@@ -59,11 +58,11 @@ var CoupnCenter = (function(UICoup, CouponCtrl) {
             var arrayOfLines = fileReader.result.match(/[^\r\n]+/g);
             console.log(arrCoupn)
 
-            arrayOfLines.forEach((el, id)=> {
+            arrayOfLines.forEach((el, id) => {
               //console.log(el)
-              var coupn = el.replace(',','')
-              coupn = coupn.replace(' ','')
-              coupn = coupn.replace('$','')
+              var coupn = el.replace(',', '')
+              coupn = coupn.replace(' ', '')
+              coupn = coupn.replace('$', '')
               coupn = coupn.split(':')
               arrCoupn.push({
                 amount: coupn[0],
@@ -90,27 +89,25 @@ var CoupnCenter = (function(UICoup, CouponCtrl) {
             })
           }
           fileReader.readAsText(fileTobeRead);
-        }
-        else {
+        } else {
           alert("Please select text file");
 
         }
 
       }, false);
 
-    }
-    else {
+    } else {
       alert("Files are not supported");
     }
     console.log(arrCoupn)
   }
 
-//see the link above to see where the variable fileTobeRead comes from.
+  //see the link above to see where the variable fileTobeRead comes from.
   var labels = document.querySelectorAll('.cats')
-  labels.forEach((item)=> {
+  labels.forEach((item) => {
     item.addEventListener('click', (e) => {
       if (e.target.type === 'checkbox' && e.target.checked === true) {
-        labels.forEach((el)=> {
+        labels.forEach((el) => {
           el.classList.add("hide")
         })
         item.classList.remove("hide")
@@ -120,7 +117,7 @@ var CoupnCenter = (function(UICoup, CouponCtrl) {
 
 
       } else {
-        labels.forEach((el)=> {
+        labels.forEach((el) => {
           el.classList.remove("hide")
         })
         item.parentNode.querySelector('.details').classList.add('hide')

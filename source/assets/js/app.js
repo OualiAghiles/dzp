@@ -17,6 +17,20 @@ var UICoupon = (function () {
     showArticles: function (cat) {
 
     },
+    closeCat: function (addBtn, cat, container) {
+      var btn = container.querySelector('.closeCat')
+      var close = function () {
+        container.classList.add('d-none')
+        container.querySelector(`.add-${cat}`).classList.add('d-none')
+        document.querySelectorAll('.couponChoiceCat .col-md-3').forEach((el) => {
+          el.classList.remove('d-none')
+          el.classList.remove('active')
+        })
+        addBtn.classList.remove('d-none')
+      }
+      btn.addEventListener('click', close)
+
+    },
     todayDate: function () {
       var today = new Date();
       var dd = today.getDate();
@@ -103,25 +117,33 @@ var CoupnCenter = (function (UICoup, CouponCtrl) {
   }
 
   //see the link above to see where the variable fileTobeRead comes from.
-  var labels = document.querySelectorAll('.cats')
-  labels.forEach((item) => {
+  var btnsAddCoupon = document.querySelectorAll('.addCoupon')
+  var couponAddContent = document.querySelector('.couponAddContent')
+  console.log(btnsAddCoupon)
+  btnsAddCoupon.forEach((item) => {
     item.addEventListener('click', (e) => {
-      if (e.target.type === 'checkbox' && e.target.checked === true) {
-        labels.forEach((el) => {
-          el.classList.add("hide")
-        })
-        item.classList.remove("hide")
-        item.parentNode.querySelector('.details').classList.remove('hide')
-        var cat = e.target.dataset.cat
+      var card = item.parentNode.parentNode.parentNode
+      e.preventDefault()
+      // if (e.target.type === 'checkbox' && e.target.checked === true) {
+      document.querySelectorAll('.couponChoiceCat .col-md-3').forEach((el) => {
+        el.classList.add("d-none")
+      })
+      card.classList.remove("d-none")
+      card.classList.add("active")
+      couponAddContent.classList.remove('d-none')
+      var cat = item.dataset.target
+      couponAddContent.querySelector(`.add-${cat}`).classList.remove('d-none')
+      item.classList.add('d-none')
+
+      UICoup.closeCat(item, cat, couponAddContent)
 
 
-
-      } else {
-        labels.forEach((el) => {
-          el.classList.remove("hide")
-        })
-        item.parentNode.querySelector('.details').classList.add('hide')
-      }
+      // } else {
+      //   labels.forEach((el) => {
+      //     el.classList.remove("hide")
+      //   })
+      //   item.parentNode.querySelector('.details').classList.add('hide')
+      // }
     })
   })
 })(UICoupon, CouponController)

@@ -14,20 +14,23 @@ var UICoupon = (function () {
   }
   var showModal = function () {
     // Logout Modal
-    var html = `<div class="modal fade" id="recapModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                      <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                    </div>
-                    <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                    <div class="modal-footer">
-                      <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button><a class="btn btn-primary" href="login.html">Logout</a>
-                    </div>
-                  </div>
-                </div>
-              </div>`
+    var html = ``
+  }
+  var todayDate = function () {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+
+    var yyyy = today.getFullYear();
+    if (dd < 10) {
+      dd = '0' + dd;
+    }
+    if (mm < 10) {
+      mm = '0' + mm;
+    }
+    var today = dd + '/' + mm + '/' + yyyy;
+    return today
+
   }
   return {
     showArticles: function (cat) {
@@ -50,29 +53,44 @@ var UICoupon = (function () {
     showRecap: function (cat, content) {
       var showAction = content.querySelector('.showRecap')
       showAction.addEventListener('click', function () {
-
+        var radios = content.querySelectorAll('.selected--product input')
+        var activeTab = content.querySelector('.show')
+        var source = content.querySelector('#sourceCoupon')
+        var montant = content.querySelector('#montantCoupon')
+        var devise = content.querySelector('#devise')
+        var prixAchat = content.querySelector('#prixAchat')
+        var prixVente = content.querySelector('#prixVente')
+        var codeCoupon = content.querySelector('#codeCoupon')
+        var data = {}
+        var cat, produit ;
+        for (var i = 0; i < radios.length; i++) {
+          if(radios[i].checked){
+            cat = radios[i].getAttribute('name')
+            produit = radios[i].getAttribute('id')
+          }
+        }
+        data= {
+          cat: cat,
+          produit: produit,
+          tab: activeTab.getAttribute('id'),
+          source: source.value,
+          montant: montant.value,
+          devise: devise.options[devise.selectedIndex].value,
+          prixAchat: parseInt(prixAchat.value) * parseInt(montant.value),
+          prixVente: parseInt(prixVente.value) * parseInt(montant.value),
+          codeCoupon: codeCoupon.value,
+          date: todayDate()
+        }
+        console.log(data)
+        return data
       })
-    },
-    todayDate: function () {
-      var today = new Date();
-      var dd = today.getDate();
-      var mm = today.getMonth() + 1; //January is 0!
-
-      var yyyy = today.getFullYear();
-      if (dd < 10) {
-        dd = '0' + dd;
-      }
-      if (mm < 10) {
-        mm = '0' + mm;
-      }
-      var today = dd + '/' + mm + '/' + yyyy;
-      return today
+      //
 
     }
   }
 })()
 
-var CoupnCenter = (function (UICoup, CouponCtrl) {
+var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
 
   window.onload = function () {
     var arrCoupn = []
@@ -159,6 +177,8 @@ var CoupnCenter = (function (UICoup, CouponCtrl) {
 
       UICoup.closeCat(item, cat, couponAddContent)
       UICoup.showRecap(cat, couponAddContent)
+      Store.ShowData()
+
 
       // } else {
       //   labels.forEach((el) => {
@@ -168,4 +188,4 @@ var CoupnCenter = (function (UICoup, CouponCtrl) {
       // }
     })
   })
-})(UICoupon, CouponController)
+})(UICoupon, CouponController, Store)

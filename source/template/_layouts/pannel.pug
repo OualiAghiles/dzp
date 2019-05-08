@@ -43,7 +43,7 @@
               a.btn.btn-primary.addCoupon(href='#',  data-target="udemy") Ajouter des coupons
         .col-md-9.couponAddContent.d-none()
           #recapModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
-            .modal-dialog(role='document')
+            .modal-dialog.modal-xl(role='document')
               .modal-content
                 .modal-header
                   h5#exampleModalLabel.modal-title recap
@@ -52,7 +52,7 @@
                 .modal-body
                 .modal-footer
                   button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
-                  a.btn.btn-primary(href='login.html') Logout
+                  a.btn.btn-success.add-btn-coupon(href='#') Save
 
           h5 Choisir le produit
               a(href="#").closeCat

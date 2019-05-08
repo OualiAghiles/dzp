@@ -1,6 +1,6 @@
 var Store = (function() {
   var dataOut = {
-    link: 'http://localhost:3000/categories/',
+    link: 'http://localhost:3000/',
     game: 'jeux',
     apps: 'divertissement',
   }
@@ -13,7 +13,7 @@ var Store = (function() {
   return {
     ShowData: function() {
       var myData
-      axios.get(`${dataOut.link}?q=${dataOut.game}`)
+      axios.get(`${dataOut.link}${dataOut.game}`)
         .then(function(response) {
           myData = response.data
           console.log(myData)
@@ -23,7 +23,7 @@ var Store = (function() {
         })
     },
     AddData: function(cat, obj) {
-      axios.post(`${dataOut.link}[${cat}]`, data = obj)
+      axios.post(`${dataOut.link}${cat}`, data = obj)
         .then(function(obj) {
           console.log(outputSuccessData(obj))
         })

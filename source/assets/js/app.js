@@ -79,6 +79,7 @@ var UICoupon = (function () {
       var close = function () {
         container.classList.add('d-none')
         container.querySelector(`.add-${cat}`).classList.add('d-none')
+        container.querySelector(`.add-${cat}`).classList.remove('active')
         document.querySelectorAll('.couponChoiceCat .col-md-3').forEach((el) => {
           el.classList.remove('d-none')
           el.classList.remove('active')
@@ -92,14 +93,14 @@ var UICoupon = (function () {
       var showAction = content.querySelector('.showRecap')
       var data = []
       showAction.addEventListener('click', function () {
-        var radios = content.querySelectorAll('.selected--product input')
-        var activeTab = content.querySelector('.show')
-        var source = content.querySelector('#sourceCoupon')
-        var montant = content.querySelector('#montantCoupon')
-        var devise = content.querySelector('#devise')
-        var prixAchat = content.querySelector('#prixAchat')
-        var prixVente = content.querySelector('#prixVente')
-        var codeCoupon = content.querySelector('#codeCoupon')
+        var radios = content.querySelectorAll('.active .selected--product input')
+        var activeTab = content.querySelector('.active .show')
+        var source = content.querySelector('.active #sourceCoupon')
+        var montant = content.querySelector('.active #montantCoupon')
+        var devise = content.querySelector('.active #devise')
+        var prixAchat = content.querySelector('.active #prixAchat')
+        var prixVente = content.querySelector('.active #prixVente')
+        var codeCoupon = content.querySelector('.active #codeCoupon')
 
         var cat, produit ;
         for (var i = 0; i < radios.length; i++) {
@@ -120,6 +121,7 @@ var UICoupon = (function () {
           codeCoupon: codeCoupon.value,
           date: todayDate()
         })
+        console.log(data)
         showRecapAddCoupModal(data)
         return data
       })
@@ -213,6 +215,7 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
       couponAddContent.classList.remove('d-none')
       var cat = item.dataset.target
       couponAddContent.querySelector(`.add-${cat}`).classList.remove('d-none')
+      couponAddContent.querySelector(`.add-${cat}`).classList.add('active')
       item.classList.add('d-none')
 
       UICoup.closeCat(item, cat, couponAddContent)
@@ -222,7 +225,7 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
       var addBtnCoupon = couponAddContent.querySelector('.add-btn-coupon')
       addBtnCoupon.addEventListener('click', function(e) {
         e.preventDefault()
-        //console.log(typeof infoCoupon[0])
+        console.log(infoCoupon)
         var obj = infoCoupon[0]
         Store.AddData(cat, obj)
       })

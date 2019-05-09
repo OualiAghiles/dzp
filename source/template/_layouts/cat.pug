@@ -1,0 +1,52 @@
+
+// Content Wrapper
+#content-wrapper.d-flex.flex-column
+  // Main Content
+  #content
+    include header
+    // Begin Page Content
+    .container-fluid
+      // Page Heading
+      h1.h3.mb-4.text-gray-800 #{titlePage}
+      //
+        titre / input
+        description / textarea
+        mots cle / multiple inputs
+        image / file input / input link
+      .row
+        .col-9
+          .card
+            .card-body
+              form(action="post")
+                .form-row
+                  .form-group.col-md-6
+                    label(for='catTitle') Titre de la catégorie
+                    input#catTitle.catTitle.form-control(type='text', aria-describedby='source Coupon', placeholder='Nom de la categorie')
+                  .form-group.col-md-6
+                    label(for='catImg') Lien vers l'image
+                    input#catImg.catImg.form-control(type='text', aria-describedby='Lien vers l\'image', placeholder='http://www....png')
+                  .form-group.col-md-6
+                    label(for='catLabel') Mots clés
+                    input#catLabel.catLabel.form-control(
+                      type='text',
+                      aria-describedby='Ajouter des mots clés',
+                      placeholder='PSN-XBOX-...')
+                    a(href="#" class="badge badge-secondary mr-2") PSN
+                    a(href="#" class="badge badge-secondary mr-2") Steam
+                  .form-group.col-md-6
+                    label(for='catdesc') Description
+                    textarea#catdesc.catdesc.form-control(
+                      name="", cols="10", rows="3"
+                      aria-describedby='Ajouter un description',
+                      placeholder='Ajouter un description')
+            .card-footer
+              button.btn.btn-success(type="button") Ajouter
+              button.btn.btn-info(type="button") Aperçus
+        .col-3
+          .card()
+            img.card-img-top(src='https://www.dzpremium.net/wp-content/uploads/2019/03/Jeux.png', alt='Jeux')
+            .card-body.text-center
+              h4.card-title Jeux
+              p.card-text
+                | Ajout de coupon pour <code>PSN</code> / <code>Steam</code> / <code>Xbox</code>
+              a.btn.btn-primary.addCoupon(href='#',  data-target="jeux") Ajouter des coupons

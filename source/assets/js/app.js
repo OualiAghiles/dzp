@@ -14,10 +14,9 @@ var UICoupon = (function () {
   }
   var showRecapAddCoupModal = function (obj) {
     // Logout Modal
-
-    var insertInfo = function(tab) {
+    var insertInfo = function (tab) {
       var list = ''
-      tab.forEach(function(el) {
+      tab.forEach(function (el) {
         var html = `<tr>
                       <td>${el.cat}</td>
                       <td>${el.produit}</td>
@@ -26,7 +25,7 @@ var UICoupon = (function () {
                       <td>${el.devise}</td>
                       <td>${el.prixAchat}</td>
                       <td>${el.prixVente}</td>
-                      <td>${el.codeCoupon}</td>  
+                      <td>${el.codeCoupon}</td>
                       </tr>`
         list = html
       })
@@ -47,7 +46,7 @@ var UICoupon = (function () {
                   </thead>
                   <tbody>
                     ${insertInfo(obj)}
-                
+
                   </tbody>
                 </table>`
     var modal = document.querySelector('#recapModal .modal-body')
@@ -90,21 +89,23 @@ var UICoupon = (function () {
 
     },
     showRecap: function (cat, content) {
-      var showAction = content.querySelector('.showRecap')
+      var showAction = content.querySelector(`.add-${cat} .showRecap`)
+      var el = cat
+      console.log(showAction)
       var data = []
       showAction.addEventListener('click', function () {
-        var radios = content.querySelectorAll('.active .selected--product input')
-        var activeTab = content.querySelector('.active .show')
-        var source = content.querySelector('.active #sourceCoupon')
-        var montant = content.querySelector('.active #montantCoupon')
-        var devise = content.querySelector('.active #devise')
-        var prixAchat = content.querySelector('.active #prixAchat')
-        var prixVente = content.querySelector('.active #prixVente')
-        var codeCoupon = content.querySelector('.active #codeCoupon')
+        var radios = content.querySelectorAll(`.add-${el} .selected--product input`)
+        var activeTab = content.querySelector(`.add-${el} .show`)
+        var source = content.querySelector(`.add-${el} .sourceCoupon`)
+        var montant = content.querySelector(`.add-${el} .montantCoupon`)
+        var devise = content.querySelector(`.add-${el} .devise`)
+        var prixAchat = content.querySelector(`.add-${el} .prixAchat`)
+        var prixVente = content.querySelector(`.add-${el} .prixVente`)
+        var codeCoupon = content.querySelector(`.add-${el} .codeCoupon`)
 
-        var cat, produit ;
+        var cat, produit;
         for (var i = 0; i < radios.length; i++) {
-          if(radios[i].checked){
+          if (radios[i].checked) {
             cat = radios[i].getAttribute('name')
             produit = radios[i].getAttribute('id')
           }
@@ -119,7 +120,8 @@ var UICoupon = (function () {
           prixAchat: parseInt(prixAchat.value) * parseInt(montant.value),
           prixVente: parseInt(prixVente.value) * parseInt(montant.value),
           codeCoupon: codeCoupon.value,
-          date: todayDate()
+          date: todayDate(),
+          valide: true
         })
         console.log(data)
         showRecapAddCoupModal(data)
@@ -205,15 +207,14 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
   btnsAddCoupon.forEach((item) => {
     item.addEventListener('click', (e) => {
       var card = item.parentNode.parentNode.parentNode
+      var cat = item.dataset.target
       e.preventDefault()
-      // if (e.target.type === 'checkbox' && e.target.checked === true) {
       document.querySelectorAll('.couponChoiceCat .col-md-3').forEach((el) => {
         el.classList.add("d-none")
       })
       card.classList.remove("d-none")
       card.classList.add("active")
       couponAddContent.classList.remove('d-none')
-      var cat = item.dataset.target
       couponAddContent.querySelector(`.add-${cat}`).classList.remove('d-none')
       couponAddContent.querySelector(`.add-${cat}`).classList.add('active')
       item.classList.add('d-none')
@@ -221,15 +222,21 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
       UICoup.closeCat(item, cat, couponAddContent)
       //UICoup.showRecap(cat, couponAddContent)
       var infoCoupon = UICoup.showRecap(cat, couponAddContent)
-      console.log('infoCoupon: ',infoCoupon)
+      console.log('infoCoupon: ', infoCoupon)
       var addBtnCoupon = couponAddContent.querySelector('.add-btn-coupon')
-      addBtnCoupon.addEventListener('click', function(e) {
+      addBtnCoupon.addEventListener('click', function (e) {
         e.preventDefault()
-        console.log(infoCoupon)
         var obj = infoCoupon[0]
-        Store.AddData(cat, obj)
+        Store.AddData('coupons', obj, function (t) {
+
+          console.log(t)
+        })
       })
-      Store.ShowData()
+      Store.ShowData('coupons', function (obj) {
+        obj.forEach(function (el) {
+          console.log(el.cat, el.codeCoupon, el.produit)
+        });
+      })
 
 
       // } else {

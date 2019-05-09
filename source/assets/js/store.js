@@ -1,36 +1,54 @@
-var Store = (function() {
+var Store = (function () {
   var dataOut = {
-    link: 'http://localhost:3000/',
-    game: 'jeux',
-    apps: 'divertissement',
+    api: 'http://localhost:3000/',
+    coupon: 'coupons',
+    categories: 'categories',
+    produit: 'produit'
   }
-  var outputSuccessData = function(data) {
+  var outputSuccessData = function (data) {
     return (data)
   }
-  var outputErrorData = function(err) {
+  var outputErrorData = function (err) {
     return err
   }
   return {
-    ShowData: function() {
+    /**
+     *  [description]
+     *  @method
+     *  @param  {[string]} c [witch category to fetch ]
+     *  @return {[Object]}   [object from db]
+     */
+    ShowData: function (c, cb) {
       var myData
-      axios.get(`${dataOut.link}${dataOut.game}`)
-        .then(function(response) {
+      axios.get(`${dataOut.api}${c}`)
+        .then(function (response) {
           myData = response.data
-          console.log(myData)
+          return cb(myData)
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(outputErrorData(error))
         })
     },
-    AddData: function(cat, obj) {
-      axios.post(`${dataOut.link}${cat}`, data = obj)
-        .then(function(obj) {
-          console.log(outputSuccessData(obj))
+    /**
+     *  [description]
+     *  @method
+     *  @param  {[type]} cat [description]
+     *  @param  {[type]} obj [description]
+     *  @return {[type]}     [description]
+     */
+    AddData: function (cat, obj, cb) {
+      axios.post(`${dataOut.api}${cat}`, data = obj)
+        .then(function (data) {
+          cb(data)
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.log(outputErrorData(error))
 
         })
+    },
+    UpdateData: function (cat, id, obj, cb) {
+
+      cb()
     }
   }
 

@@ -87,30 +87,30 @@
                     .form-row
                       .form-group.col-md-4
                         label(for='sourceCoupon') Source
-                        input#sourceCoupon.form-control(type='text', aria-describedby='source Coupon', placeholder='Enter la source')
+                        input#sourceCoupon.sourceCoupon.form-control(type='text', aria-describedby='source Coupon', placeholder='Enter la source')
                       .form-group.col-md-4
                         label(for='montantCoupon') Montant
-                        input#montantCoupon.form-control(type='number', aria-describedby='montant Coupon', placeholder='Enter le montant')
+                        input#montantCoupon.montantCoupon.form-control(type='number', aria-describedby='montant Coupon', placeholder='Enter le montant')
                       .form-group.col-md-4
                         label(for='devise') Devise
-                        select#devise.custom-select
+                        select#devise.devise.custom-select
                           option(selected='') Choisir la devise
                           option(value='dollar') $
                           option(value='euro') €
 
                       .form-group.col-md-4
                         label(for='prixAchat') Prix Achat
-                        input#prixAchat.form-control(type='number', aria-describedby='prix Coupon', placeholder='Enter le prix d\'achat')
+                        input#prixAchat.prixAchat.form-control(type='number', aria-describedby='prix Coupon', placeholder='Enter le prix d\'achat')
                       .form-group.col-md-4
                         label(for='prixVente') Prix Vente
-                        input#prixVente.form-control(type='number', aria-describedby='vente Coupon', placeholder='Enter le prix dde vente')
+                        input#prixVente.prixVente.form-control(type='number', aria-describedby='vente Coupon', placeholder='Enter le prix dde vente')
                       .form-group.col-md-4
                         label(for='codeCoupon') Code coupon
-                        input#codeCoupon.form-control(type='text', aria-describedby='code Coupon', placeholder='Enter le coupon')
+                        input#codeCoupon.codeCoupon.form-control(type='text', aria-describedby='code Coupon', placeholder='Enter le coupon')
                     hr
                     .action.text-right
-                      .button.btn.btn-primary.showRecap(type="button", role="button",  data-toggle='modal', data-target='#recapModal') Voir le resumé
-                      .button.btn.btn-success(type="button", role="button") Sauvegarder
+                      button.btn.btn-primary.showRecap(type="button", role="button",  data-toggle='modal', data-target='#recapModal') Voir le resumé
+                      button.btn.btn-success(type="button", role="button") Sauvegarder
 
               #multi.tab-pane.fade(role='tabpanel', aria-labelledby='multi-tab')
                 .card.border-top-0
@@ -119,14 +119,14 @@
                       .form-row
                         .form-group.col-md-4
                           label(for='sourceCoupon') Source
-                          input#sourceCoupon.form-control(type='text', aria-describedby='source Coupon', placeholder='Enter la source')
+                          input#sourceCoupon.sourceCoupon.form-control(type='text', aria-describedby='source Coupon', placeholder='Enter la source')
 
                         .form-group.col-md-4
                           label(for='prixAchat') Prix Achat
-                          input#prixAchat.form-control(type='number', aria-describedby='prix Coupon', placeholder='Enter le prix d\'achat')
+                          input#prixAchat.prixAchat.form-control(type='number', aria-describedby='prix Coupon', placeholder='Enter le prix d\'achat')
                         .form-group.col-md-4
                           label(for='prixVente') Prix Vente
-                          input#prixVente.form-control(type='number', aria-describedby='vente Coupon', placeholder='Enter le prix dde vente')
+                          input#prixVente.prixVente.form-control(type='number', aria-describedby='vente Coupon', placeholder='Enter le prix dde vente')
                         .form-group.col-md-12
                           .custom-file
                             input#customFile.custom-file-input(type='file', lang="fr")
@@ -134,19 +134,20 @@
 
                     hr
                     .action.text-right
-                      .button.btn.btn-primary.showRecap(type="button", role="button",  data-toggle='modal', data-target='#recapModal') Voir le resumé
-                      .button.btn.btn-success(type="button", role="button") Sauvegarder
+                      button.btn.btn-primary.showRecap(type="button", role="button",  data-toggle='modal', data-target='#recapModal') Voir le resumé
+                      button.btn.btn-success(type="button", role="button") Sauvegarder
 
 
           .add-divertissement.d-none
-            .custom-control.custom-radio.custom-control-inline
-              input#gplay.custom-control-input(type='radio', name='divertissement')
-              label.custom-control-label(for='gplay')
-                img(src="https://www.info24android.com/wp-content/uploads/2018/02/Comment-t%C3%A9l%C3%A9charger-et-installer-Google-Play-Store-640x384.jpg", height="50px")
-            .custom-control.custom-radio.custom-control-inline
-              input#appStore.custom-control-input(type='radio', name='divertissement')
-              label.custom-control-label(for='appStore')
-                img(src="https://upload.wikimedia.org/wikipedia/fr/thumb/0/09/Logo_App_Store_d%27Apple.png/220px-Logo_App_Store_d%27Apple.png", alt="Steam", width="50px")
+            .selected--product
+              .custom-control.custom-radio.custom-control-inline
+                input#gplay.custom-control-input(type='radio', name='divertissement')
+                label.custom-control-label(for='gplay')
+                  img(src="https://www.info24android.com/wp-content/uploads/2018/02/Comment-t%C3%A9l%C3%A9charger-et-installer-Google-Play-Store-640x384.jpg", height="50px")
+              .custom-control.custom-radio.custom-control-inline
+                input#appStore.custom-control-input(type='radio', name='divertissement')
+                label.custom-control-label(for='appStore')
+                  img(src="https://upload.wikimedia.org/wikipedia/fr/thumb/0/09/Logo_App_Store_d%27Apple.png/220px-Logo_App_Store_d%27Apple.png", alt="Steam", width="50px")
 
             hr
             h5 Choisir type d'ajout
@@ -163,29 +164,29 @@
                     .form-row
                       .form-group.col-md-4
                         label(for='sourceCoupon') Source
-                        input#sourceCoupon.form-control(type='text', aria-describedby='source Coupon', placeholder='Enter la source')
+                        input#sourceCoupon.sourceCoupon.form-control(type='text', aria-describedby='source Coupon', placeholder='Enter la source')
                       .form-group.col-md-4
                         label(for='montantCoupon') Montant
-                        input#montantCoupon.form-control(type='number', aria-describedby='montant Coupon', placeholder='Enter le montant')
+                        input#montantCoupon.montantCoupon.form-control(type='number', aria-describedby='montant Coupon', placeholder='Enter le montant')
                       .form-group.col-md-4
                         label(for='devise') Devise
-                        select.custom-select
+                        select#devise.devise.custom-select
                           option(selected='') Choisir la devise
                           option(value='dollar') $
                           option(value='euro') €
                       .form-group.col-md-4
                         label(for='prixAchat') Prix Achat
-                        input#prixAchat.form-control(type='number', aria-describedby='prix Coupon', placeholder='Enter le prix d\'achat')
+                        input#prixAchat.prixAchat.form-control(type='number', aria-describedby='prix Coupon', placeholder='Enter le prix d\'achat')
                       .form-group.col-md-4
                         label(for='prixVente') Prix Vente
-                        input#prixVente.form-control(type='number', aria-describedby='vente Coupon', placeholder='Enter le prix dde vente')
+                        input#prixVente.prixVente.form-control(type='number', aria-describedby='vente Coupon', placeholder='Enter le prix dde vente')
                       .form-group.col-md-4
                         label(for='codeCoupon') Code coupon
-                        input#codeCoupon.form-control(type='text', aria-describedby='code Coupon', placeholder='Enter le coupon')
+                        input#codeCoupon.codeCoupon.form-control(type='text', aria-describedby='code Coupon', placeholder='Enter le coupon')
                     hr
                     .action.text-right
-                      .button.btn.btn-primary.showRecap(type="button", role="button",  data-toggle='modal', data-target='#recapModal') Voir le resumé
-                      .button.btn.btn-success(type="button", role="button") Sauvegarder
+                      button.btn.btn-primary.showRecap(type="button", role="button",  data-toggle='modal', data-target='#recapModal') Voir le resumé
+                      button.btn.btn-success(type="button", role="button") Sauvegarder
 
               #multi.tab-pane.fade(role='tabpanel', aria-labelledby='multi-tab')
                 .card.border-top-0

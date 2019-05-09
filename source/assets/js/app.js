@@ -232,10 +232,11 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
           console.log(t)
         })
       })
+
       Store.ShowData('coupons', function (obj) {
-        obj.forEach(function (el) {
-          console.log(el.cat, el.codeCoupon, el.produit)
-        });
+
+        console.log(obj)
+
       })
 
 

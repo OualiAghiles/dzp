@@ -38,17 +38,25 @@ var Store = (function () {
      */
     AddData: function (cat, obj, cb) {
       axios.post(`${dataOut.api}${cat}`, data = obj)
-        .then(function (data) {
-          cb(data)
+        .then(function (response) {
+          var myData = response.data
+          return cb(myData)
         })
         .catch(function (error) {
           console.log(outputErrorData(error))
 
         })
     },
-    UpdateData: function (cat, id, obj, cb) {
+    UpdateData: function (cat, id, obj) {
+      axios.put(`${dataOut.api}${cat}/${id}`, data = obj)
+        .then(function (response) {
+          var myData = response.data
+          return console.log(myData)
+        })
+        .catch(function (error) {
+          console.log(outputErrorData(error))
 
-      cb()
+        })
     }
   }
 

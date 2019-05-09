@@ -32,9 +32,9 @@ var Store = (function () {
     /**
      *  [description]
      *  @method
-     *  @param  {[type]} cat [description]
-     *  @param  {[type]} obj [description]
-     *  @return {[type]}     [description]
+     *  @param  {[String]} cat [description]
+     *  @param  {[Object]} obj [description]
+     *  @return {[Object]}     [description]
      */
     AddData: function (cat, obj, cb) {
       axios.post(`${dataOut.api}${cat}`, data = obj)

@@ -14,7 +14,7 @@
         mots cle / multiple inputs
         image / file input / input link
       .row
-        .col-9
+        .col-9.addCategory
           .card
             .card-body
               form(action="post")
@@ -40,13 +40,17 @@
                       aria-describedby='Ajouter un description',
                       placeholder='Ajouter un description')
             .card-footer
-              button.btn.btn-success(type="button") Ajouter
-              button.btn.btn-info(type="button") Aperçus
-        .col-3
-          .card()
-            img.card-img-top(src='https://www.dzpremium.net/wp-content/uploads/2019/03/Jeux.png', alt='Jeux')
-            .card-body.text-center
-              h4.card-title Jeux
-              p.card-text
-                | Ajout de coupon pour <code>PSN</code> / <code>Steam</code> / <code>Xbox</code>
-              a.btn.btn-primary.addCoupon(href='#',  data-target="jeux") Ajouter des coupons
+              button.btn.btn-outline-success.catAdd(type="button") Ajouter
+              button.btn.btn-outline-info.catShow(type="button") Aperçus
+        .col-3.cardCat
+          .card
+            .card-body
+              h4.card-title Aperçu pour visualiser
+            //img.card-img-top(src='https://www.dzpremium.net/wp-content/uploads/2019/03/Jeux.png', alt='Jeux')
+            //.card-body.text-center
+              h4.card-title.cat__title Jeux
+              p.card-text.cat__desc
+                | $Description
+              p.card-text.cat__tags
+                <code>$Tag</code> / <code>$Tag</code> / <code>$Tag</code>
+              a.btn.btn-outline-secondary(href='#',  data-target="jeux") Ajouter des coupons

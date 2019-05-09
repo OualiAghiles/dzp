@@ -11,20 +11,11 @@
       "codeCoupon": "LMSDFPSDf",
       "date": "09/05/2019",
       "valide": true,
-      "id": 1
+      "id": 1,
+      "name": "batata"
     },
     {
-      "cat": "divertissement",
-      "produit": "gplay",
-      "tab": "one",
-      "source": "Godady",
-      "montant": "20",
-      "devise": "dollar",
-      "prixAchat": 4200,
-      "prixVente": 4600,
-      "codeCoupon": "MPLDISQER",
-      "date": "09/05/2019",
-      "valide": true,
+      "valide": false,
       "id": 2
     },
     {
@@ -42,6 +33,21 @@
       "id": 4
     }
   ],
-  "categories": [],
+  "categories": [{
+      "content": "Debrideur",
+      "title": "Debrideur",
+      "img": "https://www.dzpremium.net/wp-content/uploads/2019/01/all-real-debrd-1.png",
+      "labels": "RealDebride-AllDebride",
+      "desc": "ceci est une description",
+      "id": 5
+    },
+    {
+      "title": "Jeux",
+      "img": "https://www.dzpremium.net/wp-content/uploads/2019/03/Jeux.png",
+      "labels": "PSN-XBOX-STEAM",
+      "desc": "Cliquer pour ajouter des coupon pour:",
+      "id": 6
+    }
+  ],
   "produit": []
 }

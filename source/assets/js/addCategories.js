@@ -27,6 +27,34 @@ var UIAddCatController = (function () {
     card: '.cardCat',
   }
   return {
+    generateCard: function (content, obj) {
+      //var tags = [...obj.labels.split(' - ')]
+      //console.log('tags: ', tags)
+      var addTags = function (arr) {
+        var els = ''
+        for (let i = 0; i < arr.length; i++) {
+          const el = arr[i];
+          var h = `<code>${el}</code>`
+          els = els + h + ' / '
+        }
+        return els
+      }
+      var html = `<div class="card">
+                  <img class="card-img-top" src="${obj.img}" alt="${obj.title}" />
+                  <div class="card-body text-center">
+                    <h4 class="card-title cat__title">${obj.title}</h4>
+                    <p class="card-text cat__desc">${obj.desc}</p>
+                    <p class="card-text cat__tags">
+                    ${addTags(obj.labels)}
+                    </p>
+                    <a class="btn btn-outline-secondary" href="#" data-target="${obj.title.toLowerCase()}">Ajouter des coupons</a>
+                  </div>
+                </div>`
+      var cont = document.querySelector(content)
+      cont.innerHTML = ''
+      cont.insertAdjacentHTML('beforeend', html)
+
+    },
     getDomString: function (DomElements) {
       var content, title, img, labels, desc;
       content = document.querySelector(DomElements.card)
@@ -37,7 +65,7 @@ var UIAddCatController = (function () {
       return {
         "title": title,
         "img": img,
-        "labels": labels,
+        "labels": labels.split(' - '),
         "desc": desc
       }
 
@@ -60,6 +88,19 @@ var AddCatController = (function (UIcat, AddCat, Store) {
       e.preventDefault()
       var obj = UIcat.getDomString(dom)
       AddCat.addData(obj)
+      console.log(UIcat.getDomString(dom))
+      document.querySelector(dom.InputAddName).value = ''
+      document.querySelector(dom.InputAddImg).value = ''
+      document.querySelector(dom.InputAddTags).value = ''
+      document.querySelector(dom.InputAddDesc).value = ''
+      console.log(UIcat.getDomString(dom))
+
+    })
+    btnprev.addEventListener('click', function (e) {
+      e.preventDefault()
+      var obj = UIcat.getDomString(dom)
+
+      UIcat.generateCard('.cardCat', obj)
       console.log(UIcat.getDomString(dom))
 
     })

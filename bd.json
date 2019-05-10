@@ -1,5 +1,6 @@
 {
-  "coupons": [{
+  "coupons": [
+    {
       "cat": "jeux",
       "produit": "psn",
       "tab": "one",
@@ -33,21 +34,71 @@
       "id": 4
     }
   ],
-  "categories": [{
-      "content": "Debrideur",
-      "title": "Debrideur",
-      "img": "https://www.dzpremium.net/wp-content/uploads/2019/01/all-real-debrd-1.png",
-      "labels": "RealDebride-AllDebride",
-      "desc": "ceci est une description",
+  "categories": [],
+  "products": [
+    {
+      "title": "PlayStation Network",
+      "img": "http://www.logospng.com/images/71/support-playstation-71160.png",
+      "ref": "psn",
+      "desc": "Catégorie du produit",
+      "cat": "Catégorie du produit",
+      "id": 1
+    },
+    {
+      "title": "PlayStation Network",
+      "img": "http://www.logospng.com/images/71/support-playstation-71160.png",
+      "ref": "psn",
+      "desc": "Catégorie du produit",
+      "cat": "Catégorie du produit",
+      "id": 2
+    },
+    {
+      "title": "PlayStation Network",
+      "img": "http://www.logospng.com/images/71/support-playstation-71160.png",
+      "ref": "PSN",
+      "desc": "desc",
+      "cat": "Catégorie du produit",
+      "id": 3
+    },
+    {
+      "title": "PlayStation Network",
+      "img": "http://www.logospng.com/images/71/support-playstation-71160.png",
+      "ref": "PSN",
+      "desc": "desc",
+      "cat": "Catégorie du produit",
+      "id": 4
+    },
+    {
+      "title": "PlayStation Network",
+      "img": "http://www.logospng.com/images/71/support-playstation-71160.png",
+      "ref": "PSN",
+      "desc": "desc",
+      "cat": "Catégorie du produit",
       "id": 5
     },
     {
-      "title": "Jeux",
-      "img": "https://www.dzpremium.net/wp-content/uploads/2019/03/Jeux.png",
-      "labels": "PSN-XBOX-STEAM",
-      "desc": "Cliquer pour ajouter des coupon pour:",
+      "title": "PlayStation Network",
+      "img": "http://www.logospng.com/images/71/support-playstation-71160.png",
+      "ref": "PSN",
+      "desc": "desc",
+      "cat": "Catégorie du produit",
       "id": 6
+    },
+    {
+      "title": "PlayStation Network",
+      "img": "http://www.logospng.com/images/71/support-playstation-71160.png",
+      "ref": "PSN",
+      "desc": "description de PSN",
+      "cat": "Catégorie du produit",
+      "id": 7
+    },
+    {
+      "title": "PlayStation Network",
+      "img": "http://www.logospng.com/images/71/support-playstation-71160.png",
+      "ref": "PSN",
+      "desc": "description de PSN",
+      "cat": "Catégorie du produit",
+      "id": 8
     }
-  ],
-  "produit": []
+  ]
 }

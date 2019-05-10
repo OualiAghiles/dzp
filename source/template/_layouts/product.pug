@@ -1,0 +1,70 @@
+
+// Content Wrapper
+#content-wrapper.d-flex.flex-column
+  // Main Content
+  #content
+    include header
+    // Begin Page Content
+    .container-fluid
+      // Page Heading
+      h1.h3.mb-4.text-gray-800 #{titlePage}
+      .row
+        .col-9.addCategory
+          .card
+            .card-body
+              form(action="post")
+                .form-row
+                  .form-group.col-md-6
+                    label(for='prodTitle') Nom du produit
+                    input#prodTitle.prodTitle.form-control(type='text', aria-describedby='Nom du produit', placeholder='Nom de la produit')
+                  .form-group.col-md-6
+                    label(for='prodRef') Ref
+                    input#prodRef.prodRef.form-control(type='text', aria-describedby='Réferance du produit', placeholder='Réferance de la produit')
+                  .form-group.col-md-6
+                    label(for='prodImg') Lien vers l'image
+                    input#prodImg.prodImg.form-control(type='text', aria-describedby='Lien vers l\'image', placeholder='http://www....png')
+                  .form-group.col-md-6
+                    label(for='prodCat') Catégorie
+                    select#prodCat.custom-select.prodCat
+                      option(selected='') Catégorie du produit
+
+                  .form-group.col-md-6
+                    label(for='proddesc') Description
+                    textarea#proddesc.proddesc.form-control(
+                      name="", cols="10", rows="3"
+                      aria-describedby='Ajouter un description',
+                      placeholder='Ajouter un description')
+                  .col-md-6
+                    label.prodMulty(for='t') Type d'ajout
+                    .custom-control.custom-switch
+                      input#customSwitch1.custom-control-input(type='checkbox')
+                      label.custom-control-label(for='customSwitch1') Activer l'ajout multiple
+
+            .card-footer
+              button.btn.btn-outline-success.prodAdd(type="button") Ajouter
+              button.btn.btn-outline-info.prodShow(type="button") Aperçus
+        .col-3.cardProd
+          .card
+            .card-body
+              img.card-img-top(src="http://www.logospng.com/images/71/support-playstation-71160.png", alt="", srcset="")
+              h4.card-title.text-center PlayStation Network
+              hr
+              p.card-text
+                span.mr-3 Ref:
+                span
+                  code PSN
+              hr
+              p.card-text
+                span.mr-3 Catégorie:
+                span
+                  code Jeux
+              hr
+              p.card-text
+                span.mr-3 Type d'ajout:
+                span
+                  code Multiple
+              hr
+              p.card-text
+                h5 Description:
+                span Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum, fugit?
+              hr

@@ -6,6 +6,13 @@ var AddProducts = (function () {
       Store.AddData('products', data, function (obj) {
         console.log(obj)
       })
+    },
+    getData: function (cb) {
+      var elems;
+      Store.ShowData("categories", function (obj) {
+        elems = obj
+        cb(elems)
+      })
     }
   }
 
@@ -36,14 +43,15 @@ var UIAddProductsController = (function () {
                           <span class="mr-3">${title}:</span>
                           <span><code>${value}</code></span>
                         </p>`
+        return template
       }
       var html = `<div class="card">
                   <img class="card-img-top" src="${obj.img}" alt="${obj.title}" />
-                  <div class="card-body text-center">
-                    <h4 class="card-title cat__title">${obj.title}</h4>
-                    ${addDetails('Ref:', obj.ref)}
-                    ${addDetails('Ref:', obj.cat)}
-                    ${addDetails('Ref:', obj.type)}
+                  <div class="card-body ">
+                    <h4 class = "card-title cat__title text-center"> ${obj.title}</h4>
+                    ${addDetails('Ref', obj.ref)}
+                    ${addDetails('Categorie', obj.cat)}
+                    ${addDetails('Mutli-ajout', obj.multi)}
                     <p class="card-text cat__desc">
                     <h5> Description :</h5>
                     <span>${obj.desc}</span>
@@ -63,7 +71,8 @@ var UIAddProductsController = (function () {
       img = document.querySelector(DomElements.InputAddImg).value
       cat = document.querySelector(DomElements.InputAddCat).value
       desc = document.querySelector(DomElements.InputAddDesc).value
-      multi = document.querySelector(DomElements.inputMulty).value
+      multi = document.querySelector(DomElements.inputMulty).checked
+      console.log(multi)
       return {
         "title": title,
         "img": img,
@@ -83,7 +92,17 @@ var UIAddProductsController = (function () {
 
 var AddProductsController = (function (UIprod, AddProd, Store) {
   var dom = UIprod.getDOMEls()
+  var generateCats = function () {
+    var cats = document.querySelector('.prodCat')
+    AddProd.getData(function (obj) {
+      obj.forEach(el => {
+        var t = el.title.toLowerCase()
+        cats.insertAdjacentHTML('beforeend', `<option value = "${el.title.toLowerCase()}"> ${t} </option>`)
+        console.log(t)
+      });
+    })
 
+  }
   var setupEvents = function () {
     var btnAdd = document.querySelector(`${dom.btnAdd}`)
     var btnprev = document.querySelector(`${dom.btnShow}`)
@@ -98,7 +117,7 @@ var AddProductsController = (function (UIprod, AddProd, Store) {
       document.querySelector(dom.InputAddImg).value = ""
       document.querySelector(dom.InputAddCat).value = ""
       document.querySelector(dom.InputAddDesc).value = ""
-      document.querySelector(dom.inputMulty).value = ""
+      document.querySelector(dom.inputMulty).checked = false
       console.log(UIprod.getDomString(dom))
 
     })
@@ -115,6 +134,7 @@ var AddProductsController = (function (UIprod, AddProd, Store) {
   return {
     init: function () {
       console.log("init")
+      generateCats()
       setupEvents()
 
     }

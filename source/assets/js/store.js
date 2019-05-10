@@ -23,6 +23,7 @@ var Store = (function () {
       axios.get(`${dataOut.api}${c}`)
         .then(function (response) {
           myData = response.data
+          //console.log(outputSuccessData(myData))
           return cb(myData)
         })
         .catch(function (error) {

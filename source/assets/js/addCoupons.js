@@ -109,7 +109,46 @@ var UICoupon = (function () {
       cont.insertAdjacentHTML('beforeend', html)
 
     },
-
+    generateInputs: function (obj) {
+      var html = `<div class="form-group col-md-4">
+                    <label for="${obj.id}">${obj.label}</label>
+                    < input id = "${obj.id}"
+                    class = "form-control ${obj.cls}"
+                    type = "${obj.type}",
+                    aria-describedby = '${obj.desc}'
+                    value = "${obj.val}"
+                    placeholder = "${obj.placeH}")>
+                  </div>`
+      return html
+    },
+    generateSelectProd: function (arr) {
+      var addSelect = function (array) {
+        var result = ''
+        array.forEach(function (el) {
+          var templ = `<div
+                        class="custom-control custom-radio custom-control-inline">
+                        <input
+                          class="custom-control-input"
+                          id="${el.ref}"
+                          type="radio"
+                          name = "${el.cat}" / >
+                        <label
+                          class="custom-control-label"
+                          for="${el.ref}">
+                            <img
+                              src="${el.img}"
+                              alt="${el.title}"
+                              width="50px" /></label>
+                      </div>`
+          result = result + templ
+        })
+        return result
+      }
+      var html = `<div class="selected--product">
+                    ${addSelect(arr)}
+                  </div>`
+      return html
+    },
     closeCat: function (addBtn, cat, container) {
       var btn = container.querySelector('.closeCat')
       var close = function () {
@@ -166,8 +205,77 @@ var UICoupon = (function () {
       })
       //
       return data
+    },
+    generateForm: function (cat, ref) {
+      var html = `<form>
+                    <div class="form-row">
+                      ${UICoupon.generateInputs({
+                        id: cat+'-source-'+ref,
+                        cls: "sourceCoupon",
+                        type: "text",
+                        desc: '',
+                        val: "",
+                        label: "Source",
+                        placeH: "Indiquer la source"
+                      })}
+                      ${UICoupon.generateInputs({
+                        id: cat+'-montant-'+ref,
+                        cls: "montantCoupon",
+                        type: "number",
+                        desc: '',
+                        val: "",
+                        label: "Montant",
+                        placeH: "Indiquer la montant"
+                      })}
+                      ${UICoupon.generateListInput(
+                        "Devise",
+                        "Default value",
+                        [
+                          {val:"dollar",
+                          label:"$"},
+                          {val:"euro",
+                          label:"€"}
+                        ])}
+                      ${UICoupon.generateInputs({
+                        id: cat+'-prixAchat-'+ref,
+                        cls: "prixAchat",
+                        type: "number",
+                        desc: '',
+                        val: "210",
+                        label: "Prix d'achat",
+                        placeH: "Indiquer le prix d'achat"
+                      })}
+                      ${UICoupon.generateInputs({
+                        id: cat+'-prixVente-'+ref,
+                        cls: "prixVente",
+                        type: "number",
+                        desc: '',
+                        val: "230",
+                        label: "Prix de vente",
+                        placeH: "Indiquer le prix de vente"
+                      })}
+                      ${UICoupon.generateInputs({
+                        id: cat+'-codeCoupon-'+ref,
+                        cls: "codeCoupon",
+                        type: "text",
+                        desc: '',
+                        val: "",
+                        label: "Code",
+                        placeH: "Indiquer le code a ajouter"
+                      })}
+                    </div>
+                  </form>`
+      return html
+    },
+    generateListInput: function (val, label, arr) {
+      var html = `<div class="form-group col-md-4">
+                    <label for=""></label>
+                    <select>
+                      <option value=""></option>
+                      ${options(arr)}
+                    </select>
+                  </div>`
     }
-
   }
 })()
 
@@ -272,9 +380,9 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
           })
         })
 
-        Store.ShowData('coupons', function (obj) {
+        Store.ShowData('products?cat=jeux', function (obj) {
 
-          console.log(obj)
+          console.log(UICoup.generateSelectProd(obj))
 
         })
 

@@ -121,17 +121,32 @@ var UICoupon = (function () {
                   </div>`
       return html
     },
+    generateInputFile: function (obj) {
+      var html = `<div class="custom-file col-md-4">
+
+                    <input id = "${obj.id}"
+                    class = "custom-file-input ${obj.cls}"
+                    type = "${obj.type}",
+                    aria-describedby = '${obj.desc}'
+                    value = "${obj.val}"
+                    placeholder = "${obj.placeH}">
+                    <label class="custom-file-label" for="${obj.id}">${obj.label}</label>
+                  </div>`
+      return html
+    },
     generateSelectProd: function (arr) {
       var addSelect = function (array) {
         var result = ''
         array.forEach(function (el) {
           var templ = `<div
-                        class="custom-control custom-radio custom-control-inline">
+                        class="custom-control custom-radio custom-control-inline" >
                         <input
                           class="custom-control-input"
                           id="${el.ref}"
                           type="radio"
-                          name = "${el.cat}" / >
+                          name= "${el.cat}"
+                          data-multi= "${el.multi}"
+                           / >
                         <label
                           class="custom-control-label"
                           for="${el.ref}">
@@ -206,7 +221,7 @@ var UICoupon = (function () {
       //
       return data
     },
-    generateForm: function (cat, ref) {
+    generateForm: function (cat, ref, multi) {
       var html = `<form>
                     <div class="form-row">
                       ${UICoupon.generateInputs({
@@ -218,7 +233,7 @@ var UICoupon = (function () {
                         label: "Source",
                         placeH: "Indiquer la source"
                       })}
-                      ${UICoupon.generateInputs({
+                      ${!multi ? UICoupon.generateInputs({
                         id: cat+'-montant-'+ref,
                         cls: "montantCoupon",
                         type: "number",
@@ -226,8 +241,8 @@ var UICoupon = (function () {
                         val: "",
                         label: "Montant",
                         placeH: "Indiquer la montant"
-                      })}
-                      ${UICoupon.generateListInput(
+                      }):''}
+                      ${!multi ?UICoupon.generateListInput(
                         'devise',
                         "Devise",
                         cat+'-devise-'+ref,
@@ -237,7 +252,7 @@ var UICoupon = (function () {
                           label:"$"},
                           {val:"euro",
                           label:"€"}
-                        ])}
+                        ]):""}
                       ${UICoupon.generateInputs({
                         id: cat+'-prixAchat-'+ref,
                         cls: "prixAchat",
@@ -256,14 +271,24 @@ var UICoupon = (function () {
                         label: "Prix de vente",
                         placeH: "Indiquer le prix de vente"
                       })}
-                      ${UICoupon.generateInputs({
+                      ${!multi?UICoupon.generateInputs({
                         id: cat+'-codeCoupon-'+ref,
                         cls: "codeCoupon",
                         type: "text",
                         desc: '',
                         val: "",
                         label: "Code",
-                        placeH: "Indiquer le code a ajouter"})}
+                        placeH: "Indiquer le code a ajouter"
+                        }): UICoupon.generateInputFile({
+                          id: cat + '-codeCoupon-' + ref,
+                          cls: "codeCoupon",
+                          type: "file",
+                          desc: '',
+                          val: "",
+                          label: "Selectionner le fichier",
+                          placeH: "Indiquer le code a ajouter"
+                        })
+                        }
                     </div>
                   </form>`
       return html
@@ -397,17 +422,65 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
     var btnsAddCoupon = document.querySelectorAll('.addCoupon')
     var couponAddContent = document.querySelector('.couponAddContent')
     console.log(btnsAddCoupon)
-
-    var handelSelectProd = function () {
+    var generateTabs = function (cls, name, id) {
+      var menu = `<ul class="nav nav-tabs" id="${name}-nav" role="tablist">
+                    <li class="nav-item">
+                      <a class="nav-link active"
+                        id="one-tab"
+                        data-toggle="tab"
+                        href="#one"
+                        role="tab"
+                        aria-controls="one"
+                        aria-selected="true">
+                        Unique</a>
+                      </li>
+                    <li class="nav-item">
+                      <a
+                      class="nav-link"
+                      id="multi-tab"
+                      data-toggle="tab"
+                      href="#multi"
+                      role="tab"
+                      aria-controls="multi"
+                      aria-selected="false">
+                      Multiple</a>
+                    </li>
+                    </ul>`
+      var content = `<div class="tab-content" id="${name}-content">
+                        <div
+                          class="card tab-pane fade show active border-top-0"
+                          id="one"
+                          role="tabpanel"
+                          aria-labelledby="one-tab">
+                          <div class="card-body">${UICoup.generateForm(name, id, false)}</div>
+                        </div>
+                        <div class="card tab-pane fade"
+                            id="multi"
+                            role="tabpanel"
+                            aria-labelledby="multi-tab">
+                            <div class="card-body">${UICoup.generateForm(name, id+ '-multi', true)}</div>
+                        </div>
+                      </div>`
+      var el = document.querySelector(cls)
+      el.insertAdjacentHTML('beforeend', menu)
+      el.insertAdjacentHTML('beforeend', content)
+    }
+    var handelSelectProd = function (cls, multi) {
       var products = document.querySelectorAll('.selected--product input')
       products.forEach((el) => {
         el.addEventListener('click', function (e) {
-          //e.preventDefault()
-          console.log(el.name, el.id)
-          var form = UICoup.generateForm(el.name, el.id)
-          var prodForm = document.querySelector('.couponAddContent .products-form')
-          prodForm.innerHTML = ''
-          prodForm.insertAdjacentHTML('beforeend', form)
+          var prodForm = document.querySelector(cls)
+          console.log(el.dataset.multi)
+          if (el.dataset.multi === "true") {
+            prodForm.innerHTML = ''
+            generateTabs(cls, el.name, el.id, multi)
+          } else {
+            var form = UICoup.generateForm(el.name, el.id)
+
+            prodForm.innerHTML = ''
+            prodForm.insertAdjacentHTML('beforeend', form)
+          }
+
         })
       })
 
@@ -433,10 +506,9 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
           console.log("categories Products", obj)
           var products = UICoup.generateSelectProd(obj)
           document.querySelector('.couponAddContent .products').insertAdjacentHTML('beforeend', products + '<hr>')
-          handelSelectProd()
+          handelSelectProd('.couponAddContent .products-form')
         })
         Store.ShowData('categories?title=' + cat, function (obj) {
-          console.log("categories Selected", obj[0])
 
           UICoup.generateCard('.couponChoiceCat', obj[0])
 

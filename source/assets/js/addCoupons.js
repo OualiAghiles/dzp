@@ -81,6 +81,11 @@ var UICoupon = (function () {
 
   }
   return {
+    /**
+     *
+     * @param {*} content
+     * @param {*} obj
+     */
     generateCard: function (content, obj) {
       var addTags = function (arr) {
         var els = ''
@@ -109,6 +114,10 @@ var UICoupon = (function () {
       cont.insertAdjacentHTML('beforeend', html)
 
     },
+    /**
+     *
+     * @param {*} obj
+     */
     generateInputs: function (obj) {
       var html = `<div class="form-group col-md-4">
                     <label for="${obj.id}">${obj.label}</label>
@@ -121,6 +130,11 @@ var UICoupon = (function () {
                   </div>`
       return html
     },
+    /**
+     *
+     * @param {*} obj
+     * @returns htmlElement
+     */
     generateInputFile: function (obj) {
       var html = `<div class="custom-file col-md-4">
 
@@ -134,6 +148,10 @@ var UICoupon = (function () {
                   </div>`
       return html
     },
+    /**
+     *
+     * @param {*} arr
+     */
     generateSelectProd: function (arr) {
       var addSelect = function (array) {
         var result = ''
@@ -164,6 +182,12 @@ var UICoupon = (function () {
                   </div>`
       return html
     },
+    /**
+     *
+     * @param {*} addBtn
+     * @param {*} cat
+     * @param {*} container
+     */
     closeCat: function (addBtn, cat, container) {
       var btn = container.querySelector('.closeCat')
       var close = function () {
@@ -179,6 +203,11 @@ var UICoupon = (function () {
       btn.addEventListener('click', close)
 
     },
+    /**
+     *
+     * @param {*} cat
+     * @param {*} content
+     */
     showRecap: function (cat, content) {
       var showAction = content.querySelector(`.add-${cat} .showRecap`)
       var el = cat
@@ -221,6 +250,12 @@ var UICoupon = (function () {
       //
       return data
     },
+    /**
+     *
+     * @param {*} cat
+     * @param {*} ref
+     * @param {*} multi
+     */
     generateForm: function (cat, ref, multi) {
       var html = `<form>
                     <div class="form-row">
@@ -293,6 +328,14 @@ var UICoupon = (function () {
                   </form>`
       return html
     },
+    /**
+     *
+     * @param {*} cls
+     * @param {*} val
+     * @param {*} id
+     * @param {*} label
+     * @param {*} arr
+     */
     generateListInput: function (cls, val, id, label, arr) {
       var options = function (arr) {
         var el;
@@ -422,6 +465,12 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
     var btnsAddCoupon = document.querySelectorAll('.addCoupon')
     var couponAddContent = document.querySelector('.couponAddContent')
     console.log(btnsAddCoupon)
+    /**
+     *
+     * @param {*} cls
+     * @param {*} name
+     * @param {*} id
+     */
     var generateTabs = function (cls, name, id) {
       var menu = `<ul class="nav nav-tabs" id="${name}-nav" role="tablist">
                     <li class="nav-item">
@@ -465,6 +514,11 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
       el.insertAdjacentHTML('beforeend', menu)
       el.insertAdjacentHTML('beforeend', content)
     }
+    /**
+     *
+     * @param {*} cls
+     * @param {*} multi
+     */
     var handelSelectProd = function (cls, multi) {
       var products = document.querySelectorAll('.selected--product input')
       products.forEach((el) => {

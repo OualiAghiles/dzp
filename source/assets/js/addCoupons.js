@@ -524,6 +524,19 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
       products.forEach((el) => {
         el.addEventListener('click', function (e) {
           var prodForm = document.querySelector(cls)
+          var templ = `<hr />
+                      <div class="action text-right">
+                        <button
+                          class="btn btn-primary showRecap"
+                          type="button" role="button"
+                          data-toggle="modal"
+                          data-target="#${el.id}-modal" > Voir le resumé </button>
+                        <button
+                          class="btn btn-success"
+                          type="button"
+                          role="button">Sauvegarder</button>
+                      </div>`
+
           console.log(el.dataset.multi)
           if (el.dataset.multi === "true") {
             prodForm.innerHTML = ''
@@ -534,6 +547,7 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
             prodForm.innerHTML = ''
             prodForm.insertAdjacentHTML('beforeend', form)
           }
+          prodForm.parentNode.insertAdjacentHTML('beforeend', templ)
 
         })
       })
@@ -550,6 +564,7 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
                               <h3 class="card-title">Veuiller choisire un produit</h3>
                               <div class="products"></div>
                               <div class="products-form"></div>
+
                             </div>
                           </div>
                         </div>`

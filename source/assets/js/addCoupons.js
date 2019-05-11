@@ -358,26 +358,17 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
     item.addEventListener('click', function (e) {
       e.preventDefault()
       e.stopPropagation()
-      if (e.target.dataset.target === "jeux") {
-        console.log(e.target)
-        Store.ShowData('categories?title=Jeux', function (obj) {
-          console.log(obj[0])
-          //UICoup.generateCard('.couponChoiceCat', obj[0])
-          //document.querySelector('.couponChoiceCat').insertAdjacentHTML('afterbegin', form)
 
-        })
-      }
-
-      //document.querySelector('.couponChoiceCat').innerHTML = '';
+      document.querySelector('.couponChoiceCat').innerHTML = '';
 
 
       //UICoup.closeCat(item, cat, couponAddContent)
-      // Store.ShowData('categories?name=jeux', function (obj) {
-      //   console.log(obj)
-      //   var form = UICoup.generateSelectProd(obj)
-      //   document.querySelector('.add-jeux .card-body').insertAdjacentHTML('afterbegin', form)
+      Store.ShowData('categories?name=jeux', function (obj) {
+        console.log(obj)
+        var form = UICoup.generateSelectProd(obj)
+        document.querySelector('.add-jeux .card-body').insertAdjacentHTML('afterbegin', form)
 
-      // })
+      })
 
 
 
@@ -406,10 +397,54 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
     var btnsAddCoupon = document.querySelectorAll('.addCoupon')
     var couponAddContent = document.querySelector('.couponAddContent')
     console.log(btnsAddCoupon)
-    btnsAddCoupon.forEach(function (el) {
-      el.addEventListener('click', () => {
-        console.log(el)
+
+    var handelSelectProd = function () {
+      var products = document.querySelectorAll('.selected--product input')
+      products.forEach((el) => {
+        el.addEventListener('click', function (e) {
+          //e.preventDefault()
+          console.log(el.name, el.id)
+          var form = UICoup.generateForm(el.name, el.id)
+          var prodForm = document.querySelector('.couponAddContent .products-form')
+          prodForm.innerHTML = ''
+          prodForm.insertAdjacentHTML('beforeend', form)
+        })
       })
+
+    }
+    btnsAddCoupon.forEach(function (el) {
+      el.addEventListener('click', (e) => {
+        console.log(el.dataset.target)
+        var main = document.querySelector('.couponChoiceCat')
+        main.innerHTML = '';
+        var content = `<div class="couponAddContent col-md-9">
+                          <div class="card">
+                            <div class="card-body">
+                              <h3 class="card-title">Veuiller choisire un produit</h3>
+                              <div class="products"></div>
+                              <div class="products-form"></div>
+                            </div>
+                          </div>
+                        </div>`
+        main.insertAdjacentHTML('beforeend', content)
+        var cat = el.dataset.target.charAt(0).toUpperCase() + el.dataset.target.slice(1)
+
+        Store.ShowData('products?cat=' + el.dataset.target, function (obj) {
+          console.log("categories Products", obj)
+          var products = UICoup.generateSelectProd(obj)
+          document.querySelector('.couponAddContent .products').insertAdjacentHTML('beforeend', products + '<hr>')
+          handelSelectProd()
+        })
+        Store.ShowData('categories?title=' + cat, function (obj) {
+          console.log("categories Selected", obj[0])
+
+          UICoup.generateCard('.couponChoiceCat', obj[0])
+
+        })
+
+
+      })
+
     })
   }
   return {

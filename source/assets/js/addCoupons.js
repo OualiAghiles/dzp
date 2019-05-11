@@ -23,14 +23,14 @@ var UICoupon = (function () {
   var DOMstrings = {
     addModal: '.add-coupons'
   }
-  var showRecapAddCoupModal = function (obj) {
+  var showRecapAddCoupModal = function (modalId, obj) {
     // Logout Modal
     var insertInfo = function (tab) {
       var list = ''
       tab.forEach(function (el) {
         var html = `<tr>
                       <td>${el.cat}</td>
-                      <td>${el.produit}</td>
+                      <td>${el.produitRef}</td>
                       <td>${el.source}</td>
                       <td>${el.montant}</td>
                       <td>${el.devise}</td>
@@ -60,7 +60,7 @@ var UICoupon = (function () {
 
                   </tbody>
                 </table>`
-    var modal = document.querySelector('#recapModal .modal-body')
+    var modal = document.querySelector(`${modalId} .modal-body`)
     modal.insertAdjacentHTML('beforeend', html)
 
   }
@@ -208,20 +208,21 @@ var UICoupon = (function () {
      * @param {*} cat
      * @param {*} content
      */
-    showRecap: function (cat, content) {
-      var showAction = content.querySelector(`.add-${cat} .showRecap`)
+    showRecap: function (target, content, cat) {
+      var showAction = content.querySelector(`[data-target="${target}"]`)
       var el = cat
-      console.log(showAction)
+      console.log(el)
       var data = []
       showAction.addEventListener('click', function () {
-        var radios = content.querySelectorAll(`.add-${el} .selected--product input`)
-        var activeTab = content.querySelector(`.add-${el} .show`)
-        var source = content.querySelector(`.add-${el} .sourceCoupon`)
-        var montant = content.querySelector(`.add-${el} .montantCoupon`)
-        var devise = content.querySelector(`.add-${el} .devise`)
-        var prixAchat = content.querySelector(`.add-${el} .prixAchat`)
-        var prixVente = content.querySelector(`.add-${el} .prixVente`)
-        var codeCoupon = content.querySelector(`.add-${el} .codeCoupon`)
+        var radios = content.querySelectorAll(`.products .selected--product input`)
+        var activeTab = content.querySelector(`#${el}-content .active`)
+        var source = content.querySelector(`#${el}-content .active .sourceCoupon`)
+        var montant = content.querySelector(`#${el}-content .active .montantCoupon`)
+        var devise = content.querySelector(`#${el}-content .active .devise`)
+        var prixAchat = content.querySelector(`#${el}-content .active .prixAchat`)
+        var prixVente = content.querySelector(`#${el}-content .active .prixVente`)
+        var codeCoupon = content.querySelector(`#${el}-content .active .codeCoupon`)
+        //console.log(`.${el}-content`)
 
         var cat, produit;
         for (var i = 0; i < radios.length; i++) {
@@ -232,8 +233,7 @@ var UICoupon = (function () {
         }
         data.push({
           cat: cat,
-          produit: produit,
-          tab: activeTab.getAttribute('id'),
+          produitRef: produit,
           source: source.value,
           montant: montant.value,
           devise: devise.options[devise.selectedIndex].value,
@@ -244,7 +244,8 @@ var UICoupon = (function () {
           valide: true
         })
         console.log(data)
-        showRecapAddCoupModal(data)
+        document.querySelector(`${target} .modal-body`).innerHTML = ''
+        showRecapAddCoupModal(target, data)
         return data
       })
       //
@@ -514,6 +515,27 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
       el.insertAdjacentHTML('beforeend', menu)
       el.insertAdjacentHTML('beforeend', content)
     }
+    var generateModal = function (id) {
+      var html = `<div
+                    class="modal fade" id="${id}"
+                    tabindex="-1"
+                    role="dialog"
+                    aria-labelledby="Recap" aria-hidden="true">
+                  <div class="modal-dialog modal-xl" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Recap</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                      </div>
+                      <div class="modal-body"></div>
+                      <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button><a class="btn btn-success add-btn-coupon" href="#">Save</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>`
+      return html
+    }
     /**
      *
      * @param {*} cls
@@ -547,7 +569,12 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
             prodForm.innerHTML = ''
             prodForm.insertAdjacentHTML('beforeend', form)
           }
-          prodForm.parentNode.insertAdjacentHTML('beforeend', templ)
+          var modal = generateModal(`${el.id}-modal`)
+
+          prodForm.insertAdjacentHTML('beforeend', templ)
+          prodForm.insertAdjacentHTML('beforeend', modal)
+          //var bodyModal = document.querySelector('.modal-body')
+          UICoup.showRecap(`#${el.id}-modal`, prodForm.parentNode, el.name)
 
         })
       })

@@ -216,13 +216,19 @@ var UICoupon = (function () {
       showAction.addEventListener('click', function () {
         var radios = content.querySelectorAll(`.products .selected--product input`)
         var activeTab = content.querySelector(`#${el}-content .active`)
+        var montant = ''
+        var devise = ''
+        if (activeTab.id !== "multi") {
+          console.log('remove some inputs value')
+          var montant = content.querySelector(`#${el}-content .active .montantCoupon`).value
+          devise = content.querySelector(`#${el}-content .active .devise`)
+          devise = devise.options[devise.selectedIndex].value
+        }
         var source = content.querySelector(`#${el}-content .active .sourceCoupon`)
-        var montant = content.querySelector(`#${el}-content .active .montantCoupon`)
-        var devise = content.querySelector(`#${el}-content .active .devise`)
         var prixAchat = content.querySelector(`#${el}-content .active .prixAchat`)
         var prixVente = content.querySelector(`#${el}-content .active .prixVente`)
         var codeCoupon = content.querySelector(`#${el}-content .active .codeCoupon`)
-        //console.log(`.${el}-content`)
+        console.log(source.value)
 
         var cat, produit;
         for (var i = 0; i < radios.length; i++) {
@@ -235,8 +241,8 @@ var UICoupon = (function () {
           cat: cat,
           produitRef: produit,
           source: source.value,
-          montant: montant.value,
-          devise: devise.options[devise.selectedIndex].value,
+          montant: montant,
+          devise: devise,
           prixAchat: parseInt(prixAchat.value) * parseInt(montant.value),
           prixVente: parseInt(prixVente.value) * parseInt(montant.value),
           codeCoupon: codeCoupon.value,

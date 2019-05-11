@@ -111,20 +111,18 @@ var AddProductsController = (function (UIprod, AddProd, Store) {
       e.preventDefault()
       var obj = UIprod.getDomString(dom)
       AddProd.addData(obj)
-      console.log(UIprod.getDomString(dom))
+
       document.querySelector(dom.InputAddName).value = ""
       document.querySelector(dom.InputAddRef).value = ""
       document.querySelector(dom.InputAddImg).value = ""
       document.querySelector(dom.InputAddCat).value = ""
       document.querySelector(dom.InputAddDesc).value = ""
       document.querySelector(dom.inputMulty).checked = false
-      console.log(UIprod.getDomString(dom))
-
+      e.stopPropagation();
     })
     btnprev.addEventListener('click', function (e) {
       e.preventDefault()
       var obj = UIprod.getDomString(dom)
-
       UIprod.generateCard(dom.card, obj)
       console.log(UIprod.getDomString(dom))
 

@@ -24,7 +24,9 @@ var Store = (function () {
         .then(function (response) {
           myData = response.data
           //console.log(outputSuccessData(myData))
-          return cb(myData)
+          if (cb) {
+            return cb(myData)
+          }
         })
         .catch(function (error) {
           console.log(outputErrorData(error))
@@ -37,11 +39,10 @@ var Store = (function () {
      *  @param  {[Object]} obj [description]
      *  @return {[Object]}     [description]
      */
-    AddData: function (cat, obj, cb) {
+    AddData: function (cat, obj) {
       axios.post(`${dataOut.api}${cat}`, data = obj)
         .then(function (response) {
-          var myData = response.data
-          return cb(myData)
+          return response.data
         })
         .catch(function (error) {
           console.log(outputErrorData(error))

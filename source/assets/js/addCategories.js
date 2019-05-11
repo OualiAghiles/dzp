@@ -3,9 +3,7 @@ var AddCategories = (function () {
 
   return {
     addData: function (data) {
-      Store.AddData('categories', data, function (obj) {
-        console.log(obj)
-      })
+      Store.AddData('categories', data)
     }
   }
 
@@ -84,24 +82,23 @@ var AddCatController = (function (UIcat, AddCat, Store) {
     var btnAdd = document.querySelector(`${dom.btnAdd}`)
     var btnprev = document.querySelector(`${dom.btnShow}`)
 
+
     btnAdd.addEventListener('click', function (e) {
-      e.preventDefault()
       var obj = UIcat.getDomString(dom)
+      e.preventDefault()
       AddCat.addData(obj)
-      console.log(UIcat.getDomString(dom))
       document.querySelector(dom.InputAddName).value = ''
       document.querySelector(dom.InputAddImg).value = ''
       document.querySelector(dom.InputAddTags).value = ''
       document.querySelector(dom.InputAddDesc).value = ''
-      console.log(UIcat.getDomString(dom))
 
     })
     btnprev.addEventListener('click', function (e) {
-      e.preventDefault()
       var obj = UIcat.getDomString(dom)
+      e.preventDefault()
+      console.log(obj)
 
       UIcat.generateCard('.cardCat', obj)
-      console.log(UIcat.getDomString(dom))
 
     })
   }

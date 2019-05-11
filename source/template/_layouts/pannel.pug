@@ -84,34 +84,11 @@
               #myTabContent.tab-content
                 #one.card.tab-pane.fade.show.active.border-top-0(role='tabpanel', aria-labelledby='one-tab')
                   .card-body
-                    form()
-                      .form-row
-                        .form-group.col-md-4
-                          label(for='sourceCoupon') Source
-                          input#sourceCoupon.sourceCoupon.form-control(type='text', aria-describedby='source Coupon', placeholder='Enter la source')
-                        .form-group.col-md-4
-                          label(for='montantCoupon') Montant
-                          input#montantCoupon.montantCoupon.form-control(type='number', aria-describedby='montant Coupon', placeholder='Enter le montant')
-                        .form-group.col-md-4
-                          label(for='devise') Devise
-                          select#devise.devise.custom-select
-                            option(selected='') Choisir la devise
-                            option(value='dollar') $
-                            option(value='euro') €
-
-                        .form-group.col-md-4
-                          label(for='prixAchat') Prix Achat
-                          input#prixAchat.prixAchat.form-control(type='number', aria-describedby='prix Coupon', placeholder='Enter le prix d\'achat')
-                        .form-group.col-md-4
-                          label(for='prixVente') Prix Vente
-                          input#prixVente.prixVente.form-control(type='number', aria-describedby='vente Coupon', placeholder='Enter le prix dde vente')
-                        .form-group.col-md-4
-                          label(for='codeCoupon') Code coupon
-                          input#codeCoupon.codeCoupon.form-control(type='text', aria-describedby='code Coupon', placeholder='Enter le coupon')
-                      hr
-                      .action.text-right
-                        button.btn.btn-primary.showRecap(type="button", role="button",  data-toggle='modal', data-target='#recapModal') Voir le resumé
-                        button.btn.btn-success(type="button", role="button") Sauvegarder
+                    .testForm
+                    hr
+                    .action.text-right
+                      button.btn.btn-primary.showRecap(type="button", role="button",  data-toggle='modal', data-target='#recapModal') Voir le resumé
+                      button.btn.btn-success(type="button", role="button") Sauvegarder
 
                 #multi.tab-pane.fade(role='tabpanel', aria-labelledby='multi-tab')
                   .card.border-top-0
@@ -148,7 +125,7 @@
     footer.sticky-footer.bg-white
       .container.my-auto
         .copyright.text-center.my-auto
-          span Copyright © Your Website 2019
+          span Copyright © DZPREMIUM 2019
     // End of Footer
     // End of Content Wrapper
     // End of Page Wrapper

@@ -112,12 +112,12 @@ var UICoupon = (function () {
     generateInputs: function (obj) {
       var html = `<div class="form-group col-md-4">
                     <label for="${obj.id}">${obj.label}</label>
-                    < input id = "${obj.id}"
+                    <input id = "${obj.id}"
                     class = "form-control ${obj.cls}"
                     type = "${obj.type}",
                     aria-describedby = '${obj.desc}'
                     value = "${obj.val}"
-                    placeholder = "${obj.placeH}")>
+                    placeholder = "${obj.placeH}">
                   </div>`
       return html
     },
@@ -228,7 +228,9 @@ var UICoupon = (function () {
                         placeH: "Indiquer la montant"
                       })}
                       ${UICoupon.generateListInput(
+                        'devise',
                         "Devise",
+                        cat+'-devise-'+ref,
                         "Default value",
                         [
                           {val:"dollar",
@@ -261,20 +263,28 @@ var UICoupon = (function () {
                         desc: '',
                         val: "",
                         label: "Code",
-                        placeH: "Indiquer le code a ajouter"
-                      })}
+                        placeH: "Indiquer le code a ajouter"})}
                     </div>
                   </form>`
       return html
     },
-    generateListInput: function (val, label, arr) {
+    generateListInput: function (cls, val, id, label, arr) {
+      var options = function (arr) {
+        var el;
+        arr.forEach(function (opt) {
+          var h = `<option value = '${opt.val}'>${opt.label}</option>`
+          el = el + h
+        })
+        return el
+      }
       var html = `<div class="form-group col-md-4">
-                    <label for=""></label>
-                    <select>
-                      <option value=""></option>
+                    <label for="${id}">${val}</label>
+                    <select id="${id}" class="custom-select ${cls}">
+                      <option value="">${label}</option>
                       ${options(arr)}
                     </select>
                   </div>`
+      return html
     }
   }
 })()
@@ -344,49 +354,61 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
     }
     console.log(arrCoupn)
   }
+  var hundleCpn = function (item) {
+    item.addEventListener('click', function (e) {
+      e.preventDefault()
+      e.stopPropagation()
+      if (e.target.dataset.target === "jeux") {
+        console.log(e.target)
+        Store.ShowData('categories?title=Jeux', function (obj) {
+          console.log(obj[0])
+          //UICoup.generateCard('.couponChoiceCat', obj[0])
+          //document.querySelector('.couponChoiceCat').insertAdjacentHTML('afterbegin', form)
 
+        })
+      }
+
+      //document.querySelector('.couponChoiceCat').innerHTML = '';
+
+
+      //UICoup.closeCat(item, cat, couponAddContent)
+      // Store.ShowData('categories?name=jeux', function (obj) {
+      //   console.log(obj)
+      //   var form = UICoup.generateSelectProd(obj)
+      //   document.querySelector('.add-jeux .card-body').insertAdjacentHTML('afterbegin', form)
+
+      // })
+
+
+
+
+      //UICoup.showRecap(cat, couponAddContent)
+      //var infoCoupon = UICoup.showRecap(cat, couponAddContent)
+      //console.log('infoCoupon: ', infoCoupon)
+      /*var addBtnCoupon = couponAddContent.querySelector('.add-btn-coupon')
+      addBtnCoupon.addEventListener('click', function (e) {
+        e.preventDefault()
+        var obj = infoCoupon[0]
+        Store.AddData('coupons', obj, function (t) {
+
+          console.log(t)
+        })
+      })*/
+
+
+
+      e.stopPropagation()
+    }, false)
+  }
   //see the link above to see where the variable fileTobeRead comes from.
   var setupEvents = function () {
     console.log('started')
     var btnsAddCoupon = document.querySelectorAll('.addCoupon')
     var couponAddContent = document.querySelector('.couponAddContent')
     console.log(btnsAddCoupon)
-    btnsAddCoupon.forEach((item) => {
-      item.addEventListener('click', (e) => {
-        var card = item.parentNode.parentNode.parentNode
-        var cat = item.dataset.target
-        e.preventDefault()
-        document.querySelectorAll('.couponChoiceCat .col-md-3').forEach((el) => {
-          el.classList.add("d-none")
-        })
-        card.classList.remove("d-none")
-        card.classList.add("active")
-        couponAddContent.classList.remove('d-none')
-        couponAddContent.querySelector(`.add-${cat}`).classList.remove('d-none')
-        couponAddContent.querySelector(`.add-${cat}`).classList.add('active')
-        item.classList.add('d-none')
-
-        UICoup.closeCat(item, cat, couponAddContent)
-        //UICoup.showRecap(cat, couponAddContent)
-        var infoCoupon = UICoup.showRecap(cat, couponAddContent)
-        console.log('infoCoupon: ', infoCoupon)
-        var addBtnCoupon = couponAddContent.querySelector('.add-btn-coupon')
-        addBtnCoupon.addEventListener('click', function (e) {
-          e.preventDefault()
-          var obj = infoCoupon[0]
-          Store.AddData('coupons', obj, function (t) {
-
-            console.log(t)
-          })
-        })
-
-        Store.ShowData('products?cat=jeux', function (obj) {
-
-          console.log(UICoup.generateSelectProd(obj))
-
-        })
-
-
+    btnsAddCoupon.forEach(function (el) {
+      el.addEventListener('click', () => {
+        console.log(el)
       })
     })
   }
@@ -395,10 +417,13 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
       var data = CouponCtrl.getData(function (obj) {
         obj.forEach(function (el) {
           UICoup.generateCard('.couponChoiceCat', el)
-          setupEvents()
+
         })
+        setupEvents()
       })
+
       console.log('init')
+
     }
   }
 })(UICoupon, CouponController, Store)

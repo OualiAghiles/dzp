@@ -6,6 +6,28 @@
  * */
 var CouponController = (function () {
 
+    var Coupon = function (
+      cat,
+      produitRef,
+      source,
+      montant,
+      devise,
+      prixAchat,
+      prixVente,
+      codeCoupon,
+      date,
+      valide) {
+        this.cat = cat
+        this.produitRef = produitRef
+        this.source = source
+        this.montant = montant
+        this.devise = devise
+        this.prixAchat = prixAchat
+        this.prixVente = prixVente
+        this.codeCoupon = codeCoupon
+        this.date = date
+        this.valid = valide
+    }
 
   return {
     getData: function (cb) {
@@ -14,6 +36,21 @@ var CouponController = (function () {
         elems = obj
         cb(elems)
       })
+    },
+    addCoupon: function (cat, produitRef, source, montant, devise, prixAchat, prixVente, codeCoupon, date, valide) {
+      var newCoup = new Coupon(cat,
+        produitRef,
+        source,
+        montant,
+        devise,
+        prixAchat,
+        prixVente,
+        codeCoupon,
+        date,
+        valide)
+            console.log(newCoup)
+
+        return newCoup
     }
   }
 
@@ -196,6 +233,77 @@ var UICoupon = (function () {
     },
     /**
      *
+     * @param {*} cls
+     * @param {*} name
+     * @param {*} id
+     */
+    generateTabs: function (cls, name, id) {
+      var menu = `<h3 class="card-title">Veuiller remplire les informations</h3><ul class="nav nav-tabs" id="${name}-nav" role="tablist">
+                    <li class="nav-item">
+                      <a class="nav-link active"
+                        id="one-tab"
+                        data-toggle="tab"
+                        href="#one"
+                        role="tab"
+                        aria-controls="one"
+                        aria-selected="true">
+                        Unique</a>
+                      </li>
+                    <li class="nav-item">
+                      <a
+                      class="nav-link"
+                      id="multi-tab"
+                      data-toggle="tab"
+                      href="#multi"
+                      role="tab"
+                      aria-controls="multi"
+                      aria-selected="false">
+                      Multiple</a>
+                    </li>
+                    </ul>`
+      var content = `<div class="tab-content" id="${name}-content">
+                        <div
+                          class="card tab-pane fade show active border-top-0"
+                          id="one"
+                          role="tabpanel"
+                          aria-labelledby="one-tab">
+                          <div class="card-body">${UICoupon.generateForm(name, id, false)}</div>
+                        </div>
+                        <div class="card tab-pane fade"
+                            id="multi"
+                            role="tabpanel"
+                            aria-labelledby="multi-tab">
+                            <div class="card-body">${UICoupon.generateForm(name, id+ '-multi', true)}</div>
+                        </div>
+                      </div>`
+      var el = document.querySelector(cls)
+      el.insertAdjacentHTML('beforeend', menu)
+      el.insertAdjacentHTML('beforeend', content)
+    },
+    generateModal: function (id) {
+      var html = `<div
+                    class="modal fade" id="${id}"
+                    tabindex="-1"
+                    role="dialog"
+                    aria-labelledby="Recap" aria-hidden="true">
+                  <div class="modal-dialog modal-xl" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Recap</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                      </div>
+                      <div class="modal-body"></div>
+                      <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <a class="btn btn-success add-btn-coupon" data-dismiss="modal" href="#">Save</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>`
+      return html
+    },
+    /**
+     *
      * @param {*} addBtn
      * @param {*} cat
      * @param {*} container
@@ -222,7 +330,7 @@ var UICoupon = (function () {
       var el = cat
       console.log(el)
       var data = []
-      showAction.addEventListener('click', function () {
+      showAction.addEventListener('click', function (event) {
         var radios = content.querySelectorAll(`.products .selected--product input`)
         var activeTab = content.querySelector(`#${el}-content .active`)
         var montant = ''
@@ -244,19 +352,20 @@ var UICoupon = (function () {
           devise = content.querySelector(`#${el}-content .active .devise`)
           devise = devise.options[devise.selectedIndex].value
           codeCoupon = content.querySelector(`#${el}-content .active .codeCoupon`)
-          data.push({
-            cat: cat,
-            produitRef: produit,
-            source: source.value,
-            montant: montant,
-            devise: devise,
-            prixAchat: parseInt(prixAchat.value) * parseInt(montant),
-            prixVente: parseInt(prixVente.value) * parseInt(montant),
-            codeCoupon: codeCoupon.value,
-            date: todayDate(),
-            valide: true
-          })
 
+          var couponObj = CouponController.addCoupon(
+            cat,
+            produit,
+            source.value,
+            montant,
+            devise,
+            parseInt(prixAchat.value) * parseInt(montant),
+            parseInt(prixVente.value) * parseInt(montant),
+            codeCoupon.value,
+            todayDate(),
+            true
+          )
+          data.push(couponObj)
 
         } else {
           var codeCoupon = content.querySelector(`#${el}-content .active .codeCouponMulti`)
@@ -297,12 +406,12 @@ var UICoupon = (function () {
       //
       var addBtnCoupon = document.querySelector('.add-btn-coupon')
       addBtnCoupon.addEventListener('click', function (e) {
+        debugger
         e.preventDefault()
         var obj = data
         obj.forEach(function (el) {
           Store.AddData('coupons', el, function (t) {
 
-            console.log(t)
           })
         })
         console.log(obj)
@@ -451,115 +560,8 @@ var UICoupon = (function () {
         reader.readAsText(input.files[0])
       }, false)
       return tab
-    }
-  }
-})()
-
-var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
-
-  var hundleCpn = function (item) {
-    item.addEventListener('click', function (e) {
-      e.preventDefault()
-      e.stopPropagation()
-
-      document.querySelector('.couponChoiceCat').innerHTML = '';
-
-
-      //UICoup.closeCat(item, cat, couponAddContent)
-      Store.ShowData('categories?name=jeux', function (obj) {
-        console.log(obj)
-        var form = UICoup.generateSelectProd(obj)
-        document.querySelector('.add-jeux .card-body').insertAdjacentHTML('afterbegin', form)
-
-      })
-
-
-      e.stopPropagation()
-    }, false)
-  }
-  //see the link above to see where the variable fileTobeRead comes from.
-  var setupEvents = function () {
-    console.log('started')
-    var btnsAddCoupon = document.querySelectorAll('.addCoupon')
-    var couponAddContent = document.querySelector('.couponAddContent')
-    console.log(btnsAddCoupon)
-    /**
-     *
-     * @param {*} cls
-     * @param {*} name
-     * @param {*} id
-     */
-    var generateTabs = function (cls, name, id) {
-      var menu = `<h3 class="card-title">Veuiller remplire les informations</h3><ul class="nav nav-tabs" id="${name}-nav" role="tablist">
-                    <li class="nav-item">
-                      <a class="nav-link active"
-                        id="one-tab"
-                        data-toggle="tab"
-                        href="#one"
-                        role="tab"
-                        aria-controls="one"
-                        aria-selected="true">
-                        Unique</a>
-                      </li>
-                    <li class="nav-item">
-                      <a
-                      class="nav-link"
-                      id="multi-tab"
-                      data-toggle="tab"
-                      href="#multi"
-                      role="tab"
-                      aria-controls="multi"
-                      aria-selected="false">
-                      Multiple</a>
-                    </li>
-                    </ul>`
-      var content = `<div class="tab-content" id="${name}-content">
-                        <div
-                          class="card tab-pane fade show active border-top-0"
-                          id="one"
-                          role="tabpanel"
-                          aria-labelledby="one-tab">
-                          <div class="card-body">${UICoup.generateForm(name, id, false)}</div>
-                        </div>
-                        <div class="card tab-pane fade"
-                            id="multi"
-                            role="tabpanel"
-                            aria-labelledby="multi-tab">
-                            <div class="card-body">${UICoup.generateForm(name, id+ '-multi', true)}</div>
-                        </div>
-                      </div>`
-      var el = document.querySelector(cls)
-      el.insertAdjacentHTML('beforeend', menu)
-      el.insertAdjacentHTML('beforeend', content)
-    }
-    var generateModal = function (id) {
-      var html = `<div
-                    class="modal fade" id="${id}"
-                    tabindex="-1"
-                    role="dialog"
-                    aria-labelledby="Recap" aria-hidden="true">
-                  <div class="modal-dialog modal-xl" role="document">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Recap</h5>
-                        <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                      </div>
-                      <div class="modal-body"></div>
-                      <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <a class="btn btn-success add-btn-coupon" data-dismiss="modal" href="#">Save</a>
-                      </div>
-                    </div>
-                  </div>
-                </div>`
-      return html
-    }
-    /**
-     *
-     * @param {*} cls
-     * @param {*} multi
-     */
-    var handelSelectProd = function (cls, multi) {
+    },
+    handelSelectProd: function (cls, multi) {
       var products = document.querySelectorAll('.selected--product input')
       products.forEach((el) => {
         el.addEventListener('click', function (e) {
@@ -582,17 +584,17 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
           console.log(el.dataset.multi)
           if (el.dataset.multi === "true") {
             prodForm.innerHTML = ''
-            generateTabs(cls, el.name, el.id, multi)
-            var file = UICoup.readFile()
+            UICoupon.generateTabs(cls, el.name, el.id, multi)
+            var file = UICoupon.readFile()
             console.log('file:', file)
-            var modal = generateModal(`${el.id}-modal`)
+            var modal = UICoupon.generateModal(`${el.id}-modal`)
             prodForm.insertAdjacentHTML('beforeend', templ)
             prodForm.insertAdjacentHTML('beforeend', modal)
-            UICoup.showRecap(`#${el.id}-modal`, prodForm.parentNode, el.name, file)
+            UICoupon.showRecap(`#${el.id}-modal`, prodForm.parentNode, el.name, file)
 
 
           } else {
-            var form = UICoup.generateForm(el.name, el.id)
+            var form = UICoupon.generateForm(el.name, el.id)
             var container = `<div id="${el.name}-content">
                               <div class='active'>
                               <h3 class = "card-title" > Veuiller remplire les informations </h3>
@@ -602,10 +604,10 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
 
             prodForm.innerHTML = ''
             prodForm.insertAdjacentHTML('beforeend', container)
-            var modal = generateModal(`${el.id}-modal`)
+            var modal = UICoupon.generateModal(`${el.id}-modal`)
             prodForm.insertAdjacentHTML('beforeend', templ)
             prodForm.insertAdjacentHTML('beforeend', modal)
-            UICoup.showRecap(`#${el.id}-modal`, prodForm.parentNode, el.name)
+            UICoupon.showRecap(`#${el.id}-modal`, prodForm.parentNode, el.name)
 
           }
 
@@ -615,11 +617,9 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
         })
       })
 
-    }
-    btnsAddCoupon.forEach(function (el) {
-      el.addEventListener('click', (e) => {
-        console.log(el.dataset.target)
-        var main = document.querySelector('.couponChoiceCat')
+    },
+    generateMain: function () {
+      var main = document.querySelector('.couponChoiceCat')
         main.innerHTML = '';
         var content = `<div class="couponAddContent col-md-9">
                           <div class="card">
@@ -636,24 +636,38 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
                           </div>
                         </div>`
         main.insertAdjacentHTML('beforeend', content)
-        var cat = el.dataset.target.charAt(0).toUpperCase() + el.dataset.target.slice(1)
 
-        Store.ShowData('products?cat=' + el.dataset.target, function (obj) {
-          console.log("categories Products", obj)
-          var products = UICoup.generateSelectProd(obj)
-          document.querySelector('.couponAddContent .products').insertAdjacentHTML('beforeend', products + '<hr>')
-          handelSelectProd('.couponAddContent .products-form')
-          UICoup.closeCat()
-        })
-        Store.ShowData('categories?title=' + cat, function (obj) {
+    }
+  }
+})()
 
-          UICoup.generateCard('.couponChoiceCat', obj[0])
+var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
 
-        })
-
-
+  var genCouponCenter = function (el) {
+    UICoup.generateMain()
+    var cat = el.dataset.target.charAt(0).toUpperCase() + el.dataset.target.slice(1)
+    Store.ShowData('products?cat=' + el.dataset.target, function (obj) {
+      var products = UICoup.generateSelectProd(obj)
+      document.querySelector('.couponAddContent .products').insertAdjacentHTML('beforeend', products + '<hr>')
+      UICoup.handelSelectProd('.couponAddContent .products-form')
+      UICoup.closeCat()
+    })
+    Store.ShowData('categories?title=' + cat, function (obj) {
+      UICoup.generateCard('.couponChoiceCat', obj[0])
+    })
+  }
+  //see the link above to see where the variable fileTobeRead comes from.
+  var setupEvents = function () {
+    var btnsAddCoupon = document.querySelectorAll('.addCoupon')
+    /**
+     *
+     * @param {*} cls
+     * @param {*} multi
+     */
+    btnsAddCoupon.forEach(function (el) {
+      el.addEventListener('click', (e) => {
+        genCouponCenter(el)
       })
-
     })
   }
   return {
@@ -661,7 +675,6 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
       var data = CouponCtrl.getData(function (obj) {
         obj.forEach(function (el) {
           UICoup.generateCard('.couponChoiceCat', el)
-
         })
         setupEvents()
       })

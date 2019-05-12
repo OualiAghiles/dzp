@@ -24,6 +24,7 @@ var UICoupon = (function () {
     addModal: '.add-coupons'
   }
   var showRecapAddCoupModal = function (modalId, obj) {
+    var info = obj
     // Logout Modal
     var insertInfo = function (tab) {
       var list = ''
@@ -56,11 +57,12 @@ var UICoupon = (function () {
                     </tr>
                   </thead>
                   <tbody>
-                    ${insertInfo(obj)}
+                    ${insertInfo(info)}
 
                   </tbody>
                 </table>`
     var modal = document.querySelector(`${modalId} .modal-body`)
+    modal.innerHTML = ""
     modal.insertAdjacentHTML('beforeend', html)
 
 
@@ -129,7 +131,13 @@ var UICoupon = (function () {
                     type = "${obj.type}",
                     aria-describedby = '${obj.desc}'
                     value = "${obj.val}"
-                    placeholder = "${obj.placeH}">
+                    placeholder = "${obj.placeH}"
+                    required = "required">
+                    <div class = "valid-feedback" >
+                      Looks good!
+                      </div>
+                    <div class = "invalid-feedback" >
+                      Please choose a username.. </div>
                   </div>`
       return html
     },
@@ -146,7 +154,8 @@ var UICoupon = (function () {
                     type = "${obj.type}",
                     aria-describedby = '${obj.desc}'
                     value = "${obj.val}"
-                    placeholder = "${obj.placeH}">
+                    placeholder = "${obj.placeH}"
+                    required >
                     <label class="custom-file-label" for="${obj.id}">${obj.label}</label>
                   </div>`
       return html
@@ -248,6 +257,7 @@ var UICoupon = (function () {
             valide: true
           })
 
+
         } else {
           var codeCoupon = content.querySelector(`#${el}-content .active .codeCouponMulti`)
           console.log(file)
@@ -265,12 +275,23 @@ var UICoupon = (function () {
             console.log(cp)
             data.push(cp)
           })
+
         }
 
-        console.table([data])
-
+        var form = document.querySelector('.active .needs-validation');
+        //Loop over them and prevent submission
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+          console.log('form', form)
+        }
+        form.classList.add('was-validated');
         document.querySelector(`${target} .modal-body`).innerHTML = ''
         showRecapAddCoupModal(target, data)
+        source.value = ''
+        devise = ""
+        montant = ""
+        codeCoupon.value = ""
         return data
       })
       //
@@ -286,7 +307,7 @@ var UICoupon = (function () {
         })
         console.log(obj)
       })
-      return data
+      data = []
 
     },
     /**
@@ -296,7 +317,7 @@ var UICoupon = (function () {
      * @param {*} multi
      */
     generateForm: function (cat, ref, multi) {
-      var html = `<form>
+      var html = `<form class='needs-validation' novalidate>
                     <div class="form-row">
                       ${UICoupon.generateInputs({
                         id: cat+'-source-'+ref,
@@ -547,7 +568,7 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
                       <div class="action text-right">
                         <button
                           class="btn btn-primary showRecap"
-                          type="button" role="button"
+                          type="submit" role="button"
                           data-toggle="modal"
                           data-target="#${el.id}-modal" > Voir le resumé </button>
                         <button

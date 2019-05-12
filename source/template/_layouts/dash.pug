@@ -1,0 +1,105 @@
+// Content Wrapper
+#content-wrapper.d-flex.flex-column
+  // Main Content
+  #content
+    include header
+    // Begin Page Content
+    .container-fluid
+      // Page Heading
+      h1.h3.mb-4.text-gray-800 #{titlePage}
+      .row.recapStat
+        .col-xl-3.col-md-6.mb-4
+          .card.border-left-primary.shadow.h-100.py-2
+            .card-body
+              .row.no-gutters.align-items-center
+                .col.mr-2
+                  .text-xs.font-weight-bold.text-primary.text-uppercase.mb-1 Total Products
+                  .h5.mb-0.font-weight-bold.text-gray-800 50
+                .col-auto
+                  i.fas.fa-boxes.fa-2x.text-gray-300
+        .col-xl-3.col-md-6.mb-4
+          .card.border-left-success.shadow.h-100.py-2
+            .card-body
+              .row.no-gutters.align-items-center
+                .col.mr-2
+                  .text-xs.font-weight-bold.text-success.text-uppercase.mb-1 Total Sales
+                    samll (TODAY)
+                  .h5.mb-0.font-weight-bold.text-gray-800 $645
+                .col-auto
+                  i.fas.fa-dollar-sign.fa-2x.text-gray-300
+        .col-xl-3.col-md-6.mb-4
+          .card.border-left-warning.shadow.h-100.py-2
+            .card-body
+              .row.no-gutters.align-items-center
+                .col.mr-2
+                  .text-xs.font-weight-bold.text-warning.text-uppercase.mb-1 Pending Requests
+                  .h5.mb-0.font-weight-bold.text-gray-800 18
+                .col-auto
+                  i.fas.fa-comments.fa-2x.text-gray-300
+        .col-xl-3.col-md-6.mb-4
+          .card.border-left-info.shadow.h-100.py-2
+            .card-body
+              .row.no-gutters.align-items-center
+                .col.mr-2
+                  .text-xs.font-weight-bold.text-info.text-uppercase.mb-1 Tasks
+                  .row.no-gutters.align-items-center
+                    .col-auto
+                      .h5.mb-0.mr-3.font-weight-bold.text-gray-800 50%
+                    .col
+                      .progress.progress-sm.mr-2
+                        .progress-bar.bg-info(role='progressbar', style='width: 50%', aria-valuenow='50', aria-valuemin='0', aria-valuemax='100')
+                .col-auto
+                  i.fas.fa-clipboard-list.fa-2x.text-gray-300
+      .row
+        .col-xl-8.col-lg-7
+          .card.shadow.mb-4
+            // Card Header - Dropdown
+            .card-header.py-3.d-flex.flex-row.align-items-center.justify-content-between
+              h6.m-0.font-weight-bold.text-primary Tasks
+              .dropdown.no-arrow
+                a#dropdownMenuLink.dropdown-toggle(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                  i.fas.fa-ellipsis-v.fa-sm.fa-fw.text-gray-400
+                .dropdown-menu.dropdown-menu-right.shadow.animated--fade-in(aria-labelledby='dropdownMenuLink', x-placement='bottom-end', style='position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(17px, 19px, 0px);')
+                  .dropdown-header Dropdown Header:
+                  a.dropdown-item(href='#') Action
+                  a.dropdown-item(href='#') Another action
+                  .dropdown-divider
+                  a.dropdown-item(href='#') Something else here
+            // Card Body
+            .card-body
+        .col-xl-4.col-lg-5
+          .card.shadow.mb-4
+            // Card Header - Dropdown
+            .card-header.py-3.d-flex.flex-row.align-items-center.justify-content-between
+              h6.m-0.font-weight-bold.text-primary Weather
+              .dropdown.no-arrow
+                a#dropdownMenuLink.dropdown-toggle(href='#', role='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+                  i.fas.fa-ellipsis-v.fa-sm.fa-fw.text-gray-400
+                .dropdown-menu.dropdown-menu-right.shadow.animated--fade-in(aria-labelledby='dropdownMenuLink')
+                  .dropdown-header Dropdown Header:
+                  a.dropdown-item(href='#') Action
+                  a.dropdown-item(href='#') Another action
+                  .dropdown-divider
+                  a.dropdown-item(href='#') Something else here
+            // Card Body
+            .card-body
+
+
+
+
+    // /.container-fluid
+
+    // End of Main Content
+    // Footer
+    footer.sticky-footer.bg-white
+      .container.my-auto
+        .copyright.text-center.my-auto
+          span Copyright © DZPREMIUM 2019
+    // End of Footer
+    // End of Content Wrapper
+    // End of Page Wrapper
+    // Scroll to Top Button
+    a.scroll-to-top.rounded(href='#page-top')
+      i.fas.fa-angle-up
+
+    // Bootstrap core JavaScript

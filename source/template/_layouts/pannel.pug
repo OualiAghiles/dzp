@@ -10,65 +10,6 @@
       h1.h3.mb-4.text-gray-800 #{titlePage}
       .row.couponChoiceCat
         .couponAddContent.d-none()
-          #recapModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
-            .modal-dialog.modal-xl(role='document')
-              .modal-content
-                .modal-header
-                  h5#exampleModalLabel.modal-title recap
-                  button.close(type='button', data-dismiss='modal', aria-label='Close')
-                    span(aria-hidden='true') ×
-                .modal-body
-                .modal-footer
-                  button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
-                  a.btn.btn-success.add-btn-coupon(href='#') Save
-
-          h5 Choisir le produit
-              a(href="#").closeCat
-                i.fas.fa-times
-          .card.add-jeux
-            .card-body
-              hr
-              h5 Choisir type d'ajout
-              ul#myTab.nav.nav-tabs(role='tablist')
-                li.nav-item
-                  a#one-tab.nav-link.active(data-toggle='tab', href='#one', role='tab', aria-controls='one', aria-selected='true') Unique
-                li.nav-item
-                  a#multi-tab.nav-link(data-toggle='tab', href='#multi', role='tab', aria-controls='multi', aria-selected='false') Multiple
-
-              #myTabContent.tab-content
-                #one.card.tab-pane.fade.show.active.border-top-0(role='tabpanel', aria-labelledby='one-tab')
-                  .card-body
-                    .testForm
-                    hr
-                    .action.text-right
-                      button.btn.btn-primary.showRecap(type="button", role="button",  data-toggle='modal', data-target='#recapModal') Voir le resumé
-                      button.btn.btn-success(type="button", role="button") Sauvegarder
-
-                #multi.tab-pane.fade(role='tabpanel', aria-labelledby='multi-tab')
-                  .card.border-top-0
-                    .card-body
-                      form(action="post")
-                        .form-row
-                          .form-group.col-md-4
-                            label(for='sourceCoupon') Source
-                            input#sourceCoupon.sourceCoupon.form-control(type='text', aria-describedby='source Coupon', placeholder='Enter la source')
-
-                          .form-group.col-md-4
-                            label(for='prixAchat') Prix Achat
-                            input#prixAchat.prixAchat.form-control(type='number', aria-describedby='prix Coupon', placeholder='Enter le prix d\'achat')
-                          .form-group.col-md-4
-                            label(for='prixVente') Prix Vente
-                            input#prixVente.prixVente.form-control(type='number', aria-describedby='vente Coupon', placeholder='Enter le prix dde vente')
-                          .form-group.col-md-12
-                            .custom-file
-                              input#customFile.custom-file-input(type='file', lang="fr")
-                              label.custom-file-label(for='customFile') Choisir un fichier
-
-                      hr
-                      .action.text-right
-                        button.btn.btn-primary.showRecap(type="button", role="button",  data-toggle='modal', data-target='#recapModal') Voir le resumé
-                        button.btn.btn-success(type="button", role="button") Sauvegarder
-
 
 
 

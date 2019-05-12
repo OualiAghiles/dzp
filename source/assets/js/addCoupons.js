@@ -38,7 +38,7 @@ var UICoupon = (function () {
                       <td>${el.prixVente}</td>
                       <td>${el.codeCoupon}</td>
                       </tr>`
-        list = html
+        list = list + html
       })
       return list
     }
@@ -62,6 +62,7 @@ var UICoupon = (function () {
                 </table>`
     var modal = document.querySelector(`${modalId} .modal-body`)
     modal.insertAdjacentHTML('beforeend', html)
+
 
   }
   var todayDate = function () {
@@ -208,7 +209,8 @@ var UICoupon = (function () {
      * @param {*} cat
      * @param {*} content
      */
-    showRecap: function (target, content, cat) {
+    showRecap: function (target, content, cat, file) {
+
       var showAction = content.querySelector(`[data-target="${target}"]`)
       var el = cat
       console.log(el)
@@ -218,44 +220,76 @@ var UICoupon = (function () {
         var activeTab = content.querySelector(`#${el}-content .active`)
         var montant = ''
         var devise = ''
-        if (activeTab.id !== "multi") {
-          console.log('remove some inputs value')
-          var montant = content.querySelector(`#${el}-content .active .montantCoupon`).value
-          devise = content.querySelector(`#${el}-content .active .devise`)
-          devise = devise.options[devise.selectedIndex].value
-        }
+        var codeCoupon
+        var cat, produit;
         var source = content.querySelector(`#${el}-content .active .sourceCoupon`)
         var prixAchat = content.querySelector(`#${el}-content .active .prixAchat`)
         var prixVente = content.querySelector(`#${el}-content .active .prixVente`)
-        var codeCoupon = content.querySelector(`#${el}-content .active .codeCoupon`)
-        console.log(source.value)
-
-        var cat, produit;
         for (var i = 0; i < radios.length; i++) {
           if (radios[i].checked) {
             cat = radios[i].getAttribute('name')
             produit = radios[i].getAttribute('id')
           }
         }
-        data.push({
-          cat: cat,
-          produitRef: produit,
-          source: source.value,
-          montant: montant,
-          devise: devise,
-          prixAchat: parseInt(prixAchat.value) * parseInt(montant.value),
-          prixVente: parseInt(prixVente.value) * parseInt(montant.value),
-          codeCoupon: codeCoupon.value,
-          date: todayDate(),
-          valide: true
-        })
-        console.log(data)
+        if (activeTab.id !== "multi") {
+          console.log('remove some inputs value')
+          var montant = content.querySelector(`#${el}-content .active .montantCoupon`).value
+          devise = content.querySelector(`#${el}-content .active .devise`)
+          devise = devise.options[devise.selectedIndex].value
+          codeCoupon = content.querySelector(`#${el}-content .active .codeCoupon`)
+          data.push({
+            cat: cat,
+            produitRef: produit,
+            source: source.value,
+            montant: montant,
+            devise: devise,
+            prixAchat: parseInt(prixAchat.value) * parseInt(montant),
+            prixVente: parseInt(prixVente.value) * parseInt(montant),
+            codeCoupon: codeCoupon.value,
+            date: todayDate(),
+            valide: true
+          })
+
+        } else {
+          var codeCoupon = content.querySelector(`#${el}-content .active .codeCouponMulti`)
+          console.log(file)
+          file.forEach(function (el) {
+            var cp = Object.assign(el, {
+              cat: cat,
+              produitRef: produit,
+              source: source.value,
+              prixAchat: parseInt(prixAchat.value) * parseInt(el.montant),
+              prixVente: parseInt(prixVente.value) * parseInt(el.montant),
+              date: todayDate(),
+              valide: true
+
+            })
+            console.log(cp)
+            data.push(cp)
+          })
+        }
+
+        console.table([data])
+
         document.querySelector(`${target} .modal-body`).innerHTML = ''
         showRecapAddCoupModal(target, data)
         return data
       })
       //
+      var addBtnCoupon = document.querySelector('.add-btn-coupon')
+      addBtnCoupon.addEventListener('click', function (e) {
+        e.preventDefault()
+        var obj = data
+        obj.forEach(function (el) {
+          Store.AddData('coupons', el, function (t) {
+
+            console.log(t)
+          })
+        })
+        console.log(obj)
+      })
       return data
+
     },
     /**
      *
@@ -323,7 +357,7 @@ var UICoupon = (function () {
                         placeH: "Indiquer le code a ajouter"
                         }): UICoupon.generateInputFile({
                           id: cat + '-codeCoupon-' + ref,
-                          cls: "codeCoupon",
+                          cls: "codeCouponMulti",
                           type: "file",
                           desc: '',
                           val: "",
@@ -360,75 +394,50 @@ var UICoupon = (function () {
                     </select>
                   </div>`
       return html
+    },
+    readFile: function () {
+      var input = document.querySelector('.codeCouponMulti')
+      var tab = []
+      input.addEventListener('change', function (e) {
+        console.log(input.files[0])
+        var reader = new FileReader()
+        reader.onload = function () {
+          var lines = reader.result.split('\n')
+
+          var devise = ''
+          lines.forEach(function (el) {
+            var t = el.replace(',', '')
+            t = t.replace(' ', '')
+            if (t.indexOf('$') !== -1) {
+              t = t.replace('$', '')
+              devise = "dollar"
+            }
+            if (t.indexOf('€') !== -1) {
+              t = t.replace('€', '')
+              devise = "euro"
+            }
+            t = t.split(':')
+            var data = {
+              devise: devise,
+              montant: t[0],
+              codeCoupon: t[1]
+            }
+            if (data.codeCoupon !== undefined) {
+
+              tab.push(data)
+            }
+          })
+          return tab
+        }
+        reader.readAsText(input.files[0])
+      }, false)
+      return tab
     }
   }
 })()
 
 var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
 
-  window.onload = function () {
-    var arrCoupn = []
-    //Check the support for the File API support
-    if (window.File && window.FileReader && window.FileList && window.Blob) {
-      var fileSelected = document.getElementById('txtfiletoread');
-      fileSelected.addEventListener('change', function (e) {
-        //Set the extension for the file
-        var fileExtension = /text.*/;
-        //Get the file object
-        var fileTobeRead = fileSelected.files[0];
-        //Check of the extension match
-        if (fileTobeRead.type.match(fileExtension)) {
-          //Initialize the FileReader object to read the 2file
-          var fileReader = new FileReader();
-          fileReader.onload = function (e) {
-            var fileContents = document.getElementById('msg');
-            //fileContents.innerText = fileReader.result;
-            var arrayOfLines = fileReader.result.match(/[^\r\n]+/g);
-            console.log(arrCoupn)
-
-            arrayOfLines.forEach((el, id) => {
-              //console.log(el)
-              var coupn = el.replace(',', '')
-              coupn = coupn.replace(' ', '')
-              coupn = coupn.replace('$', '')
-              coupn = coupn.split(':')
-              arrCoupn.push({
-                amount: coupn[0],
-                code: coupn[1],
-                id: id,
-                dateAjout: UICoup.todayDate(),
-                source: 'gearbest',
-                prixAchat: '210',
-                prixVente: '230',
-                status: 'Valide',
-                devise: '$'
-              })
-
-            })
-            arrCoupn.forEach((el) => {
-              var html = `<div>
-                            <span>${el.amount} ${el.devise}</span>
-                            <span>${el.source}</span>
-                            <span>${el.code}</span>
-                            <span>${el.dateAjout}</span>
-
-</div>`
-              fileContents.insertAdjacentHTML('beforeend', html)
-            })
-          }
-          fileReader.readAsText(fileTobeRead);
-        } else {
-          alert("Please select text file");
-
-        }
-
-      }, false);
-
-    } else {
-      alert("Files are not supported");
-    }
-    console.log(arrCoupn)
-  }
   var hundleCpn = function (item) {
     item.addEventListener('click', function (e) {
       e.preventDefault()
@@ -535,7 +544,8 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
                       </div>
                       <div class="modal-body"></div>
                       <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button><a class="btn btn-success add-btn-coupon" href="#">Save</a>
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <a class="btn btn-success add-btn-coupon" data-dismiss="modal" href="#">Save</a>
                       </div>
                     </div>
                   </div>
@@ -565,22 +575,40 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
                           role="button">Sauvegarder</button>
                       </div>`
 
+
+
           console.log(el.dataset.multi)
           if (el.dataset.multi === "true") {
             prodForm.innerHTML = ''
             generateTabs(cls, el.name, el.id, multi)
+            var file = UICoup.readFile()
+            console.log('file:', file)
+            debugger
+            var modal = generateModal(`${el.id}-modal`)
+            prodForm.insertAdjacentHTML('beforeend', templ)
+            prodForm.insertAdjacentHTML('beforeend', modal)
+            UICoup.showRecap(`#${el.id}-modal`, prodForm.parentNode, el.name, file)
+
+
           } else {
             var form = UICoup.generateForm(el.name, el.id)
+            var container = `<div id="${el.name}-content">
+                              <div class='active'>
+                                ${form}
+                              </div>
+                            </div>`
 
             prodForm.innerHTML = ''
-            prodForm.insertAdjacentHTML('beforeend', form)
-          }
-          var modal = generateModal(`${el.id}-modal`)
+            prodForm.insertAdjacentHTML('beforeend', container)
+            var modal = generateModal(`${el.id}-modal`)
+            prodForm.insertAdjacentHTML('beforeend', templ)
+            prodForm.insertAdjacentHTML('beforeend', modal)
+            UICoup.showRecap(`#${el.id}-modal`, prodForm.parentNode, el.name)
 
-          prodForm.insertAdjacentHTML('beforeend', templ)
-          prodForm.insertAdjacentHTML('beforeend', modal)
+          }
+
           //var bodyModal = document.querySelector('.modal-body')
-          UICoup.showRecap(`#${el.id}-modal`, prodForm.parentNode, el.name)
+
 
         })
       })

@@ -95,6 +95,7 @@ var UICoupon = (function () {
           var h = `<code>${el}</code>`
           els = els + h + ' / '
         }
+
         return els
       }
       var html = `<div class="col-md-3" data-content="${obj.title.toLowerCase()}">
@@ -110,6 +111,7 @@ var UICoupon = (function () {
                   </div>
                 </div>
       </div>`
+
       var cont = document.querySelector(content)
 
       cont.insertAdjacentHTML('beforeend', html)
@@ -189,20 +191,16 @@ var UICoupon = (function () {
      * @param {*} cat
      * @param {*} container
      */
-    closeCat: function (addBtn, cat, container) {
-      var btn = container.querySelector('.closeCat')
+    closeCat: function () {
+      var btn = document.querySelector('.action')
+
       var close = function () {
-        container.classList.add('d-none')
-        container.querySelector(`.add-${cat}`).classList.add('d-none')
-        container.querySelector(`.add-${cat}`).classList.remove('active')
-        document.querySelectorAll('.couponChoiceCat .col-md-3').forEach((el) => {
-          el.classList.remove('d-none')
-          el.classList.remove('active')
-        })
-        addBtn.classList.remove('d-none')
+        console.log('close')
+        document.querySelector('.couponChoiceCat').innerHTML = ""
+        CoupnCenter.init()
+
       }
       btn.addEventListener('click', close)
-
     },
     /**
      *
@@ -455,23 +453,6 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
       })
 
 
-
-
-      //UICoup.showRecap(cat, couponAddContent)
-      //var infoCoupon = UICoup.showRecap(cat, couponAddContent)
-      //console.log('infoCoupon: ', infoCoupon)
-      /*var addBtnCoupon = couponAddContent.querySelector('.add-btn-coupon')
-      addBtnCoupon.addEventListener('click', function (e) {
-        e.preventDefault()
-        var obj = infoCoupon[0]
-        Store.AddData('coupons', obj, function (t) {
-
-          console.log(t)
-        })
-      })*/
-
-
-
       e.stopPropagation()
     }, false)
   }
@@ -488,7 +469,7 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
      * @param {*} id
      */
     var generateTabs = function (cls, name, id) {
-      var menu = `<ul class="nav nav-tabs" id="${name}-nav" role="tablist">
+      var menu = `<h3 class="card-title">Veuiller remplire les informations</h3><ul class="nav nav-tabs" id="${name}-nav" role="tablist">
                     <li class="nav-item">
                       <a class="nav-link active"
                         id="one-tab"
@@ -583,7 +564,6 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
             generateTabs(cls, el.name, el.id, multi)
             var file = UICoup.readFile()
             console.log('file:', file)
-            debugger
             var modal = generateModal(`${el.id}-modal`)
             prodForm.insertAdjacentHTML('beforeend', templ)
             prodForm.insertAdjacentHTML('beforeend', modal)
@@ -594,6 +574,7 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
             var form = UICoup.generateForm(el.name, el.id)
             var container = `<div id="${el.name}-content">
                               <div class='active'>
+                              <h3 class = "card-title" > Veuiller remplire les informations </h3>
                                 ${form}
                               </div>
                             </div>`
@@ -622,7 +603,11 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
         var content = `<div class="couponAddContent col-md-9">
                           <div class="card">
                             <div class="card-body">
-                              <h3 class="card-title">Veuiller choisire un produit</h3>
+                              <h3 class="card-title">Veuiller choisire un produit
+                                <a href="#" data-action= "initCoup" class="action">
+                                  <i class="fas fa-times"></i>
+                                </a>
+                              </h3>
                               <div class="products"></div>
                               <div class="products-form"></div>
 
@@ -637,6 +622,7 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
           var products = UICoup.generateSelectProd(obj)
           document.querySelector('.couponAddContent .products').insertAdjacentHTML('beforeend', products + '<hr>')
           handelSelectProd('.couponAddContent .products-form')
+          UICoup.closeCat()
         })
         Store.ShowData('categories?title=' + cat, function (obj) {
 

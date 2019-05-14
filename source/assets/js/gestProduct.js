@@ -147,6 +147,7 @@ var UIGestProducts = (function () {
                       })}
 
                       ${UIGestProducts.generateListInput(
+                        '4',
                         'categorie',
                         "Categorie",
                         cat+'-cat-'+ref,
@@ -165,7 +166,7 @@ var UIGestProducts = (function () {
      * @param {*} label
      * @param {*} arr
      */
-    generateListInput: function (cls, val, id, label, arr) {
+    generateListInput: function (size, cls, val, id, label, arr) {
       var options = function (arr) {
         var el;
         arr.forEach(function (opt) {
@@ -174,10 +175,9 @@ var UIGestProducts = (function () {
         })
         return el
       }
-      var html = `<div class="form-group col-md-4">
+      var html = `<div class="form-group col-md-${size}">
                     <label for="${id}">${val}</label>
-                    <select id="${id}" class=" prodCat custom-select ${cls}">
-                      <option value="">${label}</option>
+                    <select id="${id}" class=" custom-select ${cls}">
                       ${options(arr)}
                     </select>
                   </div>`

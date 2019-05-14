@@ -41,14 +41,14 @@ var UIGestCatsController = (function() {
                         <td>${addTags(obj.labels)}</td>
                         <td>${obj.desc}</td>
                         <td><div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-  <button type="button" data-toggle="modal" data-target="#${obj.title.toLowerCase()}" class="btn btn-success">
-  
-  <i class="fas fa-eye"></i>
-  
-</button>
-  <button type="button" data-toggle="modal" data-target="#${obj.title.toLowerCase()}" class="btn btn-warning"><i class="fas fa-edit"></i></button>
-  <button type="button" class="btn btn-danger deleteCat"><i class="fas fa-trash"></i></button>
-</div></td>
+                          <button type="button" data-toggle="modal" data-target="#${obj.title}" class="btn btn-success">
+                          
+                          <i class="fas fa-eye"></i>
+                          
+                        </button>
+                          <button type="button" data-toggle="modal" data-target="#${obj.title}" class="btn btn-warning"><i class="fas fa-edit"></i></button>
+                          <button type="button" class="btn btn-danger deleteCat"><i class="fas fa-trash"></i></button>
+                        </div></td>
                       </tr>`;
       return html
     }
@@ -65,12 +65,8 @@ var GestCatsController= (function(UICats,GestCats, Store) {
       //var cat = GestCats.newCat()
       rows = rows + UICats.generateRows(el)
       table.push(el)
-      var modal = Utils.generateModal(`${el.title}`,`${el.title.toLowerCase()}`)
-
-      cont.insertAdjacentHTML('beforeend', modal);
       return rows
     })
-
     var UItable = `<table class="table">
                     <thead>
                       <tr>
@@ -83,10 +79,27 @@ var GestCatsController= (function(UICats,GestCats, Store) {
                     <tbody>
                     ${rows}
                   </tbody>
-                </table>`
-
-
+                </table>`;
+    //var modal = Utils.generateModal(`${el.title}`,`${el.title.toLowerCase()}`)
+    //
     cont.insertAdjacentHTML('beforeend', UItable);
+    var modalBtns = document.querySelectorAll('[data-toggle="modal"]')
+    modalBtns.forEach(function(btn) {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault()
+        var title = btn.dataset.target
+        var target = title.substr(1, title.length)
+        var modalHtml = Utils.generateModal(`${target}`,`${target}`)
+        var modal = cont.querySelector('.modal')
+        if (modal) {
+          modal.parentNode.removeChild(modal)
+          cont.insertAdjacentHTML('afterbegin', modalHtml)
+        } else {
+          cont.insertAdjacentHTML('afterbegin', modalHtml)
+        }
+      }, false)
+    })
+    console.log(modalBtns)
     var dels = document.querySelectorAll('.deleteCat')
     console.log(dels)
     dels.forEach(function(btn) {

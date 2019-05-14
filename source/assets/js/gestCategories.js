@@ -93,7 +93,7 @@ var GestCatsController= (function(UICats,GestCats, Store) {
         var modal = cont.querySelector('.modal')
         var indaxCat = table.findIndex(x => x.title === `${target}`)
         console.log(indaxCat, table[indaxCat])
-        console.log(table[0])
+        var cat = GestCats.newCat(table[indaxCat])
         if (modal) {
           modal.parentNode.removeChild(modal)
           cont.insertAdjacentHTML('afterbegin', modalHtml)
@@ -103,10 +103,31 @@ var GestCatsController= (function(UICats,GestCats, Store) {
         var contentModal = ''
         if(btn.classList.contains('btnEdit')){
           contentModal = 'generate form'
+
         }
         if(btn.classList.contains('btnShow')){
-          contentModal = Utils.generateCard(`${title} .modal-body`,table[indaxCat])
+          contentModal = Utils.generateCard(`${title} .modal-body`,cat)
+          Utils.getData(`products?cat=${target.toLowerCase()}`,function(obj) {
+            console.log(obj)
+            var products = cont.querySelector('.modal-body')
+            products.insertAdjacentHTML('beforeend', `<div class="products col-md-9">
+              <h3 class="card-title"> Produit afilié<hr></h3>
+              <div class="row">
+              </div>
+              </div>`)
 
+
+            obj.forEach(function(el) {
+              var total=[];
+              Utils.getData(`coupons?produitRef=${el.ref}`,function(obj) {
+                var vendu = obj.filter(statut => statut.valide === false).length
+                console.log(vendu)
+                total = obj.length
+                products.querySelector('.products .row').insertAdjacentHTML('beforeend',Utils.gereratProductCards(el, total, vendu))
+              })
+
+            })
+          })
         }
       }, false)
     })

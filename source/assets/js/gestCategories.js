@@ -58,19 +58,20 @@ var UIGestCatsController = (function() {
 var GestCatsController= (function(UICats,GestCats, Store) {
 
   var cont = document.querySelector('.gestCats');
-  Store.ShowData('categories', function(obj) {
-
+ var table = []
+  Utils.getData('categories', function(obj) {
     var rows= ""
     obj.forEach((el)=>{
-
-      var row = UICats.generateRows(el)
-      rows = rows + row
+      //var cat = GestCats.newCat()
+      rows = rows + UICats.generateRows(el)
+      table.push(el)
       var modal = Utils.generateModal(`${el.title}`,`${el.title.toLowerCase()}`)
 
       cont.insertAdjacentHTML('beforeend', modal);
       return rows
     })
-    var table = `<table class="table">
+
+    var UItable = `<table class="table">
                     <thead>
                       <tr>
                         <th scope="col">Nom</th>
@@ -79,13 +80,13 @@ var GestCatsController= (function(UICats,GestCats, Store) {
                         <th scope="col">actions</th>
                       </tr>
                     </thead>
-                    <tbody>   
-                    ${rows}                 
+                    <tbody>
+                    ${rows}
                   </tbody>
                 </table>`
 
 
-    cont.insertAdjacentHTML('beforeend', table);
+    cont.insertAdjacentHTML('beforeend', UItable);
     var dels = document.querySelectorAll('.deleteCat')
     console.log(dels)
     dels.forEach(function(btn) {
@@ -96,8 +97,8 @@ var GestCatsController= (function(UICats,GestCats, Store) {
           text: "You won't be able to revert this!",
           type: 'warning',
           showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
+          confirmButtonColor: '#18d6b5',
+          cancelButtonColor: '#d63031',
           confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
           if (result.value) {
@@ -110,8 +111,8 @@ var GestCatsController= (function(UICats,GestCats, Store) {
         })
       })
     })
-  })
 
+  })
 
 
 })(UIGestCatsController, GestCats, Store)

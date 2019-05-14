@@ -46,8 +46,8 @@ var UIGestCatsController = (function() {
   <i class="fas fa-eye"></i>
   
 </button>
-  <button type="button" class="btn btn-warning"><i class="fas fa-edit"></i></button>
-  <button type="button" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+  <button type="button" data-toggle="modal" data-target="#${obj.title.toLowerCase()}" class="btn btn-warning"><i class="fas fa-edit"></i></button>
+  <button type="button" class="btn btn-danger deleteCat"><i class="fas fa-trash"></i></button>
 </div></td>
                       </tr>`;
       return html
@@ -86,7 +86,32 @@ var GestCatsController= (function(UICats,GestCats, Store) {
 
 
     cont.insertAdjacentHTML('beforeend', table);
+    var dels = document.querySelectorAll('.deleteCat')
+    console.log(dels)
+    dels.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        console.log('del')
+        Swal.fire({
+          title: 'Are you sure?',
+          text: "You won't be able to revert this!",
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+          if (result.value) {
+            Swal.fire(
+              'Deleted!',
+              'Your file has been deleted.',
+              'success'
+            )
+          }
+        })
+      })
+    })
   })
+
 
 
 })(UIGestCatsController, GestCats, Store)

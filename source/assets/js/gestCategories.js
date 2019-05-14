@@ -41,12 +41,12 @@ var UIGestCatsController = (function() {
                         <td>${addTags(obj.labels)}</td>
                         <td>${obj.desc}</td>
                         <td><div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                          <button type="button" data-toggle="modal" data-target="#${obj.title}" class="btn btn-success">
+                          <button type="button" data-toggle="modal" data-target="#${obj.title}" class="btn btn-success btnShow">
                           
                           <i class="fas fa-eye"></i>
                           
                         </button>
-                          <button type="button" data-toggle="modal" data-target="#${obj.title}" class="btn btn-warning"><i class="fas fa-edit"></i></button>
+                          <button type="button" data-toggle="modal" data-target="#${obj.title}" class="btn btn-warning btnEdit"><i class="fas fa-edit"></i></button>
                           <button type="button" class="btn btn-danger deleteCat"><i class="fas fa-trash"></i></button>
                         </div></td>
                       </tr>`;
@@ -91,11 +91,22 @@ var GestCatsController= (function(UICats,GestCats, Store) {
         var target = title.substr(1, title.length)
         var modalHtml = Utils.generateModal(`${target}`,`${target}`)
         var modal = cont.querySelector('.modal')
+        var indaxCat = table.findIndex(x => x.title === `${target}`)
+        console.log(indaxCat, table[indaxCat])
+        console.log(table[0])
         if (modal) {
           modal.parentNode.removeChild(modal)
           cont.insertAdjacentHTML('afterbegin', modalHtml)
         } else {
           cont.insertAdjacentHTML('afterbegin', modalHtml)
+        }
+        var contentModal = ''
+        if(btn.classList.contains('btnEdit')){
+          contentModal = 'generate form'
+        }
+        if(btn.classList.contains('btnShow')){
+          contentModal = Utils.generateCard(`${title} .modal-body`,table[indaxCat])
+
         }
       }, false)
     })

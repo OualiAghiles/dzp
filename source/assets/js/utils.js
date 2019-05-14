@@ -4,7 +4,7 @@ var Utils = (function() {
       var elems;
       Store.ShowData(rout, function (obj) {
         elems = obj
-        cb(elems)
+        return cb(elems)
       })
 
     },
@@ -183,7 +183,7 @@ var Utils = (function() {
                         <h5 class="modal-title" id="exampleModalLabel">${title}</h5>
                         <button class="close" type="button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                       </div>
-                      <div class="modal-body"></div>
+                      <div class="modal-body row"></div>
                       <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                         <a class="btn btn-success add-btn-coupon" data-dismiss="modal" href="#">Save</a>
@@ -231,6 +231,26 @@ var Utils = (function() {
         console.log(t)
       });
 
-    }
+    },
+    gereratProductCards: function (obj, nbrStock, vente) {
+      data = obj
+
+      var html = `<div class="col-md-6 mb-3 ">
+                    <div class="media editProduct bg-white shadow-sm p-3">
+                      <img src="${data.img}" class="align-self-center mr-3" width="70px" alt="${data.title}">
+                      <div class="media-body ">
+                        <h5 class="mt-0">${data.title}</h5>
+                        <p>${data.desc}</p>
+                        <p class="mb-0">
+                          <span class='badge badge-light'>${data.ref}</span>
+                          <span class='badge badge-light'>${data.cat}</span>
+                          <span class='badge badge-light'>${nbrStock}</span>
+                          <span class='badge badge-light'>${vente}</span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>`
+      return html
+    },
   }
 })()

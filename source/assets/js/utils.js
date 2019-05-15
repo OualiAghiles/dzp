@@ -23,6 +23,34 @@ var Utils = (function () {
         return cb(obj)
       })
     },
+    twb: function (scope, arr, cb) {
+      var $scope = scope
+
+      var bindClasses = arr;
+
+      var attachEvent = function (classNames) {
+        classNames.forEach(function (className) {
+          var elements = document.getElementsByClassName(className);
+          for (var index in elements) {
+            elements[index].onkeyup = function () {
+              for (var index in elements) {
+                //elements[index].value = this.value;
+                return cb(elements, this.value)
+              }
+            }
+          }
+          Object.defineProperty($scope, className, {
+            set: function (newValue) {
+              for (var index in elements) {
+                //elements[index].value = newValue;
+                return cb(elements[index], newValue)
+              }
+            }
+          });
+        });
+      };
+      attachEvent(bindClasses);
+    },
 
     /**
      *
@@ -62,11 +90,11 @@ var Utils = (function () {
       }
       var html = `<div class="col-md-3" data-content="${obj.title.toLowerCase()}">
                     <div class="card">
-                      <img class="card-img-top" src="${obj.img}" alt="${obj.title}" />
+                      <img class="card-img-top ${obj.title}-img" src="${obj.img}" alt="${obj.title}" />
                       <div class="card-body text-center">
-                        <h4 class="card-title cat__title">${obj.title}</h4>
-                        <p class="card-text cat__desc">${obj.desc}</p>
-                        <p class="card-text cat__tags">
+                        <h4 class="card-title cat__title ${obj.title}-name">${obj.title}</h4>
+                        <p class="card-text cat__desc ${obj.title}-desc">${obj.desc}</p>
+                        <p class="card-text cat__tags ${obj.title}-tags">
                         ${addTags(obj.labels)}
                         </p>
                         <a class="btn btn-outline-primary" href="#" data-target="${obj.title.toLowerCase()}">Ajouter des coupons</a>
@@ -115,9 +143,7 @@ var Utils = (function () {
                     <textarea rows="3" id = "${obj.id}"
                     class = "form-control ${obj.cls}"
                     placeholder = "${obj.placeH}"
-                    required = "required">
-                    ${obj.val}
-                    </textarea>
+                    required = "required">${obj.val}</textarea>
                     <div class = "valid-feedback" >
                       Looks good!
                       </div>

@@ -28,6 +28,7 @@ var UIGestCatsController = (function () {
   return {
     generateRows: function (obj) {
       var addTags = function (arr) {
+        console.log(arr)
         var els = '';
         for (let i = 0; i < arr.length; i++) {
           const el = arr[i];
@@ -109,10 +110,10 @@ var GestCatsController = (function (UICats, GestCats, Store) {
                               <div class="card-body">
                               <form class="form">
                                 <div class="form-row">
-                              ${Utils.generateInputs(6,{id: cat.title+"-name", label: "Nom de la catégorie", type: 'text', cls: "catTitle",placeH:"",val:cat.title})}
-                              ${Utils.generateInputs(6,{id: cat.title+"-img", label: "Lien vers l'image", type: 'text', cls: "catImg",placeH:"",val:cat.img })}
-                              ${Utils.generateInputs(6,{id: cat.title+"-tags", label: "Nom de la catégorie", type: 'text', cls: "catTags",placeH:"",val:cat.labels})}
-                              ${Utils.generateTextarea(6,{id: cat.title+"-desc", label: "Description de la catégorie", cls: "descTitle",placeH:"",val: cat.desc})}
+                              ${Utils.generateInputs(6,{id: cat.title+"-name", label: "Nom de la catégorie", type: 'text', cls: cat.title+"-name",placeH:"",val:cat.title})}
+                              ${Utils.generateInputs(6,{id: cat.title+"-img", label: "Lien vers l'image", type: 'text', cls: cat.title+"-img",placeH:"",val:cat.img })}
+                              ${Utils.generateInputs(6,{id: cat.title+"-tags", label: "Nom de la catégorie", type: 'text', cls: cat.title+"-tags",placeH:"",val:cat.labels})}
+                              ${Utils.generateTextarea(6,{id: cat.title+"-desc", label: "Description de la catégorie", cls: cat.title+"-desc",placeH:"",val: cat.desc})}
 </div></form>
 </div>
                             </div>
@@ -120,6 +121,7 @@ var GestCatsController = (function (UICats, GestCats, Store) {
           var modalBody = cont.querySelector('.modal-body')
           modalBody.insertAdjacentHTML('beforeend', bodyModalTemplate)
           Utils.generateCard(`${title} .modal-body`, cat)
+
         }
         if (btn.classList.contains('btnShow')) {
           Utils.generateCard(`${title} .modal-body`, cat)
@@ -145,18 +147,72 @@ var GestCatsController = (function (UICats, GestCats, Store) {
         }
         var initSuccess = function () {
           var btn = document.querySelector('.alertSuccess')
-          btn.addEventListener('click', function () {
-            var getInputs = {
-              name: document.querySelector(`#${cat.title}-name`).value,
-              img: document.querySelector(`#${cat.title}-img`).value,
-              tags: document.querySelector(`#${cat.title}-tags`).value,
-              desc: document.querySelector(`#${cat.title}-desc`).value
-            }
-            var data = Object.assign(cat, getInputs)
+          var getInputs = {
+            title: document.querySelector(`#${cat.title}-name`).value,
+            img: document.querySelector(`#${cat.title}-img`).value,
+            labels: document.querySelector(`#${cat.title}-tags`).value,
+            desc: document.querySelector(`#${cat.title}-desc`).value
+          }
 
+          var outputObj = {
+            title: "",
+            img: "",
+            labels: [],
+            desc: ""
+          }
+          Utils.twb(getInputs, [cat.title + "-name", cat.title + "-img", cat.title + "-tags", cat.title + "-desc"], function (els, val) {
+            var t = [...els]
+            t.forEach((el) => {
+              if (el.classList.contains('cat__title')) {
+                if (val === "") {
+                  val = getInputs.title
+                } else {
+                  getInputs.title = val
+                }
+
+                el.innerHTML = val
+              } else if (el.localName == 'img') {
+                if (val === "") {
+                  val = getInputs.img
+                } else {
+                  getInputs.img = val
+                }
+
+                el.src = val
+              } else if (el.classList.contains('cat__tags')) {
+                if (val === "") {
+                  val = getInputs.labels
+                } else {
+                  getInputs.labels = val
+                }
+                var tags = val.split(',')
+                var html = ""
+                tags.forEach(function (tag) {
+                  html = html + `<code>${tag}</code> / `
+                  return html
+                })
+                el.innerHTML = html
+
+              } else if (el.classList.contains('cat__desc')) {
+                if (val === "") {
+                  val = getInputs.desc
+                } else {
+                  getInputs.desc = val
+                }
+                el.innerHTML = val
+
+              }
+            })
+          })
+
+          btn.addEventListener('click', function () {
+
+            getInputs.labels = getInputs.labels.split(',')
+            var data = Object.assign(cat, getInputs)
+            console.log(data)
             Utils.updateData("categories", cat.id, data, function (obj) {
 
-              console.log(obj)
+              console.log(obj, data)
             })
             //e.preventDefault()
             Swal.fire({
@@ -192,9 +248,13 @@ var GestCatsController = (function (UICats, GestCats, Store) {
                 `La catégorie ${obj.title} à bien été supprimer`,
                 'success'
               )
+
             })
 
+
           }
+        }).then((result) => {
+          location.reload()
         })
 
       })

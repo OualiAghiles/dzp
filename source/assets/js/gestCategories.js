@@ -178,7 +178,7 @@ var GestCatsController = (function (UICats, GestCats, Store) {
         var cat = table[indaxCat]
         Swal.fire({
           title: 'Are you sure?',
-          text: "You won't be able to revert this!",
+          text: `Etes vous sure de supprimer La catégorie ${obj.title}`,
           type: 'warning',
           showCancelButton: true,
           confirmButtonColor: '#18d6b5',
@@ -186,16 +186,17 @@ var GestCatsController = (function (UICats, GestCats, Store) {
           confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
           if (result.value) {
-            Swal.fire(
-              'Deleted!',
-              'Your file has been deleted.',
-              'success'
-            )
+            Utils.delData('categories', cat.id, function (obj) {
+              Swal.fire(
+                'Deleted!',
+                `La catégorie ${obj.title} à bien été supprimer`,
+                'success'
+              )
+            })
+
           }
         })
-        Utils.delData('categories', cat.id, function (obj) {
-          console.log(obj)
-        })
+
       })
     })
 

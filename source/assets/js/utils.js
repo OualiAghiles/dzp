@@ -1,4 +1,4 @@
-var Utils = (function() {
+var Utils = (function () {
   return {
     getData: function (rout, cb) {
       var elems;
@@ -13,8 +13,13 @@ var Utils = (function() {
         console.log(obj)
       })
     },
-    updateData: function (rout,id, obj, cb) {
-      Store.UpdateData(rout, id, obj, function(obj) {
+    updateData: function (rout, id, obj, cb) {
+      Store.UpdateData(rout, id, obj, function (obj) {
+        return cb(obj)
+      })
+    },
+    delData: function (rout, id, cb) {
+      Store.DeleteData(rout, id, function (obj) {
         return cb(obj)
       })
     },

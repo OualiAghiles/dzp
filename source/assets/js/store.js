@@ -69,6 +69,17 @@ var Store = (function () {
           console.log(outputErrorData(error))
 
         })
+    },
+    DeleteData: function (cat, id, cb) {
+      axios.delete(`${dataOut.api}${cat}/${id}`)
+        .then(res => {
+          console.log(res);
+          console.log(res.data);
+        })
+      axios.delete(`${dataOut.api}${cat}`, {
+        params: data
+      })
+      return cb(data)
     }
   }
 })()

@@ -8,8 +8,8 @@ var Utils = (function() {
       })
 
     },
-    addData: function (data) {
-      Store.AddData('products', data, function (obj) {
+    addData: function (cat, data) {
+      Store.AddData(cat, data, function (obj) {
         console.log(obj)
       })
     },
@@ -64,7 +64,7 @@ var Utils = (function() {
                         <p class="card-text cat__tags">
                         ${addTags(obj.labels)}
                         </p>
-                        <a class="btn btn-outline-primary addCoupon" href="#" data-target="${obj.title.toLowerCase()}">Ajouter des coupons</a>
+                        <a class="btn btn-outline-primary" href="#" data-target="${obj.title.toLowerCase()}">Ajouter des coupons</a>
                   </div>
                 </div>
       </div>`
@@ -90,6 +90,29 @@ var Utils = (function() {
                     value = "${obj.val}"
                     placeholder = "${obj.placeH}"
                     required = "required">
+                    <div class = "valid-feedback" >
+                      Looks good!
+                      </div>
+                    <div class = "invalid-feedback" >
+                      Please choose a username.. </div>
+                  </div>`
+      return html
+    },
+    /**
+     *
+     * @param size
+     * @param obj
+     * @returns {string}
+     */
+    generateTextarea: function (size, obj) {
+      var html = `<div class="form-group col-md-${size}">
+                    <label for="${obj.id}">${obj.label}</label>
+                    <textarea rows="3" id = "${obj.id}"
+                    class = "form-control ${obj.cls}"
+                    placeholder = "${obj.placeH}"
+                    required = "required">
+                    ${obj.val}
+                    </textarea>
                     <div class = "valid-feedback" >
                       Looks good!
                       </div>
@@ -186,7 +209,7 @@ var Utils = (function() {
                       <div class="modal-body row"></div>
                       <div class="modal-footer">
                         <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <a class="btn btn-success add-btn-coupon" data-dismiss="modal" href="#">Save</a>
+                        <a class="btn btn-success alertSuccess" data-dismiss="modal" href="#">Save</a>
                       </div>
                     </div>
                   </div>

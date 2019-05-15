@@ -94,6 +94,7 @@ var GestCatsController= (function(UICats,GestCats, Store) {
         var indaxCat = table.findIndex(x => x.title === `${target}`)
         console.log(indaxCat, table[indaxCat])
         var cat = GestCats.newCat(table[indaxCat])
+        console.log(cat)
         if (modal) {
           modal.parentNode.removeChild(modal)
           cont.insertAdjacentHTML('afterbegin', modalHtml)
@@ -102,11 +103,27 @@ var GestCatsController= (function(UICats,GestCats, Store) {
         }
         var contentModal = ''
         if(btn.classList.contains('btnEdit')){
-          contentModal = 'generate form'
-
+         var bodyModalTemplate = `
+                          <div class="col-9 editForm">
+                          <div class="card">
+                              <div class="card-header"><h6>Form</h6></div>
+                              <div class="card-body">
+                              <form class="form">
+                                <div class="form-row">
+                              ${Utils.generateInputs(6,{id: cat.title+"-name", label: "Nom de la catégorie", type: 'text', cls: "catTitle",placeH:"",val:cat.title})}
+                              ${Utils.generateInputs(6,{id: cat.title+"-img", label: "Lien vers l'image", type: 'text', cls: "catImg",placeH:"",val:cat.img })}
+                              ${Utils.generateInputs(6,{id: cat.title+"-tags", label: "Nom de la catégorie", type: 'text', cls: "catTags",placeH:"",val:cat.labels})}
+                              ${Utils.generateTextarea(6,{id: cat.title+"-tags", label: "Description de la catégorie", cls: "descTitle",placeH:"",val: cat.desc})}
+</div></form>
+</div>
+                            </div>
+                            </div>`
+          var modalBody = cont.querySelector('.modal-body')
+          modalBody.insertAdjacentHTML('beforeend', bodyModalTemplate)
+          Utils.generateCard(`${title} .modal-body`,cat)
         }
         if(btn.classList.contains('btnShow')){
-          contentModal = Utils.generateCard(`${title} .modal-body`,cat)
+          Utils.generateCard(`${title} .modal-body`,cat)
           Utils.getData(`products?cat=${target.toLowerCase()}`,function(obj) {
             console.log(obj)
             var products = cont.querySelector('.modal-body')
@@ -115,8 +132,6 @@ var GestCatsController= (function(UICats,GestCats, Store) {
               <div class="row">
               </div>
               </div>`)
-
-
             obj.forEach(function(el) {
               var total=[];
               Utils.getData(`coupons?produitRef=${el.ref}`,function(obj) {
@@ -129,6 +144,24 @@ var GestCatsController= (function(UICats,GestCats, Store) {
             })
           })
         }
+        var initSuccess = function() {
+          var btn = document.querySelector('.alertSuccess')
+          btn.addEventListener('click', function(){
+
+            Utils.addData(cat.title+"?id="+cat.id, data, function(obj) {
+              console.log(obj)
+            })
+            console.log('hey')
+            //e.preventDefault()
+            Swal.fire({
+              type: 'success',
+              title: 'Your work has been saved',
+              showConfirmButton: false,
+              timer: 1500
+            })
+          })
+        }
+        initSuccess()
       }, false)
     })
     console.log(modalBtns)

@@ -1,4 +1,4 @@
-var GestCats = (function() {
+var GestCats = (function () {
   var cat = function (
     title,
     img,
@@ -6,14 +6,14 @@ var GestCats = (function() {
     desc,
     id) {
     this.title = title,
-    this.img = img,
-    this.labels = labels,
-    this.desc = desc,
-    this.id = id
+      this.img = img,
+      this.labels = labels,
+      this.desc = desc,
+      this.id = id
   }
   return {
-    newCat: function(obj) {
-      var t  = new cat(obj.title,
+    newCat: function (obj) {
+      var t = new cat(obj.title,
         obj.img,
         obj.labels,
         obj.desc,
@@ -24,7 +24,7 @@ var GestCats = (function() {
 })()
 
 
-var UIGestCatsController = (function() {
+var UIGestCatsController = (function () {
   return {
     generateRows: function (obj) {
       var addTags = function (arr) {
@@ -42,12 +42,12 @@ var UIGestCatsController = (function() {
                         <td>${obj.desc}</td>
                         <td><div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
                           <button type="button" data-toggle="modal" data-target="#${obj.title}" class="btn btn-success btnShow">
-                          
+
                           <i class="fas fa-eye"></i>
-                          
+
                         </button>
                           <button type="button" data-toggle="modal" data-target="#${obj.title}" class="btn btn-warning btnEdit"><i class="fas fa-edit"></i></button>
-                          <button type="button" class="btn btn-danger deleteCat"><i class="fas fa-trash"></i></button>
+                          <button type="button" class="btn btn-danger deleteCat" data-target="#${obj.title}"><i class="fas fa-trash"></i></button>
                         </div></td>
                       </tr>`;
       return html
@@ -55,13 +55,13 @@ var UIGestCatsController = (function() {
   }
 })()
 
-var GestCatsController= (function(UICats,GestCats, Store) {
+var GestCatsController = (function (UICats, GestCats, Store) {
 
   var cont = document.querySelector('.gestCats');
- var table = []
-  Utils.getData('categories', function(obj) {
-    var rows= ""
-    obj.forEach((el)=>{
+  var table = []
+  Utils.getData('categories', function (obj) {
+    var rows = ""
+    obj.forEach((el) => {
       //var cat = GestCats.newCat()
       rows = rows + UICats.generateRows(el)
       table.push(el)
@@ -84,15 +84,14 @@ var GestCatsController= (function(UICats,GestCats, Store) {
     //
     cont.insertAdjacentHTML('beforeend', UItable);
     var modalBtns = document.querySelectorAll('[data-toggle="modal"]')
-    modalBtns.forEach(function(btn) {
+    modalBtns.forEach(function (btn) {
       btn.addEventListener('click', function (e) {
         e.preventDefault()
         var title = btn.dataset.target
         var target = title.substr(1, title.length)
-        var modalHtml = Utils.generateModal(`${target}`,`${target}`)
+        var modalHtml = Utils.generateModal(`${target}`, `${target}`)
         var modal = cont.querySelector('.modal')
         var indaxCat = table.findIndex(x => x.title === `${target}`)
-        console.log(indaxCat, table[indaxCat])
         var cat = GestCats.newCat(table[indaxCat])
         console.log(cat)
         if (modal) {
@@ -102,8 +101,8 @@ var GestCatsController= (function(UICats,GestCats, Store) {
           cont.insertAdjacentHTML('afterbegin', modalHtml)
         }
         var contentModal = ''
-        if(btn.classList.contains('btnEdit')){
-         var bodyModalTemplate = `
+        if (btn.classList.contains('btnEdit')) {
+          var bodyModalTemplate = `
                           <div class="col-9 editForm">
                           <div class="card">
                               <div class="card-header"><h6>Form</h6></div>
@@ -113,18 +112,18 @@ var GestCatsController= (function(UICats,GestCats, Store) {
                               ${Utils.generateInputs(6,{id: cat.title+"-name", label: "Nom de la catégorie", type: 'text', cls: "catTitle",placeH:"",val:cat.title})}
                               ${Utils.generateInputs(6,{id: cat.title+"-img", label: "Lien vers l'image", type: 'text', cls: "catImg",placeH:"",val:cat.img })}
                               ${Utils.generateInputs(6,{id: cat.title+"-tags", label: "Nom de la catégorie", type: 'text', cls: "catTags",placeH:"",val:cat.labels})}
-                              ${Utils.generateTextarea(6,{id: cat.title+"-tags", label: "Description de la catégorie", cls: "descTitle",placeH:"",val: cat.desc})}
+                              ${Utils.generateTextarea(6,{id: cat.title+"-desc", label: "Description de la catégorie", cls: "descTitle",placeH:"",val: cat.desc})}
 </div></form>
 </div>
                             </div>
                             </div>`
           var modalBody = cont.querySelector('.modal-body')
           modalBody.insertAdjacentHTML('beforeend', bodyModalTemplate)
-          Utils.generateCard(`${title} .modal-body`,cat)
+          Utils.generateCard(`${title} .modal-body`, cat)
         }
-        if(btn.classList.contains('btnShow')){
-          Utils.generateCard(`${title} .modal-body`,cat)
-          Utils.getData(`products?cat=${target.toLowerCase()}`,function(obj) {
+        if (btn.classList.contains('btnShow')) {
+          Utils.generateCard(`${title} .modal-body`, cat)
+          Utils.getData(`products?cat=${target.toLowerCase()}`, function (obj) {
             console.log(obj)
             var products = cont.querySelector('.modal-body')
             products.insertAdjacentHTML('beforeend', `<div class="products col-md-9">
@@ -132,26 +131,33 @@ var GestCatsController= (function(UICats,GestCats, Store) {
               <div class="row">
               </div>
               </div>`)
-            obj.forEach(function(el) {
-              var total=[];
-              Utils.getData(`coupons?produitRef=${el.ref}`,function(obj) {
+            obj.forEach(function (el) {
+              var total = [];
+              Utils.getData(`coupons?produitRef=${el.ref}`, function (obj) {
                 var vendu = obj.filter(statut => statut.valide === false).length
                 console.log(vendu)
                 total = obj.length
-                products.querySelector('.products .row').insertAdjacentHTML('beforeend',Utils.gereratProductCards(el, total, vendu))
+                products.querySelector('.products .row').insertAdjacentHTML('beforeend', Utils.gereratProductCards(el, total, vendu))
               })
 
             })
           })
         }
-        var initSuccess = function() {
+        var initSuccess = function () {
           var btn = document.querySelector('.alertSuccess')
-          btn.addEventListener('click', function(){
+          btn.addEventListener('click', function () {
+            var getInputs = {
+              name: document.querySelector(`#${cat.title}-name`).value,
+              img: document.querySelector(`#${cat.title}-img`).value,
+              tags: document.querySelector(`#${cat.title}-tags`).value,
+              desc: document.querySelector(`#${cat.title}-desc`).value
+            }
+            var data = Object.assign(cat, getInputs)
 
-            Utils.addData(cat.title+"?id="+cat.id, data, function(obj) {
+            Utils.updateData("categories", cat.id, data, function (obj) {
+
               console.log(obj)
             })
-            console.log('hey')
             //e.preventDefault()
             Swal.fire({
               type: 'success',
@@ -164,12 +170,12 @@ var GestCatsController= (function(UICats,GestCats, Store) {
         initSuccess()
       }, false)
     })
-    console.log(modalBtns)
     var dels = document.querySelectorAll('.deleteCat')
-    console.log(dels)
-    dels.forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        console.log('del')
+    dels.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var target = btn.dataset.target.substr(1, btn.dataset.target.length)
+        var indaxCat = table.findIndex(x => x.title === `${target}`)
+        var cat = table[indaxCat]
         Swal.fire({
           title: 'Are you sure?',
           text: "You won't be able to revert this!",
@@ -186,6 +192,9 @@ var GestCatsController= (function(UICats,GestCats, Store) {
               'success'
             )
           }
+        })
+        Utils.delData('categories', cat.id, function (obj) {
+          console.log(obj)
         })
       })
     })

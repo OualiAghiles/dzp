@@ -25,12 +25,15 @@ var Store = (function () {
           myData = response.data
           //console.log(outputSuccessData(myData))
           if (cb) {
-            return cb(myData)
+            return cb(myData), myData
+          } else {
+            return myData
           }
         })
         .catch(function (error) {
           console.log(outputErrorData(error))
         })
+      return myData
     },
     /**
      *  [description]

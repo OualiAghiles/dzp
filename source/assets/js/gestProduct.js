@@ -63,9 +63,11 @@ var UIGestProducts = (function () {
                         <div class="row">
                           <div class="col-9">
                             <div class="card">
-                              <div class="card-title">
-                              initForm
-                              </div>
+                              <div class="card-body">
+                                <div class="card-title">
+                                initForm
+                                </div>
+</div>
                             </div>
                           </div>
                           <div class="col-3">
@@ -86,7 +88,7 @@ var UIGestProducts = (function () {
      * @param {*} obj
      */
     generateInputs: function (obj) {
-      var html = `<div class="form-group col-md-4">
+      var html = `<div class="form-group col-md-6">
                     <label for="${obj.id}">${obj.label}</label>
                     <input id = "${obj.id}"
                     class = "form-control ${obj.cls}"
@@ -122,37 +124,36 @@ var UIGestProducts = (function () {
       var html = `<form class='needs-validation' novalidate>
                     <div class="form-row">
                       ${UIGestProducts.generateInputs({
-                        id: cat+'-title-'+ref,
-                        cls: "producTtitle",
-                        type: "text",
-                        val: "",
-                        label: "Nom du produit",
-                        placeH: "Nom du produit"
-                      })}
+        id: cat+'-title-'+ref,
+        cls: "producTtitle",
+        type: "text",
+        val: "",
+        label: "Nom du produit",
+        placeH: "Nom du produit"
+      })}
                       ${UIGestProducts.generateInputs({
-                        id: cat+'-img-'+ref,
-                        cls: "producImg",
-                        type: "text",
-                        val: "",
-                        label: "Image du produit",
-                        placeH: "http://....jpg"
-                      })}
+        id: cat+'-img-'+ref,
+        cls: "producImg",
+        type: "text",
+        val: "",
+        label: "Image du produit",
+        placeH: "http://....jpg"
+      })}
                       ${UIGestProducts.generateInputs({
-                        id: cat+'-ref-'+ref,
-                        cls: "producRef",
-                        type: "text",
-                        val: "",
-                        label: "Referance du produit",
-                        placeH: "PSN"
-                      })}
+        id: cat+'-ref-'+ref,
+        cls: "producRef",
+        type: "text",
+        val: "",
+        label: "Referance du produit",
+        placeH: "PSN"
+      })}
 
                       ${UIGestProducts.generateListInput(
-                        '4',
-                        'categorie',
-                        "Categorie",
-                        cat+'-cat-'+ref,
-                        "Default value",
-                        [])}
+        'categorie',
+        "Categorie",
+        cat+'-cat-'+ref,
+        "Default value",
+        [])}
 
                     </div>
                   </form>`
@@ -166,7 +167,7 @@ var UIGestProducts = (function () {
      * @param {*} label
      * @param {*} arr
      */
-    generateListInput: function (size, cls, val, id, label, arr) {
+    generateListInput: function (cls, val, id, label, arr) {
       var options = function (arr) {
         var el;
         arr.forEach(function (opt) {
@@ -175,9 +176,10 @@ var UIGestProducts = (function () {
         })
         return el
       }
-      var html = `<div class="form-group col-md-${size}">
+      var html = `<div class="form-group col-md-4">
                     <label for="${id}">${val}</label>
-                    <select id="${id}" class=" custom-select ${cls}">
+                    <select id="${id}" class=" prodCat custom-select ${cls}">
+                      <option value="">${label}</option>
                       ${options(arr)}
                     </select>
                   </div>`
@@ -220,7 +222,7 @@ window.onload = function () {
       var target = el.dataset.target
       target = target.substr(1, target.length)
       var modal = container.querySelector('.modal')
-      var modalHtml = UIGestProducts.generateModal(target)
+      var modalHtml = Utils.generateModal(target,target)
       if (modal) {
         modal.parentNode.removeChild(modal)
         container.insertAdjacentHTML('afterbegin', modalHtml)
@@ -228,24 +230,51 @@ window.onload = function () {
       } else {
         container.insertAdjacentHTML('afterbegin', modalHtml)
       }
-      var test = container.querySelector('.modal-body .card-title')
+      var test = container.querySelector('.modal-body ')
 
       var filterProd = obj.filter(function (ref) {
         return ref.ref == target
       })
       test.innerHTML = ``
-      var form = UIGestProducts.generateForm(filterProd[0].cat, filterProd[0].ref)
+      //var form = UIGestProducts.generateForm(filterProd[0].cat, filterProd[0].ref)
+      var cats = obj.map(el => el.cat)
+      var categories = (names) => names.filter((v,i) => names.indexOf(v) === i)
+      console.log('hdy',categories(cats))
+      var form = `
+                          <div class="col-9 editForm">
+                          <div class="card">
+                              <div class="card-header"><h6>Form</h6></div>
+                              <div class="card-body">
+                              <form class="form">
+                                <div class="form-row">
+                              ${Utils.generateInputs(6,{id: filterProd[0].ref+"-name", label: "Nom du produit", type: 'text', cls: filterProd[0].ref+"-name",placeH:"",val:filterProd[0].title})}
+                              ${Utils.generateInputs(6,{id: filterProd[0].ref+"-img", label: "Lien vers l'image", type: 'text', cls: filterProd[0].ref+"-img",placeH:"",val:filterProd[0].img })}
+                              ${Utils.generateListInput(6,
+                                                        'Categories',
+                                                        "cats",
+                                                        filterProd[0].ref+'-cats',
+                                                        "Default value",
+        categories(cats), false)}                   
+                              ${Utils.generateInputs(6,{id: filterProd[0].ref+"-ref", label: "Nom de la ref", type: 'text', cls: filterProd[0].ref+"-ref",placeH:"",val:filterProd[0].ref})}
+                              ${Utils.generateTextarea(6,{id: filterProd[0].ref+"-desc", label: "Description de la catégorie", cls: filterProd[0].ref+"-desc",placeH:"",val: filterProd[0].desc})}
+                              ${Utils.generateToggle(6,{title:"Type d'ajout",id: filterProd[0].ref+"-multi", label: "Activer Multi ajout", cls: filterProd[0].ref+"-multi",multi: filterProd[0].multi})}
+</div></form>
+</div>
+                            </div>
+                            </div>`
       test.innerHTML = form
-      UIGestProducts.generateCats()
-      console.table([
-        filterProd[0].title,
-        filterProd[0].img,
-        filterProd[0].ref,
-        filterProd[0].desc,
-        filterProd[0].cat,
-        filterProd[0].multi,
-        filterProd[0].id
-      ])
+      var checkedMulti = document.querySelector(`#${filterProd[0].ref+"-multi"}`)
+      checkedMulti.checked = filterProd[0].multi
+      //$(`#${target} #${filterProd[0].ref+'-cats'}`).select2();
+      //document.querySelector(".select2").style.width = '100%'
+      $(document).ready(function() {
+        $(`#${target} #${filterProd[0].ref + '-cats'}`).select2({
+          dropdownParent: $(`#${target} `)
+        });
+        document.querySelector(".select2").style.width = '100%'
+      })
+      // UIGestProducts.generateCats()
+
     })
 
   })

@@ -78,22 +78,27 @@ var Utils = (function () {
      * @param obj
      */
     generateCard: function (content, obj) {
-      var addTags = function (arr) {
-        var els = ''
-        for (let i = 0; i < arr.length; i++) {
-          const el = arr[i];
-          var h = `<code>${el}</code>`
-          els = els + h + ' / '
-        }
 
-        return els
+      var addTags = function (arr) {
+        if(arr !== undefined) {
+          var els = ''
+          for (let i = 0; i < arr.length; i++) {
+            const el = arr[i];
+            var h = `<code>${el}</code>`
+            els = els + h + ' / '
+          }
+
+          return els
+        }else {
+          return obj.multi
+        }
       }
       var html = `<div class="col-md-3" data-content="${obj.title.toLowerCase()}">
                     <div class="card">
                       <img class="card-img-top ${obj.title}-img" src="${obj.img}" alt="${obj.title}" />
                       <div class="card-body text-center">
                         <h4 class="card-title cat__title ${obj.title}-name">${obj.title}</h4>
-                        <p class="card-text cat__desc ${obj.title}-desc">${obj.desc}</p>
+                        <p class="card-text cat__desc ${obj.title}-desc">${obj.desc || obj.cat}</p>
                         <p class="card-text cat__tags ${obj.title}-tags">
                         ${addTags(obj.labels)}
                         </p>

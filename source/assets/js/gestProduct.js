@@ -29,6 +29,34 @@ var UIGestProducts = (function () {
 
 
   return {
+    generateCard: function (content, obj) {
+      var addDetails = function (title, value) {
+        var template = `<hr />
+                        <p class="card-text">
+                          <span class="mr-3">${title}:</span>
+                          <span><code>${value}</code></span>
+                        </p>`
+        return template
+      }
+      var html = `<div class="card">
+                  <img class="card-img-top" src="${obj.img}" alt="${obj.title}" />
+                  <div class="card-body ">
+                    <h4 class = "card-title cat__title text-center"> ${obj.title}</h4>
+                    ${addDetails('Ref', obj.ref)}
+                    ${addDetails('Categorie', obj.cat)}
+                    ${addDetails('Mutli-ajout', obj.multi)}
+                    <p class="card-text cat__desc">
+                    <h5> Description :</h5>
+                    <span>${obj.desc}</span>
+                    </p>
+                  </div>
+                </div>`
+      var cont = document.querySelector(content)
+
+      cont.insertAdjacentHTML('beforeend', html)
+      console.log('added')
+      console.log(html)
+    },
     gereratCards: function (obj) {
       data = obj
 
@@ -264,6 +292,8 @@ window.onload = function () {
                             </div>`
       test.innerHTML = form
       var checkedMulti = document.querySelector(`#${filterProd[0].ref+"-multi"}`)
+      
+
       checkedMulti.checked = filterProd[0].multi
       //$(`#${target} #${filterProd[0].ref+'-cats'}`).select2();
       //document.querySelector(".select2").style.width = '100%'
@@ -273,7 +303,7 @@ window.onload = function () {
         });
         document.querySelector(".select2").style.width = '100%'
       })
-      // UIGestProducts.generateCats()
+
 
     })
 

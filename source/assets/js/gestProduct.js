@@ -246,29 +246,36 @@ var UIGestProducts = (function () {
 
 })()
 window.onload = function () {
+  var container = document.querySelector('.gestProducts')
+  var initSelect2 = function(target, obj) {
+    $(document).ready(function() {
+      var el = $(`#${target} #${obj.ref}-cats`)
+      el.value = obj.cat
+      el.select2({
+        dropdownParent: $(`#${target} `)
+      });
+      $(el).val(obj.cat).trigger('change')
+      document.querySelector(".select2").style.width = '100%'
 
-  var generateProductModal = function(obj, el) {
-    var target = el.dataset.target
-    target = target.substr(1, target.length)
-    var modal = container.querySelector('.modal')
-    var modalHtml = Utils.generateModal(target,target)
-    if (modal) {
-      modal.parentNode.removeChild(modal)
-      container.insertAdjacentHTML('afterbegin', modalHtml)
-    } else {
-      container.insertAdjacentHTML('afterbegin', modalHtml)
-    }
-    var productModalBody = container.querySelector('.modal-body ')
-
+    })
+  }
+  var initProductCardModal = function(target, obj) {
+    var element = obj.filter(el => (el ? el.ref === target: ''))
+    var html = `<div class="col-md-3"></div>`
+    document.querySelector(`#${target} .modal-body`).insertAdjacentHTML('beforeend', html)
+    UIGestProducts.generateCard(`#${target} .col-md-3`, element[0])
+  }
+  var initForm = function(target, obj) {
+    var cats = obj.map(el => el.cat)
+    //var tet =  Store.ShowData('categories', (data)=> console.log(data.title))
+    //console.log(tet)
+    var categories = (names) => names.filter((v,i) => names.indexOf(v) === i)
     var filterProd = obj.filter(function (ref) {
       return ref.ref === target
     })
-    productModalBody.innerHTML = ``
-    //var form = UIGestProducts.generateForm(filterProd[0].cat, filterProd[0].ref)
-    var cats = obj.map(el => el.cat)
-    var categories = (names) => names.filter((v,i) => names.indexOf(v) === i)
 
-    var form = `<div class="col-9 editForm">
+
+     var form = `<div class="col-9 editForm">
                           <div class="card">
                               <div class="card-header"><h6>Form</h6></div>
                               <div class="card-body">
@@ -289,22 +296,8 @@ window.onload = function () {
 </div>
                             </div>
                             </div>`
-    productModalBody.innerHTML = form
-    var checkedMulti = document.querySelector(`#${filterProd[0].ref+"-multi"}`)
-    checkedMulti.checked = filterProd[0].multi
-    $(document).ready(function() {
-      var el = $(`#${target} #${filterProd[0].ref + '-cats'}`)
-      el.select2({
-        dropdownParent: $(`#${target} `)
-      });
-      $(el).val(filterProd[0].cat).trigger('change')
-      document.querySelector(".select2").style.width = '100%'
-    })
-    var element = obj.filter(el => (el ? el.ref === target: ''))
-    console.log(element )
-    var html = `<div class="col-md-3"></div>`
-    document.querySelector(`#${target} .modal-body`).insertAdjacentHTML('beforeend', html)
-    UIGestProducts.generateCard(`#${target} .col-md-3`, element[0])
+
+    return form
   }
   var handleLoopClickEvent = function (cls, cb) {
     var els = document.querySelectorAll(cls)
@@ -316,7 +309,47 @@ window.onload = function () {
 
     }, false)
   }
-  var container = document.querySelector('.gestProducts')
+
+  var getInputs = function(id) {
+    var name = document.querySelector(`${id}-name`).value
+    var img = document.querySelector(`${id}-img`).value
+    var cat = document.querySelector(`${id}-cats`).value
+
+
+    var ref = document.querySelector(`${id}-ref`).value
+    var desc = document.querySelector(`${id}-desc`).value
+    var multi = document.querySelector(`${id}-multi`).checked
+    return{ title:name, img:img,cat:cat, ref:ref, desc:desc, multi:multi}
+
+  }
+
+  var generateProductModal = function(obj, el, cb) {
+    var target = el.dataset.target
+    target = target.substr(1, target.length)
+    var modal = container.querySelector('.modal')
+    var modalHtml = Utils.generateModal(target,target)
+    if (modal) {
+      modal.parentNode.removeChild(modal)
+      container.insertAdjacentHTML('afterbegin', modalHtml)
+    } else {
+      container.insertAdjacentHTML('afterbegin', modalHtml)
+    }
+    var productModalBody = container.querySelector('.modal-body ')
+    productModalBody.innerHTML = ``
+    productModalBody.innerHTML = initForm(target, obj)
+    // init multi
+    var filterProd = obj.filter(function (ref) {
+      return ref.ref === target
+    })
+    var checkedMulti = document.querySelector(`#${filterProd[0].ref+"-multi"}`)
+    checkedMulti.checked = filterProd[0].multi
+    // init select2
+    initSelect2(target, filterProd[0])
+    initProductCardModal(target, obj)
+    return cb(filterProd[0])
+    //UpdateProduct('.alertSuccess', filterProd[0].id, inputDate)
+  }
+
   GestProducts.getData(function (obj) {
     console.log(obj)
     obj.forEach(function (el) {
@@ -324,8 +357,17 @@ window.onload = function () {
       container.insertAdjacentHTML('beforeend', card)
     })
     handleLoopClickEvent('.editProduct',  (el)=> {
-      generateProductModal(obj, el)    })
+      generateProductModal(obj, el, (item) => {
+        var btnUpdate = document.querySelector('.alertSuccess')
+        btnUpdate.addEventListener('click', ()=> {
+          Utils.updateData('products',item.id,getInputs('#'+item.ref), (obj) => {
+            console.log(obj)
+          })
+        })
+
+    })
 
   })
   //p(products)
+  })
 }

@@ -16,24 +16,20 @@ var Store = (function () {
      *  [description]
      *  @method
      *  @param  {[string]} c [witch category to fetch ]
+     *  @param cb
      *  @return {[Object]}   [object from db]
      */
-    ShowData: function (c, cb) {
-      var myData
-      axios.get(`${dataOut.api}${c}`)
-        .then(function (response) {
-          myData = response.data
-          //console.log(outputSuccessData(myData))
-          if (cb) {
-            return cb(myData), myData
-          } else {
-            return myData
-          }
-        })
-        .catch(function (error) {
-          console.log(outputErrorData(error))
-        })
-      return myData
+    ShowData: async (c, cb) => {
+      var data;
+      try {
+        // fetch data from a url endpoint
+        const response = await axios.get(`${dataOut.api}${c}`);
+        data = await response.data;
+        return data, cb(data)
+      } catch (error) {
+        alert(error); // catches both errors
+      }
+
     },
     /**
      *  [description]

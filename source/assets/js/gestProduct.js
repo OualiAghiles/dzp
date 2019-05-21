@@ -2,11 +2,19 @@ var GestProducts = (function () {
 
 
   return {
+    /**
+     *
+     * @param data
+     */
     addData: function (data) {
       Store.AddData('products', data, function (obj) {
         console.log(obj)
       })
     },
+    /**
+     *
+     * @param cb
+     */
     getData: function (cb) {
       var elems;
       Store.ShowData("products", function (obj) {
@@ -14,6 +22,10 @@ var GestProducts = (function () {
         cb(elems)
       })
     },
+    /**
+     *
+     * @param cb
+     */
     getCats: function (cb) {
       var elems;
       Store.ShowData("categories", function (obj) {
@@ -25,10 +37,12 @@ var GestProducts = (function () {
 
 })()
 var UIGestProducts = (function () {
-
-
-
   return {
+    /**
+     *
+     * @param content
+     * @param obj
+     */
     generateCard: function (content, obj) {
       var addDetails = function (title, value) {
         var template = `<hr />
@@ -39,7 +53,7 @@ var UIGestProducts = (function () {
         return template
       }
       var html = `<div class="card">
-                  <img class="card-img-top" src="${obj.img}" alt="${obj.title}" />
+                  <img class="card-img-top" src="${obj.img}" alt="${obj.title}" width="150px"/>
                   <div class="card-body ">
                     <h4 class = "card-title cat__title text-center"> ${obj.title}</h4>
                     ${addDetails('Ref', obj.ref)}
@@ -54,9 +68,13 @@ var UIGestProducts = (function () {
       var cont = document.querySelector(content)
 
       cont.insertAdjacentHTML('beforeend', html)
-      console.log('added')
-      console.log(html)
+
     },
+    /**
+     *
+     * @param obj
+     * @returns {string}
+     */
     gereratCards: function (obj) {
       data = obj
 
@@ -75,6 +93,11 @@ var UIGestProducts = (function () {
                   </div>`
       return html
     },
+    /**
+     *
+     * @param id
+     * @returns {string}
+     */
     generateModal: function (id) {
       var html = `<div
                     class="modal fade" id="${id}"
@@ -140,15 +163,6 @@ var UIGestProducts = (function () {
      * @param {*} multi
      */
     generateForm: function (cat, ref) {
-      /*[
-        filterProd[0].title,
-        filterProd[0].img,
-        filterProd[0].ref,
-        filterProd[0].desc,
-        filterProd[0].cat,
-        filterProd[0].multi,
-        filterProd[0].id
-      ]*/
       var html = `<form class='needs-validation' novalidate>
                     <div class="form-row">
                       ${UIGestProducts.generateInputs({
@@ -213,13 +227,16 @@ var UIGestProducts = (function () {
                   </div>`
       return html
     },
+    /**
+     *
+     */
     generateCats: function () {
       var cats = document.querySelector('.prodCat')
       GestProducts.getCats(function (obj) {
         obj.forEach(el => {
           var t = el.title.toLowerCase()
           cats.insertAdjacentHTML('beforeend', `<option value = "${el.title.toLowerCase()}"> ${t} </option>`)
-          console.log(t)
+
         });
       })
 
@@ -229,11 +246,71 @@ var UIGestProducts = (function () {
 
 })()
 window.onload = function () {
+
+  var generateProductModal = function(obj, el) {
+    var target = el.dataset.target
+    target = target.substr(1, target.length)
+    var modal = container.querySelector('.modal')
+    var modalHtml = Utils.generateModal(target,target)
+    if (modal) {
+      modal.parentNode.removeChild(modal)
+      container.insertAdjacentHTML('afterbegin', modalHtml)
+    } else {
+      container.insertAdjacentHTML('afterbegin', modalHtml)
+    }
+    var productModalBody = container.querySelector('.modal-body ')
+
+    var filterProd = obj.filter(function (ref) {
+      return ref.ref === target
+    })
+    productModalBody.innerHTML = ``
+    //var form = UIGestProducts.generateForm(filterProd[0].cat, filterProd[0].ref)
+    var cats = obj.map(el => el.cat)
+    var categories = (names) => names.filter((v,i) => names.indexOf(v) === i)
+
+    var form = `<div class="col-9 editForm">
+                          <div class="card">
+                              <div class="card-header"><h6>Form</h6></div>
+                              <div class="card-body">
+                              <form class="form">
+                                <div class="form-row">
+                              ${Utils.generateInputs(6,{id: filterProd[0].ref+"-name", label: "Nom du produit", type: 'text', cls: filterProd[0].ref+"-name",placeH:"",val:filterProd[0].title})}
+                              ${Utils.generateInputs(6,{id: filterProd[0].ref+"-img", label: "Lien vers l'image", type: 'text', cls: filterProd[0].ref+"-img",placeH:"",val:filterProd[0].img })}
+                              ${Utils.generateListInput(6,
+      'Categories',
+      "cats",
+      filterProd[0].ref+'-cats',
+      "Default value",
+      categories(cats), false)}                   
+                              ${Utils.generateInputs(6,{id: filterProd[0].ref+"-ref", label: "Nom de la ref", type: 'text', cls: filterProd[0].ref+"-ref",placeH:"",val:filterProd[0].ref})}
+                              ${Utils.generateTextarea(6,{id: filterProd[0].ref+"-desc", label: "Description de la catégorie", cls: filterProd[0].ref+"-desc",placeH:"",val: filterProd[0].desc})}
+                              ${Utils.generateToggle(6,{title:"Type d'ajout",id: filterProd[0].ref+"-multi", label: "Activer Multi ajout", cls: filterProd[0].ref+"-multi",multi: filterProd[0].multi})}
+</div></form>
+</div>
+                            </div>
+                            </div>`
+    productModalBody.innerHTML = form
+    var checkedMulti = document.querySelector(`#${filterProd[0].ref+"-multi"}`)
+    checkedMulti.checked = filterProd[0].multi
+    $(document).ready(function() {
+      var el = $(`#${target} #${filterProd[0].ref + '-cats'}`)
+      el.select2({
+        dropdownParent: $(`#${target} `)
+      });
+      $(el).val(filterProd[0].cat).trigger('change')
+      document.querySelector(".select2").style.width = '100%'
+    })
+    var element = obj.filter(el => (el ? el.ref === target: ''))
+    console.log(element )
+    var html = `<div class="col-md-3"></div>`
+    document.querySelector(`#${target} .modal-body`).insertAdjacentHTML('beforeend', html)
+    UIGestProducts.generateCard(`#${target} .col-md-3`, element[0])
+  }
   var handleLoopClickEvent = function (cls, cb) {
     var els = document.querySelectorAll(cls)
     els.forEach(function (el) {
       el.addEventListener('click', function (e) {
-        e.preventDefault()
+        //e.preventDefault()
         return cb(el)
       })
 
@@ -246,66 +323,8 @@ window.onload = function () {
       var card = UIGestProducts.gereratCards(el)
       container.insertAdjacentHTML('beforeend', card)
     })
-    handleLoopClickEvent('.editProduct', function (el) {
-      var target = el.dataset.target
-      target = target.substr(1, target.length)
-      var modal = container.querySelector('.modal')
-      var modalHtml = Utils.generateModal(target,target)
-      if (modal) {
-        modal.parentNode.removeChild(modal)
-        container.insertAdjacentHTML('afterbegin', modalHtml)
-
-      } else {
-        container.insertAdjacentHTML('afterbegin', modalHtml)
-      }
-      var test = container.querySelector('.modal-body ')
-
-      var filterProd = obj.filter(function (ref) {
-        return ref.ref == target
-      })
-      test.innerHTML = ``
-      //var form = UIGestProducts.generateForm(filterProd[0].cat, filterProd[0].ref)
-      var cats = obj.map(el => el.cat)
-      var categories = (names) => names.filter((v,i) => names.indexOf(v) === i)
-      console.log('hdy',categories(cats))
-      var form = `
-                          <div class="col-9 editForm">
-                          <div class="card">
-                              <div class="card-header"><h6>Form</h6></div>
-                              <div class="card-body">
-                              <form class="form">
-                                <div class="form-row">
-                              ${Utils.generateInputs(6,{id: filterProd[0].ref+"-name", label: "Nom du produit", type: 'text', cls: filterProd[0].ref+"-name",placeH:"",val:filterProd[0].title})}
-                              ${Utils.generateInputs(6,{id: filterProd[0].ref+"-img", label: "Lien vers l'image", type: 'text', cls: filterProd[0].ref+"-img",placeH:"",val:filterProd[0].img })}
-                              ${Utils.generateListInput(6,
-                                                        'Categories',
-                                                        "cats",
-                                                        filterProd[0].ref+'-cats',
-                                                        "Default value",
-        categories(cats), false)}                   
-                              ${Utils.generateInputs(6,{id: filterProd[0].ref+"-ref", label: "Nom de la ref", type: 'text', cls: filterProd[0].ref+"-ref",placeH:"",val:filterProd[0].ref})}
-                              ${Utils.generateTextarea(6,{id: filterProd[0].ref+"-desc", label: "Description de la catégorie", cls: filterProd[0].ref+"-desc",placeH:"",val: filterProd[0].desc})}
-                              ${Utils.generateToggle(6,{title:"Type d'ajout",id: filterProd[0].ref+"-multi", label: "Activer Multi ajout", cls: filterProd[0].ref+"-multi",multi: filterProd[0].multi})}
-</div></form>
-</div>
-                            </div>
-                            </div>`
-      test.innerHTML = form
-      var checkedMulti = document.querySelector(`#${filterProd[0].ref+"-multi"}`)
-      
-
-      checkedMulti.checked = filterProd[0].multi
-      //$(`#${target} #${filterProd[0].ref+'-cats'}`).select2();
-      //document.querySelector(".select2").style.width = '100%'
-      $(document).ready(function() {
-        $(`#${target} #${filterProd[0].ref + '-cats'}`).select2({
-          dropdownParent: $(`#${target} `)
-        });
-        document.querySelector(".select2").style.width = '100%'
-      })
-
-
-    })
+    handleLoopClickEvent('.editProduct',  (el)=> {
+      generateProductModal(obj, el)    })
 
   })
   //p(products)

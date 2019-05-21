@@ -28,7 +28,6 @@ var UIGestCatsController = (function () {
   return {
     generateRows: function (obj) {
       var addTags = function (arr) {
-        console.log(arr)
         var els = '';
         for (let i = 0; i < arr.length; i++) {
           const el = arr[i];

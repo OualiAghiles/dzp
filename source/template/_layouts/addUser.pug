@@ -1,0 +1,38 @@
+#content-wrapper.d-flex.flex-column
+  // Main Content
+  #content
+    include header
+    // Begin Page Content
+    .container-fluid
+      // Page Heading
+      h1.h4.mb-4.text-gray-800 #{titlePage}
+      .addUser.mb-3
+        .card
+          .card-body
+            form
+              .row
+                .col
+                  input.form-control.user-email(type='text', placeholder='Email')
+                .col
+                  input.form-control.user-phone(type='text', placeholder='Phone')
+                .col
+                  input.form-control.user-city(type='text', placeholder='City')
+                .col-1
+                  button.btn.btn-outline-success.w-100.add-user add
+      hr
+      .listUsers
+        h3.h4.mb-4.text-gray-800 List of users
+        .card
+          .card-body
+            table.table
+              thead
+                tr
+                  th(scope='col') id
+                  th(scope='col') Email
+                  th(scope='col') Phone
+                  th(scope='col') City
+                  th(scope='col') Added
+                  th(scope='col') Nbr products
+                  th(scope='col') Actions
+              tbody
+

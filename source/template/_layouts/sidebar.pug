@@ -17,11 +17,11 @@ ul#accordionSidebar.navbar-nav.bg-gradient-primary.sidebar.sidebar-dark.accordio
   .sidebar-heading
     | Interface
   // Nav Item - Pages Collapse Menu
-  li.nav-item.active
+  li.nav-item
     a.nav-link.collapsed(href='#', data-toggle='collapse', data-target='#collapseTwo', aria-expanded='true', aria-controls='collapseTwo')
       i.fas.fa-fw.fa-cog
       span Gestions des produits
-    #collapseTwo.show.collapse(aria-labelledby='headingTwo', data-parent='#accordionSidebar')
+    #collapseTwo.collapse(aria-labelledby='headingTwo', data-parent='#accordionSidebar')
       .bg-white.py-2.collapse-inner.rounded
         h6.collapse-header Custom Components:
         a.collapse-item.active(href='/add-coupon.html') Ajouter coupons
@@ -32,15 +32,14 @@ ul#accordionSidebar.navbar-nav.bg-gradient-primary.sidebar.sidebar-dark.accordio
   // Nav Item - Utilities Collapse Menu
   li.nav-item
     a.nav-link.collapsed(href='#', data-toggle='collapse', data-target='#collapseUtilities', aria-expanded='true', aria-controls='collapseUtilities')
-      i.fas.fa-fw.fa-wrench
-      span Utilities
+      i.fas.fa-fw.fa-money-bill-alt
+      span Gestion de ventes
     #collapseUtilities.collapse(aria-labelledby='headingUtilities', data-parent='#accordionSidebar')
       .bg-white.py-2.collapse-inner.rounded
         h6.collapse-header Custom Utilities:
-        a.collapse-item(href='utilities-color.html') Colors
-        a.collapse-item(href='utilities-border.html') Borders
-        a.collapse-item(href='utilities-animation.html') Animations
-        a.collapse-item(href='utilities-other.html') Other
+        a.collapse-item(href='list-coupons.html') Coupon vendu
+        a.collapse-item(href='add-clients.html') Ajout d'un client
+        a.collapse-item(href='add-sales.html') Ajout d'une vente
   // Divider
   hr.sidebar-divider
   // Heading

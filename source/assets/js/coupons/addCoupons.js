@@ -646,8 +646,10 @@ var CoupnCenter = (function (UICoup, CouponCtrl, Store) {
   var genCouponCenter = function (el) {
     UICoup.generateMain()
     var cat = el.dataset.target.charAt(0).toUpperCase() + el.dataset.target.slice(1)
-    Store.ShowData('products?cat=' + el.dataset.target, function (obj) {
+    console.log(cat)
+    Store.ShowData('products?cat=' + cat, function (obj) {
       var products = UICoup.generateSelectProd(obj)
+      console.log(obj)
       document.querySelector('.couponAddContent .products').insertAdjacentHTML('beforeend', products + '<hr>')
       UICoup.handelSelectProd('.couponAddContent .products-form')
       UICoup.closeCat()

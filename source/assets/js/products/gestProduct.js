@@ -248,16 +248,16 @@ var UIGestProducts = (function () {
 window.onload = function () {
   var container = document.querySelector('.gestProducts')
   var initSelect2 = function(target, obj) {
-    $(document).ready(function() {
+
       var el = $(`#${target} #${obj.ref}-cats`)
+
+
       el.value = obj.cat
       el.select2({
         dropdownParent: $(`#${target} `)
       });
+    document.querySelector(".select2").style.width = '100%'
       $(el).val(obj.cat).trigger('change')
-      document.querySelector(".select2").style.width = '100%'
-
-    })
   }
   var initProductCardModal = function(target, obj) {
     var element = obj.filter(el => (el ? el.ref === target: ''))
@@ -265,11 +265,11 @@ window.onload = function () {
     document.querySelector(`#${target} .modal-body`).insertAdjacentHTML('beforeend', html)
     UIGestProducts.generateCard(`#${target} .col-md-3`, element[0])
   }
-  var initForm = function(target, obj) {
+  var initForm = function(target, obj, arr) {
     var cats = obj.map(el => el.cat)
     //var tet =  Store.ShowData('categories', (data)=> console.log(data.title))
     //console.log(tet)
-    var categories = (names) => names.filter((v,i) => names.indexOf(v) === i)
+    var categories = arr
     var filterProd = obj.filter(function (ref) {
       return ref.ref === target
     })
@@ -288,7 +288,7 @@ window.onload = function () {
       "cats",
       filterProd[0].ref+'-cats',
       "Default value",
-      categories(cats), false)}                   
+      categories, false)}                   
                               ${Utils.generateInputs(6,{id: filterProd[0].ref+"-ref", label: "Nom de la ref", type: 'text', cls: filterProd[0].ref+"-ref",placeH:"",val:filterProd[0].ref})}
                               ${Utils.generateTextarea(6,{id: filterProd[0].ref+"-desc", label: "Description de la catégorie", cls: filterProd[0].ref+"-desc",placeH:"",val: filterProd[0].desc})}
                               ${Utils.generateToggle(6,{title:"Type d'ajout",id: filterProd[0].ref+"-multi", label: "Activer Multi ajout", cls: filterProd[0].ref+"-multi",multi: filterProd[0].multi})}
@@ -336,16 +336,16 @@ window.onload = function () {
     }
     var productModalBody = container.querySelector('.modal-body ')
     productModalBody.innerHTML = ``
-    productModalBody.innerHTML = initForm(target, obj)
+    Utils.getData('categories', (el)=> {
+      let test = el.map(item => item.title)
+      productModalBody.insertAdjacentHTML('beforeend', initForm(target, obj, test))
+    })
+    //productModalBody.innerHTML = initForm(target, obj)
     // init multi
     var filterProd = obj.filter(function (ref) {
       return ref.ref === target
     })
-    var checkedMulti = document.querySelector(`#${filterProd[0].ref+"-multi"}`)
-    checkedMulti.checked = filterProd[0].multi
-    // init select2
-    initSelect2(target, filterProd[0])
-    initProductCardModal(target, obj)
+
     return cb(filterProd[0])
     //UpdateProduct('.alertSuccess', filterProd[0].id, inputDate)
   }
@@ -357,13 +357,34 @@ window.onload = function () {
       container.insertAdjacentHTML('beforeend', card)
     })
     handleLoopClickEvent('.editProduct',  (el)=> {
+      var target = el.dataset.target
+      target = target.substr(1, target.length)
       generateProductModal(obj, el, (item) => {
-        var btnUpdate = document.querySelector('.alertSuccess')
-        btnUpdate.addEventListener('click', ()=> {
-          Utils.updateData('products',item.id,getInputs('#'+item.ref), (obj) => {
-            console.log(obj)
+        var actions = function() {
+          checkedMulti.checked = item.multi
+          // init select2
+          //initSelect2(target, item)
+          console.log(target, item)
+          initProductCardModal(target, obj)
+          var btnUpdate = document.querySelector('.alertSuccess')
+          btnUpdate.addEventListener('click', ()=> {
+            Utils.updateData('products',item.id,getInputs('#'+item.ref), (obj) => {
+              console.log(obj)
+            })
           })
-        })
+        }
+        var checkedMulti = document.querySelector(`#${item.ref+"-multi"}`)
+        if(checkedMulti !== null){
+          actions()
+        }else {
+
+          setTimeout( ()=>{checkedMulti = document.querySelector(`#${item.ref+"-multi"}`)
+
+            initSelect2(target, item)
+            actions()},200)
+        }
+        console.log( document.querySelector(`#${item.ref+"-multi"}`))
+
 
     })
 

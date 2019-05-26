@@ -284,13 +284,15 @@ var Utils = (function () {
      */
     generateListInput: function (size, cls, val, id, label, arr, s2) {
       var options = function (tab) {
-        var el;
+        var el= "";
         tab.forEach(function (val) {
           var h = `<option value="${val}">${val}</option>`
           el = el + h
+          return el
         })
         return el
       }
+
       var html = `<div class="form-group col-md-${size}">
                     <label for="${id}">${val}</label>
                     <select id="${id}" class=" custom-select ${cls}" name="${label}">
@@ -340,5 +342,15 @@ var Utils = (function () {
                   </div>`
       return html
     },
+    waitForEl: (selector, callback) => {
+      if (document.querySelector(selector).length) {
+        callback();
+      } else {
+        setTimeout(function() {
+          waitForEl(selector, callback);
+        }, 100);
+      }
+    }
   }
+
 })()

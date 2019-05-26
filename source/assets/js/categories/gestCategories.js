@@ -124,8 +124,8 @@ var GestCatsController = (function (UICats, GestCats, Store) {
         }
         if (btn.classList.contains('btnShow')) {
           Utils.generateCard(`${title} .modal-body`, cat)
-          Utils.getData(`products?cat=${target.toLowerCase()}`, function (obj) {
-            console.log(obj)
+          Utils.getData(`products?cat=${target}`, function (obj) {
+            console.log(target)
             var products = cont.querySelector('.modal-body')
             products.insertAdjacentHTML('beforeend', `<div class="products col-md-9">
               <h3 class="card-title"> Produit afilié<hr></h3>
@@ -222,7 +222,8 @@ var GestCatsController = (function (UICats, GestCats, Store) {
             })
           })
         }
-        initSuccess()
+        Utils.waitForEl(`#${cat.title}-name`,initSuccess())
+
       }, false)
     })
     var dels = document.querySelectorAll('.deleteCat')

@@ -28,6 +28,23 @@ var addUser = (e) => {
   Utils.getData('users', (obj)=>{
     Utils.addData('users',objectUser(getInputs(),obj))
     console.log(data)
+    let listUsers = document.querySelector('.listUsers tbody')
+    let template =`<tr>
+                    <td>${data.id}</td>
+                    <td>${data.email}</td>
+                    <td>${data.phone}</td>
+                    <td>${data.city}</td>
+                    <td>${data.date}</td>
+                    <td>${data.shop.length}</td>
+                    <td>
+                    <button class="btn btn-sm btn-outline-warning userActions"  data-tippy-content="Voir plus"><i class="fas fa-info-circle"></i></button>
+                    <button class="btn btn-sm btn-outline-info userActions" data-tippy-content="Editer"><i class="fas fa-pen-square" ></i></button>
+                    </td>
+</tr>`
+    listUsers.insertAdjacentHTML('beforeend', template)
+      var btnActions = document.querySelectorAll('.userActions')
+      tippy(btnActions)
+
 
   })
 
@@ -51,11 +68,23 @@ var generateTable = () => {
                       <td>${el.city}</td>
                       <td>${el.date}</td>
                       <td>${el.shop.length}</td>
-                      <td><button class="btn btn-sm btn-outline-warning"><i class="fas fa-info"></i></button></td>
+                      <td>
+                      <button class="btn btn-sm btn-outline-warning userActions"  data-tippy-content="Voir plus"><i class="fas fa-info-circle"></i></button>
+                      <button class="btn btn-sm btn-outline-info userActions" data-tippy-content="Editer"><i class="fas fa-pen-square" ></i></button>
+                      </td>
 </tr>`
       listUsers.insertAdjacentHTML('beforeend', template)
     })
+
   })
+
+  window.onload = () => {
+    var btnActions = document.querySelectorAll('.userActions')  
+    tippy(btnActions)
+
+  }
+
 }
 
 generateTable()
+

@@ -69,21 +69,34 @@ var generateTable = () => {
                       <td>${el.date}</td>
                       <td>${el.shop.length}</td>
                       <td>
-                      <button class="btn btn-sm btn-outline-warning userActions"  data-tippy-content="Voir plus"><i class="fas fa-info-circle"></i></button>
-                      <button class="btn btn-sm btn-outline-info userActions" data-tippy-content="Editer"><i class="fas fa-pen-square" ></i></button>
+                      <button class="btn btn-sm btn-outline-warning userActions infoUser" 
+                      data-toggle="modal" data-target="#${el.id}-user"  data-tippy-content="Voir plus">
+                      <i class="fas fa-info-circle"></i>
+                      </button>
+                      <button class="btn btn-sm btn-outline-info userActions editUser" data-toggle="modal" 
+                      data-target="#${el.id}-user" data-tippy-content="Editer"><i class="fas fa-pen-square" ></i></button>
                       </td>
 </tr>`
       listUsers.insertAdjacentHTML('beforeend', template)
     })
-
   })
-
   window.onload = () => {
-    var btnActions = document.querySelectorAll('.userActions')  
+    var btnActions = document.querySelectorAll('.userActions')
     tippy(btnActions)
-
+    btnActions.forEach(btn => {
+      btn.addEventListener('click', (e)=> {
+        //e.preventDefault()
+        let modalEl = document.querySelector('.modal')
+        if(modalEl){
+          modalEl.parentNode.removeChild(modalEl)
+        }
+        var target = btn.dataset.target.substr(1, btn.dataset.target.length)
+        console.log(target)
+        var modal = Utils.generateModal('recap', target)
+        document.querySelector('.listUsers').insertAdjacentHTML('beforeend', modal)
+      })
+    })
   }
-
 }
 
 generateTable()

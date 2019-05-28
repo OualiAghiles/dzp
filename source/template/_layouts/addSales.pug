@@ -1,0 +1,68 @@
+#content-wrapper.d-flex.flex-column
+  // Main Content
+  #content
+    include header
+    // Begin Page Content
+    .container
+      // Page Heading
+      h1.h4.mb-4.text-gray-800 #{titlePage}
+      .addSales.mb-3
+        .card.mb-5
+          .card-body
+            h4.card-header.mb-3 Choisir un produit
+            ul.list-unstyled.d-flex.justify-content-between
+              li
+                a.d-flex.flex-column.mr-3.text-center(href="http://")
+                  img(src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Xbox_one_logo.svg/1024px-Xbox_one_logo.svg.png",width="80px", alt="", srcset="")
+                  span Xbox
+              li
+                a.d-flex.flex-column.mr-3.text-center(href="http://")
+                  img(src="https://img.maxisciences.com/article/international/l-acces-aux-achats-sur-le-playstation-network-est-impossible-depuis-le-debut-du-weekend_5d0c6dc6aaaa17f16ac0b2e98c0aec4a75dc512e.jpg",width="80px", alt="", srcset="")
+                  span PSN
+              li
+                a.d-flex.flex-column.mr-3.text-center(href="http://")
+                  img(src="https://banner2.kisspng.com/20180604/xiy/kisspng-steam-computer-icons-logo-video-game-valves-5b14dba6212cf3.1367866015280936061359.jpg",width="80px", alt="", srcset="")
+                  span Steam
+              li
+                a.d-flex.flex-column.mr-3.text-center(href="http://")
+                  img(src="https://www.erenumerique.fr/wp-content/uploads/2016/04/logo-google-play-store.jpg",width="80px", alt="", srcset="")
+                  span GPLay
+              li
+                a.d-flex.flex-column.mr-3.text-center(href="http://")
+                  img(src="https://upload.wikimedia.org/wikipedia/fr/thumb/0/09/Logo_App_Store_d%27Apple.png/220px-Logo_App_Store_d%27Apple.png",width="80px", alt="", srcset="")
+                  span AppStore
+              li
+                a.d-flex.flex-column.mr-3.text-center(href="http://")
+                  img(src="https://about.udemy.com/wp-content/uploads/2017/10/NewUlogo-large-1.png",width="80px", alt="", srcset="")
+                  span Udemy
+              li
+                a.d-flex.flex-column.mr-3.text-center(href="http://")
+                  img(src="data:image/png;base64,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",width="80px", alt="", srcset="")
+                  span CashU
+        .card
+          .card-body
+            h4.card-header.mb-3 Détails de la commande
+              small.ml-2.text-info produit selectionné (xbox)
+            .card-body
+              .row
+                .input-group.col-6.mb-3
+                  .input-group-prepend
+                    span#basic-addon1.input-group-text $
+                  input.form-control(type='number', placeholder='Indiquer le montant', aria-label='Username', aria-describedby='basic-addon1')
+                .input-group.col-6.mb-3
+                  .input-group-prepend
+                    span#basic-addon1.input-group-text N°
+                  input.form-control(type='text', placeholder='Numero de commande', aria-label='Username', aria-describedby='basic-addon1')
+                .input-group.col-6.mb-3
+                  .input-group-prepend
+                    span#basic-addon1.input-group-text @
+                  input.form-control(type='email', placeholder='Email Client', aria-label='email', aria-describedby='basic-addon1')
+                .custom-file.col-6.mb-3
+                  input#customFile.custom-file-input(type='file')
+                  label.custom-file-label(for='customFile') Choisir la preuve de payement
+
+            hr
+            .card-body
+              h5 choisir les coupons
+              hr
+

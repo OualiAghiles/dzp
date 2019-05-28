@@ -1,0 +1,8 @@
+extends _layouts/wrapper
+
+block content
+  - var titlePage = "Add sales"
+  include _layouts/sidebar
+  include _layouts/addSales
+block scripts
+  script(src="assets/scripts/achat/addSales.js")

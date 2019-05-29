@@ -42,10 +42,13 @@ var Sales = (function () {
           var amoutUI = document.querySelector('.totalAmountUi')
           var prixCoupon = document.querySelector('.prixCoupon')
           var nbrCoupon = document.querySelector('.nbrCoupon')
+          var totalCostCoupon = document.querySelector('.totalCostCoupon')
+
           block.classList.remove('d-none')
           tittle.innerHTML = `Le produit choisit (${cat.id})`
           amout.addEventListener('change', function (e) {
             amoutUI.innerHTML = e.target.valueAsNumber
+
 
           })
 
@@ -57,13 +60,17 @@ var Sales = (function () {
             //   var nbrCoupon = (parseFloat(amoutUI.innerHTML) - mod) / parseFloat(e.target.value)
             // }
             //console.log(e, prixCoupon.value)
-            console.log(parseFloat(amoutUI.innerHTML) - parseFloat(prixCoupon.value))
             const initialAmout = amout.value
+            var mod = parseFloat(initialAmout) % parseFloat(prixCoupon.value)
+            var nbrCpn = (parseFloat(initialAmout) - mod) / parseFloat(prixCoupon.value)
+            nbrCoupon.setAttribute("max", nbrCpn)
+            console.log(parseFloat(amoutUI.innerHTML) - parseFloat(prixCoupon.value))
+
             amoutUI.innerHTML = parseFloat(initialAmout) - (parseFloat(prixCoupon.value * e.target.valueAsNumber))
 
             console.log(initialAmout)
             console.log(parseFloat(prixCoupon.value * e.target.valueAsNumber));
-
+            totalCostCoupon.innerHTML = parseFloat(prixCoupon.value * e.target.valueAsNumber)
           })
 
         })

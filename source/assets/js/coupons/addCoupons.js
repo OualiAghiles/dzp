@@ -6,28 +6,28 @@
  * */
 var CouponController = (function () {
 
-    var Coupon = function (
-      cat,
-      produitRef,
-      source,
-      montant,
-      devise,
-      prixAchat,
-      prixVente,
-      codeCoupon,
-      date,
-      valide) {
-        this.cat = cat
-        this.produitRef = produitRef
-        this.source = source
-        this.montant = montant
-        this.devise = devise
-        this.prixAchat = prixAchat
-        this.prixVente = prixVente
-        this.codeCoupon = codeCoupon
-        this.date = date
-        this.valid = valide
-    }
+  var Coupon = function (
+    cat,
+    produitRef,
+    source,
+    montant,
+    devise,
+    prixAchat,
+    prixVente,
+    codeCoupon,
+    date,
+    valide) {
+    this.cat = cat
+    this.produitRef = produitRef
+    this.source = source
+    this.montant = montant
+    this.devise = devise
+    this.prixAchat = prixAchat
+    this.prixVente = prixVente
+    this.codeCoupon = codeCoupon
+    this.date = date
+    this.valid = valide
+  }
 
   return {
     getData: function (cb) {
@@ -48,9 +48,9 @@ var CouponController = (function () {
         codeCoupon,
         date,
         valide)
-            console.log(newCoup)
+      console.log(newCoup)
 
-        return newCoup
+      return newCoup
     }
   }
 
@@ -273,7 +273,7 @@ var UICoupon = (function () {
                             id="multi"
                             role="tabpanel"
                             aria-labelledby="multi-tab">
-                            <div class="card-body">${UICoupon.generateForm(name, id+ '-multi', true)}</div>
+                            <div class="card-body">${UICoupon.generateForm(name, id + '-multi', true)}</div>
                         </div>
                       </div>`
       var el = document.querySelector(cls)
@@ -378,10 +378,10 @@ var UICoupon = (function () {
               prixAchat: parseInt(prixAchat.value) * parseInt(el.montant),
               prixVente: parseInt(prixVente.value) * parseInt(el.montant),
               date: todayDate(),
-              valide: true
+              valide: el.valide
 
             })
-            console.log(cp)
+
             data.push(cp)
           })
 
@@ -406,15 +406,13 @@ var UICoupon = (function () {
       //
       var addBtnCoupon = document.querySelector('.add-btn-coupon')
       addBtnCoupon.addEventListener('click', function (e) {
-        debugger
         e.preventDefault()
         var obj = data
-        obj.forEach(function (el) {
-          Store.AddData('coupons', el, function (t) {
-
-          })
-        })
         console.log(obj)
+        obj.forEach(function (el) {
+          Store.AddData('coupons', el)
+        })
+
       })
       data = []
 
@@ -429,70 +427,74 @@ var UICoupon = (function () {
       var html = `<form class='needs-validation' novalidate>
                     <div class="form-row">
                       ${UICoupon.generateInputs({
-                        id: cat+'-source-'+ref,
-                        cls: "sourceCoupon",
-                        type: "text",
-                        desc: '',
-                        val: "",
-                        label: "Source",
-                        placeH: "Indiquer la source"
-                      })}
+        id: cat + '-source-' + ref,
+        cls: "sourceCoupon",
+        type: "text",
+        desc: '',
+        val: "",
+        label: "Source",
+        placeH: "Indiquer la source"
+      })}
                       ${!multi ? UICoupon.generateInputs({
-                        id: cat+'-montant-'+ref,
-                        cls: "montantCoupon",
-                        type: "number",
-                        desc: '',
-                        val: "",
-                        label: "Montant",
-                        placeH: "Indiquer la montant"
-                      }):''}
-                      ${!multi ?UICoupon.generateListInput(
-                        'devise',
-                        "Devise",
-                        cat+'-devise-'+ref,
-                        "Default value",
-                        [
-                          {val:"dollar",
-                          label:"$"},
-                          {val:"euro",
-                          label:"€"}
-                        ]):""}
+        id: cat + '-montant-' + ref,
+        cls: "montantCoupon",
+        type: "number",
+        desc: '',
+        val: "",
+        label: "Montant",
+        placeH: "Indiquer la montant"
+      }) : ''}
+                      ${!multi ? UICoupon.generateListInput(
+        'devise',
+        "Devise",
+        cat + '-devise-' + ref,
+        "Default value",
+        [
+          {
+            val: "dollar",
+            label: "$"
+          },
+          {
+            val: "euro",
+            label: "€"
+          }
+        ]) : ""}
                       ${UICoupon.generateInputs({
-                        id: cat+'-prixAchat-'+ref,
-                        cls: "prixAchat",
-                        type: "number",
-                        desc: '',
-                        val: "210",
-                        label: "Prix d'achat",
-                        placeH: "Indiquer le prix d'achat"
-                      })}
+          id: cat + '-prixAchat-' + ref,
+          cls: "prixAchat",
+          type: "number",
+          desc: '',
+          val: "210",
+          label: "Prix d'achat",
+          placeH: "Indiquer le prix d'achat"
+        })}
                       ${UICoupon.generateInputs({
-                        id: cat+'-prixVente-'+ref,
-                        cls: "prixVente",
-                        type: "number",
-                        desc: '',
-                        val: "230",
-                        label: "Prix de vente",
-                        placeH: "Indiquer le prix de vente"
-                      })}
-                      ${!multi?UICoupon.generateInputs({
-                        id: cat+'-codeCoupon-'+ref,
-                        cls: "codeCoupon",
-                        type: "text",
-                        desc: '',
-                        val: "",
-                        label: "Code",
-                        placeH: "Indiquer le code a ajouter"
-                        }): UICoupon.generateInputFile({
-                          id: cat + '-codeCoupon-' + ref,
-                          cls: "codeCouponMulti",
-                          type: "file",
-                          desc: '',
-                          val: "",
-                          label: "Selectionner le fichier",
-                          placeH: "Indiquer le code a ajouter"
-                        })
-                        }
+          id: cat + '-prixVente-' + ref,
+          cls: "prixVente",
+          type: "number",
+          desc: '',
+          val: "230",
+          label: "Prix de vente",
+          placeH: "Indiquer le prix de vente"
+        })}
+                      ${!multi ? UICoupon.generateInputs({
+          id: cat + '-codeCoupon-' + ref,
+          cls: "codeCoupon",
+          type: "text",
+          desc: '',
+          val: "",
+          label: "Code",
+          placeH: "Indiquer le code a ajouter"
+        }) : UICoupon.generateInputFile({
+          id: cat + '-codeCoupon-' + ref,
+          cls: "codeCouponMulti",
+          type: "file",
+          desc: '',
+          val: "",
+          label: "Selectionner le fichier",
+          placeH: "Indiquer le code a ajouter"
+        })
+        }
                     </div>
                   </form>`
       return html
@@ -527,38 +529,42 @@ var UICoupon = (function () {
       var input = document.querySelector('.codeCouponMulti')
       var tab = []
       input.addEventListener('change', function (e) {
-        console.log(input.files[0])
         var reader = new FileReader()
         reader.onload = function () {
           var lines = reader.result.split('\n')
-
           var devise = ''
           lines.forEach(function (el) {
-            var t = el.replace(',', '')
-            t = t.replace(' ', '')
-            if (t.indexOf('$') !== -1) {
-              t = t.replace('$', '')
+            if (el.indexOf('$') !== -1) {
+              el = el.replace('$', '')
               devise = "dollar"
             }
-            if (t.indexOf('€') !== -1) {
-              t = t.replace('€', '')
+            if (el.indexOf('€') !== -1) {
+              el = el.replace('€', '')
               devise = "euro"
             }
-            t = t.split(':')
+            var t = el.split(',')
+            var valide = true
+            if (t[2] == 'Vendu' || t[2] == 'vendu') {
+              valide = false
+            }
             var data = {
               devise: devise,
               montant: t[0],
-              codeCoupon: t[1]
+              codeCoupon: t[1],
+              valide: valide
+
             }
             if (data.codeCoupon !== undefined) {
 
               tab.push(data)
             }
           })
+
           return tab
         }
         reader.readAsText(input.files[0])
       }, false)
+      console.log('tab', tab)
       return tab
     },
     handelSelectProd: function (cls, multi) {
@@ -620,8 +626,8 @@ var UICoupon = (function () {
     },
     generateMain: function () {
       var main = document.querySelector('.couponChoiceCat')
-        main.innerHTML = '';
-        var content = `<div class="couponAddContent col-md-9">
+      main.innerHTML = '';
+      var content = `<div class="couponAddContent col-md-9">
                           <div class="card">
                             <div class="card-body">
                               <h3 class="card-title">Veuiller choisire un produit
@@ -635,7 +641,7 @@ var UICoupon = (function () {
                             </div>
                           </div>
                         </div>`
-        main.insertAdjacentHTML('beforeend', content)
+      main.insertAdjacentHTML('beforeend', content)
 
     }
   }

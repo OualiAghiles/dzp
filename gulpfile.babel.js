@@ -46,8 +46,8 @@ function reload(done) {
 function copy() {
   return (
     gulp
-    .src('node_modules/startbootstrap-sb-admin-2/vendor/**/*.*')
-    .pipe(gulp.dest('dist/assets/vendor/')))
+      .src('node_modules/startbootstrap-sb-admin-2/vendor/**/*.*')
+      .pipe(gulp.dest('dist/assets/vendor/')))
 }
 
 function serve(done) {
@@ -93,19 +93,19 @@ export const clean = () => del(['dist']);
 export function styles() {
   return (
     gulp
-    .src(paths.styles.src)
-    .pipe(sass())
-    .pipe(cleanCSS())
-    // pass in options to the stream
-    .pipe(
-      rename({
-        basename: 'main',
-        suffix: '.min',
-      }),
-    )
-    .pipe(server.stream())
+      .src(paths.styles.src)
+      .pipe(sass())
+      .pipe(cleanCSS())
+      // pass in options to the stream
+      .pipe(
+        rename({
+          basename: 'main',
+          suffix: '.min',
+        }),
+      )
+      .pipe(server.stream())
 
-    .pipe(gulp.dest(paths.styles.dest))
+      .pipe(gulp.dest(paths.styles.dest))
   );
 }
 

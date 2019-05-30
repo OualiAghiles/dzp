@@ -43,34 +43,38 @@ var Sales = (function () {
           var prixCoupon = document.querySelector('.prixCoupon')
           var nbrCoupon = document.querySelector('.nbrCoupon')
           var totalCostCoupon = document.querySelector('.totalCostCoupon')
-
           block.classList.remove('d-none')
           tittle.innerHTML = `Le produit choisit (${cat.id})`
           amout.addEventListener('change', function (e) {
             amoutUI.innerHTML = e.target.valueAsNumber
-
-
           })
-
-
+          var initialAmout = amout.value
           nbrCoupon.addEventListener('change', function (e) {
             var oldval = 0
-            // if (parseFloat(amoutUI.innerHTML) % parseFloat(e.target.value) !== 0) {
-            //   var mod = parseFloat(amoutUI.innerHTML) % parseFloat(e.target.value)
-            //   var nbrCoupon = (parseFloat(amoutUI.innerHTML) - mod) / parseFloat(e.target.value)
-            // }
-            //console.log(e, prixCoupon.value)
-            const initialAmout = amout.value
+
             var mod = parseFloat(initialAmout) % parseFloat(prixCoupon.value)
             var nbrCpn = (parseFloat(initialAmout) - mod) / parseFloat(prixCoupon.value)
             nbrCoupon.setAttribute("max", nbrCpn)
-            console.log(parseFloat(amoutUI.innerHTML) - parseFloat(prixCoupon.value))
-
             amoutUI.innerHTML = parseFloat(initialAmout) - (parseFloat(prixCoupon.value * e.target.valueAsNumber))
-
-            console.log(initialAmout)
-            console.log(parseFloat(prixCoupon.value * e.target.valueAsNumber));
             totalCostCoupon.innerHTML = parseFloat(prixCoupon.value * e.target.valueAsNumber)
+          })
+          var addRow = document.querySelector('.addRow')
+          addRow.addEventListener('click', function (e) {
+            e.preventDefault()
+            var table = document.querySelector('.tableCoupons')
+            var tbody = table.querySelector('tbody')
+            table.classList.remove('d-none')
+            var template = `<tr>
+                            <td>${prixCoupon.value}</td>
+                            <td>${nbrCoupon.value}</td>
+                            <td> ${ totalCostCoupon.innerHTML}</td>
+                            <td>
+                            <button class="btn btn-sm btn-info">edit</button>
+                            <button class="btn btn-sm btn-danger">Remove</button>
+                            </td>
+            </tr>`
+            tbody.insertAdjacentHTML('beforeend', template)
+            initialAmout = amoutUI.innerHTML
           })
 
         })

@@ -58,7 +58,7 @@ var Store = (function () {
     UpdateData: function (cat, id, obj, cb) {
       axios.put(`${dataOut.api}${cat}/${id}`, data = obj)
         .then(function (response) {
-          var myData = response.data
+            var myData = response.data
           return cb(myData)
         })
         .catch(function (error) {

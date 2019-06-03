@@ -14,38 +14,32 @@
           .card-body
             h4.card-header.mb-3 Détails de la commande
               small.ml-2.text-info.selectedProd
-            .row
-              .input-group.col-6.mb-3
-                .input-group-prepend
-                  span#basic-addon1.input-group-text $
-                input.form-control.totalAmount(type='number', placeholder='Indiquer le montant', aria-label='Username', aria-describedby='basic-addon1')
-              .input-group.col-6.mb-3
-                .input-group-prepend
-                  span#basic-addon1.input-group-text N°
-                input.form-control.idCommande(type='text', placeholder='Numero de commande', aria-label='Username', aria-describedby='basic-addon1')
-              .input-group.col-6.mb-3
-                .input-group-prepend
-                  span#basic-addon1.input-group-text @
-                input.form-control.emailUser(type='email', placeholder='Email Client', aria-label='email', aria-describedby='basic-addon1')
-              .custom-file.col-6.mb-3
-                input#customFile.custom-file-input.proof(type='file')
-                label.custom-file-label(for='customFile') Choisir la preuve de payement
+            form.needs-validation(novalidate)
+              .form-row
+                .input-group.col-6.mb-3
+                  .input-group-prepend
+                    span#basic-addon1.input-group-text N°
+                  input.form-control.idCommande(required = "required",type='text', placeholder='Numero de commande', aria-label='Username', aria-describedby='basic-addon1')
+                .input-group.col-6.mb-3
+                  .input-group-prepend
+                    span#basic-addon1.input-group-text @
+                  input.form-control.emailUser(required = "required",type='email', placeholder='Email Client', aria-label='email', aria-describedby='basic-addon1')
+                .col-6.mb-3
+                  .custom-file
+                    input#customFile.custom-file-input.proof(type='file')
+                    label.custom-file-label(for='customFile') Choisir la preuve de payement
           hr.m-0
           .card-body
               h5.card-header.mb-3 choisir les coupons
-                small.float-right.text-success.totalAmountUi
               .tableRow.d-flex.justify-content-between.align-items-center
                 div
                   select.custom-select.prixCoupon
-                    option(value='10') 10
-                    option(value='15') 15
-                    option(value='25') 25
 
                 div
                   .input-group
                     .input-group-prepend
                       span#basic-addon1.input-group-text N°
-                    input.form-control.nbrCoupon(type='number',min="1", max="3", placeholder='nombre de coupon', aria-label='nbr Coupons', aria-describedby='basic-addon1')
+                    input.form-control.nbrCoupon(type='number',min="1", placeholder='nombre de coupon', aria-label='nbr Coupons', aria-describedby='basic-addon1')
                 div:span.totalCostCoupon - total
                 div:a.btn.btn-primary.addRow(href="#") +
               .tableCoupons.d-none.mt-3

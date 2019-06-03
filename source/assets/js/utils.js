@@ -80,7 +80,7 @@ var Utils = (function () {
     generateCard: function (content, obj) {
 
       var addTags = function (arr) {
-        if(arr !== undefined) {
+        if (arr !== undefined) {
           var els = ''
           for (let i = 0; i < arr.length; i++) {
             const el = arr[i];
@@ -89,7 +89,7 @@ var Utils = (function () {
           }
 
           return els
-        }else {
+        } else {
           return obj.multi
         }
       }
@@ -177,9 +177,9 @@ var Utils = (function () {
       return html
     },
     generateToggle: function (size, {
-      title:title, cls:cls, id:id, multi:multi, label:label
+      title: title, cls: cls, id: id, multi: multi, label: label
     }) {
-      if(label) {
+      if (label) {
         var val = label
       } else {
         val = "Activer l'ajout multiple"
@@ -187,9 +187,9 @@ var Utils = (function () {
       var html = `<div class="col-md-${size}">
                     <label for="t">${title}</label>
                     <div class="custom-control custom-switch">
-                      <input 
-                        class="${cls} custom-control-input" 
-                        id="${id}" 
+                      <input
+                        class="${cls} custom-control-input"
+                        id="${id}"
                         type="checkbox" data-check="${multi}"/>
                       <label class="custom-control-label" for="${id}">${val}</label>
                     </div>
@@ -238,7 +238,7 @@ var Utils = (function () {
                             id="multi"
                             role="tabpanel"
                             aria-labelledby="multi-tab">
-                            <div class="card-body">${UICoupon.generateForm(name, id+ '-multi', true)}</div>
+                            <div class="card-body">${UICoupon.generateForm(name, id + '-multi', true)}</div>
                         </div>
                       </div>`
       var el = document.querySelector(cls)
@@ -284,7 +284,7 @@ var Utils = (function () {
      */
     generateListInput: function (size, cls, val, id, label, arr, s2) {
       var options = function (tab) {
-        var el= "";
+        var el = "";
         tab.forEach(function (val) {
           var h = `<option value="${val}">${val}</option>`
           el = el + h
@@ -300,12 +300,12 @@ var Utils = (function () {
                     </select>
                   </div>`
 
-      if(s2 === 'multiTags') {
+      if (s2 === 'multiTags') {
         html = `<div class="form-group col-md-${size}">
                   <label for="${id}">${val}</label>
                   <select id="${id}" class="form-control" width="100%">
                     ${options(arr)}
-                  </select> 
+                  </select>
                 </div>`
       }
       return html
@@ -346,10 +346,51 @@ var Utils = (function () {
       if (document.querySelector(selector).length) {
         callback();
       } else {
-        setTimeout(function() {
+        setTimeout(function () {
           waitForEl(selector, callback);
         }, 100);
       }
+    },
+    /**
+Problem:
+You have a javascript array that likely has some duplicate values and you would like a count of those values.
+Solution:
+Try this schnippet out.
+*/
+
+
+    compressArray: (original) => {
+
+      var compressed = [];
+      // make a copy of the input array
+      var copy = original.slice(0);
+
+      // first loop goes over every element
+      for (var i = 0; i < original.length; i++) {
+
+        var myCount = 0;
+        // loop over every element in the copy and see if it's the same
+        for (var w = 0; w < copy.length; w++) {
+          if (original[i] == copy[w]) {
+            // increase amount of times duplicate is found
+            myCount++;
+            // sets item to undefined
+            delete copy[w];
+          }
+        }
+
+        if (myCount > 0) {
+          if (original[i] !== undefined) {
+            var a = new Object();
+            a.value = original[i];
+            a.count = myCount;
+            compressed.push(a);
+          }
+
+        }
+      }
+
+      return compressed;
     }
   }
 

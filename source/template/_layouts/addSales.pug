@@ -20,10 +20,8 @@
                   .input-group-prepend
                     span#basic-addon1.input-group-text N°
                   input.form-control.idCommande(required = "required",type='text', placeholder='Numero de commande', aria-label='Username', aria-describedby='basic-addon1')
-                .input-group.col-6.mb-3
-                  .input-group-prepend
-                    span#basic-addon1.input-group-text @
-                  input.form-control.emailUser(required = "required",type='email', placeholder='Email Client', aria-label='email', aria-describedby='basic-addon1')
+                .col-6.mb-3
+                  select.custom-select.emailUser(required = "required", placeholder='Email Client', aria-label='email', aria-describedby='basic-addon1')
                 .col-6.mb-3
                   .custom-file
                     input#customFile.custom-file-input.proof(type='file')
@@ -31,15 +29,15 @@
           hr.m-0
           .card-body
               h5.card-header.mb-3 choisir les coupons
-              .tableRow.d-flex.justify-content-between.align-items-center
+              form.tableRow.d-flex.justify-content-between.align-items-center(novalidate)
                 div
-                  select.custom-select.prixCoupon
+                  select.custom-select.prixCoupon(required = "required")
 
                 div
                   .input-group
                     .input-group-prepend
                       span#basic-addon1.input-group-text N°
-                    input.form-control.nbrCoupon(type='number',min="1", placeholder='nombre de coupon', aria-label='nbr Coupons', aria-describedby='basic-addon1')
+                    input.form-control.nbrCoupon(required = "required", type='number',min="1", placeholder='nombre de coupon', aria-label='nbr Coupons', aria-describedby='basic-addon1')
                 div:span.totalCostCoupon - total
                 div:a.btn.btn-primary.addRow(href="#") +
               .tableCoupons.d-none.mt-3
@@ -52,6 +50,6 @@
                       th(scope='col') Actions
                   tbody
                 .nextStep
-                  button.btn.btn-success save
+                  button.btn.btn-success.recapCommande.float-right(data-toggle="modal" data-target="#recapCommand") Recap
 
 

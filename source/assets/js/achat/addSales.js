@@ -24,15 +24,20 @@ var UISales = (function () {
                             </td>
             </tr></tfoot>`)
   }
-  var validForm = function (event) {
-    var form = document.querySelector('.needs-validation');
+  var validForm = function (cls, event, cb) {
+    var form = document.querySelector(cls);
     //Loop over them and prevent submission
     if (form.checkValidity() === false) {
       event.preventDefault();
       event.stopPropagation();
-      console.log('form', form)
+      console.log(form.checkValidity())
+
+      form.classList.add('was-validated');
+      //return false
+    } else {
+      form.classList.add('was-validated');
+      return cb(form.checkValidity())
     }
-    form.classList.add('was-validated');
   }
   return {
     getDomEls: () => {
@@ -43,50 +48,109 @@ var UISales = (function () {
       var total = 0
       addRow.addEventListener('click', function (e) {
         e.preventDefault()
-        validForm(e)
-        var option = prixCoupon.querySelector(`option[value="${prixCoupon.value}"]`)
-        var table = document.querySelector('.tableCoupons')
-        var tbody = table.querySelector('tbody')
-        var totalAmount = parseFloat(prixCoupon.value) * parseFloat(nbrCoupon.value)
-        var template = `<tr>
-                            <td>${prixCoupon.value}</td>
-                            <td>${nbrCoupon.value}</td>
-                            <td> ${ totalAmount}</td>
+        validForm('.needs-validation', e, () => {
+          validForm('.tableRow', e, () => {
+            var option = prixCoupon.querySelector(`option[value="${prixCoupon.value}"]`)
+            var table = document.querySelector('.tableCoupons')
+            var tbody = table.querySelector('tbody')
+            var totalAmount = parseFloat(prixCoupon.value) * parseFloat(nbrCoupon.value)
+            var template = `<tr>
+                            <td data-prix="${prixCoupon.value}">${prixCoupon.value}</td>
+                            <td data-nbrcp="${nbrCoupon.value}">${nbrCoupon.value}</td>
+                            <td data-total="${totalAmount}"> ${totalAmount}</td>
                             <td>
                             <button class="btn btn-sm btn-info">edit</button>
                             <button class="btn btn-sm btn-danger">Remove</button>
                             </td>
             </tr>`
 
-        table.classList.remove('d-none')
+            table.classList.remove('d-none')
 
-        tbody.insertAdjacentHTML('beforeend', template)
+            tbody.insertAdjacentHTML('beforeend', template)
 
-        switch (nbrCoupon.value) {
-          case ('15'):
-            totalAmount = totalAmount * 230
-            break;
-          case ('25'):
-            totalAmount = totalAmount * 225
-            break;
-          case ('50'):
-            totalAmount = totalAmount * 220
-            break;
-          default:
-            totalAmount = totalAmount * 230
+            switch (nbrCoupon.value) {
+              case ('15'):
+                totalAmount = totalAmount * 230
+                break;
+              case ('25'):
+                totalAmount = totalAmount * 225
+                break;
+              case ('50'):
+                totalAmount = totalAmount * 220
+                break;
+              default:
+                totalAmount = totalAmount * 230
 
-        }
+            }
 
-        total = total + totalAmount
-        tableFoot(table, total)
+            total = total + totalAmount
+            tableFoot(table, total)
 
 
-        nbrCoupon.value = ''
-        prixCoupon.value = ''
-        totalCostCoupon.innerHTML = 0
+            nbrCoupon.value = ''
+            prixCoupon.value = ''
+            totalCostCoupon.innerHTML = 0
 
-        option.parentNode.removeChild(option)
+            option.parentNode.removeChild(option)
+
+          })
+
+
+        })
+
       })
+    },
+    contentModal: (modal, recap, coupons, prod) => {
+      var generateRows = function () {
+        var html = ''
+        coupons.forEach(el => {
+          var template = `<tr>
+                          <td>${el.montant}</td>
+                          <td>${el.codeCoupon}</td>
+                          <td>${el.prixVente}</td>
+                          <td>${el.devise}</td>
+                        </tr>`
+          html = html + template
+          return html
+        })
+        return html
+      }
+      var template = `<div class="media w-100 p-3 shadow-sm ">
+                      <img width='120' src="${prod.img}" class="align-self-start mr-3" alt="${prod.title}">
+                      <div class="media-body">
+                        <h5 class="mt-0">Produit: ${prod.title}</h5>
+                        <p>Email: ${recap.emailUser}</p>
+                        <p>Numero de commande: ${recap.numCommand}</p>
+                        <p>Preveu de payement: ${recap.proof}</p>
+                        </div>
+                      </div>
+                      <table class="table table-striped">
+                        <thead>
+                          <tr>
+                            <th scope="col">Valeur Coupon</th>
+                            <th scope="col">Code Coupon</th>
+                            <th scope="col">Prix vente</th>
+                            <th scope="col">Devise</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          ${generateRows()}
+                        </tbody>
+                      </table>`
+      var modalBody = document.querySelector(`${modal} .modal-body`)
+      if (modalBody === null) {
+        console.log('null')
+        setTimeout(() => {
+          modalBody.insertAdjacentHTML('beforeend', template)
+        }, 200)
+      } else {
+
+        modalBody.insertAdjacentHTML('beforeend', template)
+      }
+
+      console.log('prod', prod)
+      console.log('recap', recap)
+      console.log('coupons', coupons)
     }
   }
 
@@ -96,7 +160,50 @@ var UISales = (function () {
 
 var Sales = (function (UISales) {
   var Dom = UISales.getDomEls()
+  var saveCommande = function (product, cb) {
+    var btn = document.querySelector('.recapCommande')
+    btn.addEventListener('click', () => {
+      var rows = document.querySelectorAll('.tableCoupons tbody tr')
+      var numCommande = document.querySelector('.idCommande').value
+      var emailUser = document.querySelector('.emailUser').value
+      var proof = document.querySelector('.proof').value
+      var recap = {
+        numCommand: numCommande,
+        emailUser: emailUser,
+        proof: proof,
+        product: product,
+        details: []
+      }
+      rows.forEach(row => {
+        var tds = row.querySelectorAll('td')
+        var details = {
+          prix: '',
+          nbrCp: '',
+          total: ''
+        }
+        tds.forEach(td => {
+          if (td.dataset.prix) {
+            details.prix = td.dataset.prix
+          }
+          if (td.dataset.nbrcp) {
+            details.nbrCp = td.dataset.nbrcp
+          }
 
+          if (td.dataset.total) {
+            details.total = td.dataset.total
+          }
+
+        })
+        recap.details.push(details)
+
+        return (details)
+      })
+      return cb(recap)
+
+    })
+
+
+  }
   var generateSelectProd = function (arr) {
     var addSelect = function (array) {
       var result = ''
@@ -153,7 +260,7 @@ var Sales = (function (UISales) {
       })
     })
   }
-  var handleSelectProducts = function (arr, Dom) {
+  var handleSelectProducts = function (arr, Dom, fullobj) {
     // fetch nodeArray
     arr.forEach(cat => {
       // add event click
@@ -178,9 +285,51 @@ var Sales = (function (UISales) {
         nbrCoupon.addEventListener('change', function () {
           totalCostCoupon.innerHTML = parseFloat(prixCoupon.value) * parseFloat(nbrCoupon.value)
         })
+
+        Utils.getData('users', (obj) => {
+          var data = obj.map(el => el.email)
+          console.log(data)
+          $(".emailUser").select2({
+            data: data,
+            placeholder: 'email',
+            allowClear: true,
+            minimumResultsForSearch: 2
+          });;
+        })
         // add row on table
         UISales.addRows('.addRow', prixCoupon, nbrCoupon, totalCostCoupon)
+        saveCommande(`${cat.id}`, (recap) => {
 
+          var container = document.querySelector('.formSales')
+          var modal = container.querySelector('#recapCommand')
+          if (modal) {
+            modal.parentNode.removeChild(modal)
+          }
+          modal = Utils.generateModal(`Recap commande ${recap.numCommand}`, 'recapCommand')
+          container.insertAdjacentHTML('beforeend', modal)
+          Utils.getData(`coupons?produitRef=${recap.product}&valide=true`, obj => {
+            var coupons = []
+            recap.details.forEach((cp, i) => {
+              var filtre = obj.filter(el => {
+                return el.montant === cp.prix
+              })
+              for (let i = 0; i < cp.nbrCp; i++) {
+                const element = filtre[i];
+                coupons.push(element)
+              }
+            })
+            console.log('go next')
+            productObj = fullobj.filter(el => el.ref === cat.id)
+            UISales.contentModal('#recapCommand', recap, coupons, productObj[0])
+            console.log('add content modal')
+            var btnSave = document.querySelector('#recapCommand .alertSuccess')
+            btnSave.addEventListener('click', (e) => {
+              e.preventDefault()
+              console.log(recap, coupons)
+            })
+          })
+
+        })
       })
     })
   }
@@ -188,7 +337,9 @@ var Sales = (function (UISales) {
     Utils.getData('products', (obj) => {
       document.querySelector('.toSelect').insertAdjacentHTML('beforeend', generateSelectProd(obj))
       var products = document.querySelectorAll(Dom.slectProduct + ' input')
-      handleSelectProducts(products, Dom)
+      handleSelectProducts(products, Dom, obj)
+
+
     })
   }
 })(UISales)

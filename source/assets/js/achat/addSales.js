@@ -284,6 +284,10 @@ var Sales = (function (UISales) {
         // calc amout on rows
         nbrCoupon.addEventListener('change', function () {
           totalCostCoupon.innerHTML = parseFloat(prixCoupon.value) * parseFloat(nbrCoupon.value)
+          Utils.getData('coupons', (obj) => {
+            var max = obj.filter(el => el.montant === prixCoupon.value)
+            nbrCoupon.setAttribute('max', max.length)
+          })
         })
 
         Utils.getData('users', (obj) => {
@@ -294,7 +298,10 @@ var Sales = (function (UISales) {
             placeholder: 'email',
             allowClear: true,
             minimumResultsForSearch: 2
-          });;
+          });
+          $(".emailUser").on("change", function (e) {
+            $(e.target).valid();
+          });
         })
         // add row on table
         UISales.addRows('.addRow', prixCoupon, nbrCoupon, totalCostCoupon)

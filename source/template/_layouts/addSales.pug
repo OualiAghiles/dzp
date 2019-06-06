@@ -3,7 +3,7 @@
   #content
     include header
     // Begin Page Content
-    .container
+    .container-fluid
       // Page Heading
       h1.h4.mb-4.text-gray-800 #{titlePage}
       .addSales.mb-3
@@ -21,7 +21,7 @@
                     span#basic-addon1.input-group-text N°
                   input.form-control.idCommande(required = "required",type='text', placeholder='Numero de commande', aria-label='Username', aria-describedby='basic-addon1')
                   .invalid-feedback le code de la commande est obligatoire
-                .form-group.col-6.mb-3
+                .col-6.mb-3
                   select.custom-select.emailUser(required = "required", placeholder='Email Client')
                   .invalid-feedback Example invalid custom select feedback
                 .col-6.mb-3

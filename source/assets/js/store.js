@@ -38,10 +38,10 @@ var Store = (function () {
      *  @param  {[Object]} obj [description]
      *  @return {[Object]}     [description]
      */
-    AddData: function (cat, obj) {
+    AddData: function (cat, obj, cb) {
       axios.post(`${dataOut.api}${cat}`, data = obj)
         .then(function (response) {
-          return response.data
+          return response.data, cb(response.data)
         })
         .catch(function (error) {
           console.log(outputErrorData(error))
@@ -58,7 +58,7 @@ var Store = (function () {
     UpdateData: function (cat, id, obj, cb) {
       axios.put(`${dataOut.api}${cat}/${id}`, data = obj)
         .then(function (response) {
-            var myData = response.data
+          var myData = response.data
           return cb(myData)
         })
         .catch(function (error) {

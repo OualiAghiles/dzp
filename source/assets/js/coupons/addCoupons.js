@@ -407,10 +407,12 @@ var UICoupon = (function () {
       var addBtnCoupon = document.querySelector('.add-btn-coupon')
       addBtnCoupon.addEventListener('click', function (e) {
         e.preventDefault()
-        var obj = data
-        console.log(obj)
-        obj.forEach(function (el) {
-          Store.AddData('coupons', el)
+        var objNew = data
+        console.log(objNew)
+        objNew.forEach(el => {
+          setInterval(() => {
+            Utils.addData('coupons', el)
+          }, 50);
         })
 
       })
@@ -547,11 +549,16 @@ var UICoupon = (function () {
             if (t[2] == 'Vendu' || t[2] == 'vendu') {
               valide = false
             }
+            var comment = ''
+            if (t[3]) {
+              comment = t[3]
+            }
             var data = {
               devise: devise,
               montant: t[0],
               codeCoupon: t[1],
-              valide: valide
+              valide: valide,
+              comment: comment
 
             }
             if (data.codeCoupon !== undefined) {

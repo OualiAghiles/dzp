@@ -59,45 +59,24 @@ var UISales = (function () {
                             <td data-nbrcp="${nbrCoupon.value}">${nbrCoupon.value}</td>
                             <td data-total="${totalAmount}"> ${totalAmount}</td>
                             <td>
-                            <button class="btn btn-sm btn-info">edit</button>
-                            <button class="btn btn-sm btn-danger">Remove</button>
+                            <button class="btn btn-sm btn-info editRow">edit</button>
+                            <button class="btn btn-sm btn-danger delRow">Remove</button>
                             </td>
             </tr>`
 
             table.classList.remove('d-none')
 
             tbody.insertAdjacentHTML('beforeend', template)
-
-            switch (nbrCoupon.value) {
-              case ('15'):
-                totalAmount = totalAmount * 230
-                break;
-              case ('25'):
-                totalAmount = totalAmount * 225
-                break;
-              case ('50'):
-                totalAmount = totalAmount * 220
-                break;
-              default:
-                totalAmount = totalAmount * 230
-
-            }
-
-            total = total + totalAmount
-            tableFoot(table, total)
-
-
             nbrCoupon.value = ''
             prixCoupon.value = ''
             totalCostCoupon.innerHTML = 0
-
             option.parentNode.removeChild(option)
-
+            UISales.removeRow()
+            UISales.editRow()
           })
 
 
         })
-
       })
     },
     contentModal: (modal, recap, coupons, prod) => {
@@ -151,6 +130,133 @@ var UISales = (function () {
       console.log('prod', prod)
       console.log('recap', recap)
       console.log('coupons', coupons)
+    },
+    removeRow: () => {
+      var btnDel = document.querySelectorAll('.delRow')
+      btnDel.forEach(btn => {
+        btn.addEventListener('click', function () {
+          var row = btn.parentNode.parentNode
+          var nbr = row.querySelector('td[data-nbrcp]').dataset.nbrcp
+          var opt = row.querySelector('td[data-prix]').dataset.prix
+          var select = document.querySelector('.prixCoupon')
+          select.insertAdjacentHTML('afterbegin', `<option value="${opt}">${opt}</option>`)
+          select.value = opt
+          row.parentNode.removeChild(row)
+
+        })
+      })
+    },
+    editRow: () => {
+      var btnEdit = document.querySelectorAll('.editRow')
+      btnEdit.forEach(btn => {
+        btn.addEventListener('click', function () {
+          var row = btn.parentNode.parentNode
+          var nbr = row.querySelector('td[data-nbrcp]').dataset.nbrcp
+          var nbrCoup = document.querySelector('.nbrCoupon')
+
+          var opt = row.querySelector('td[data-prix]').dataset.prix
+
+
+          nbrCoup.value = nbr
+          var select = document.querySelector('.prixCoupon')
+          select.insertAdjacentHTML('afterbegin', `<option value="${opt}" selected="selected">${opt}</option>`)
+          select.value = opt
+          row.parentNode.removeChild(row)
+        })
+      })
+    },
+    pushDataSale: (recap, coupons) => {
+      Utils.getData('users?email=' + recap.emailUser, (obj) => {
+        var tablecoup = []
+        coupons.forEach(item => {
+          tablecoup.push({
+            cat: item.cat,
+            codeCoupon: item.codeCoupon,
+            montant: item.montant,
+            produitRef: item.produitRef
+          })
+        })
+        var shop = {
+          numCommand: recap.numCommand,
+          proof: recap.proof,
+          dateVente: Utils.todayDate(),
+          coupons: [...tablecoup]
+        }
+        var data = { ...obj[0] }
+        data.shop.push(shop)
+        console.log('data', data)
+        Utils.updateData('users', obj[0].id, data, (obj) => {
+          console.log('pushed')
+        })
+        coupons.forEach(item => {
+          var data = { ...item, valide: false }
+          console.log(data)
+          Utils.updateData('coupons', item.id, data, (obj) => {
+            console.log('pushed')
+          })
+        })
+      })
+    },
+    generateBlockAddSale: () => {
+      var content = document.querySelector('.formSales')
+      content.innerHTML = ""
+      var template = `<div class="card-body">
+  <h4 class="card-header mb-3">Détails de la commande<small class="ml-2 text-info selectedProd"></small></h4>
+  <form class="needs-validation" novalidate="novalidate">
+    <div class="form-row">
+      <div class="input-group col-6 mb-3">
+        <div class="input-group-prepend"><span class="input-group-text" id="basic-addon1">N°</span></div>
+        <input class="form-control idCommande" required="required" type="text" placeholder="Numero de commande" aria-label="Username" aria-describedby="basic-addon1" />
+        <div class="invalid-feedback">le code de la commande est obligatoire</div>
+      </div>
+      <div class="col-6 mb-3">
+        <select class="custom-select emailUser" required="required" placeholder="Email Client"></select>
+        <div class="invalid-feedback">Example invalid custom select feedback</div>
+      </div>
+      <div class="col-6 mb-3">
+        <div class="custom-file">
+          <input class="custom-file-input proof" id="customFile" type="file" />
+          <label class="custom-file-label" for="customFile">Choisir la preuve de payement</label>
+          <div class="invalid-feedback">Example invalid custom select feedback</div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div><hr class='m-0' />
+<div class="card-body">
+  <h5 class="card-header mb-3">choisir les coupons</h5>
+  <form class="tableRow d-flex justify-content-between align-items-center" novalidate="novalidate">
+    <div>
+      <select class="custom-select prixCoupon" required="required"></select>
+    </div>
+    <div>
+      <div class="input-group">
+        <div class="input-group-prepend"><span class="input-group-text" id="basic-addon1">N°</span></div>
+        <input class="form-control nbrCoupon" required="required" type="number" min="0" placeholder="nombre de coupon" aria-label="nbr Coupons" aria-describedby="basic-addon1" />
+      </div>
+    </div>
+    <div:span class="totalCostCoupon">- total</div:span>
+    <div:a class="btn btn-primary addRow" href="#">+</div:a>
+  </form>
+  <div class="tableCoupons d-none mt-3">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Valeur Coupon</th>
+          <th scope="col">Nbr Coupon</th>
+          <th scope="col">Total</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div class="nextStep">
+      <button class="btn btn-success recapCommande float-right" data-toggle="modal" data-target="#recapCommand">Recap</button>
+    </div>
+  </div>
+</div>`
+      content.insertAdjacentHTML('beforeend', template)
+
     }
   }
 
@@ -204,6 +310,13 @@ var Sales = (function (UISales) {
 
 
   }
+  var limitNbrCoupons = function (nbrCoupon, priceCoup, ref) {
+    Utils.getData('coupons?valide=true&produitRef=' + ref, (obj) => {
+      var max = obj.filter(el => el.montant === priceCoup)
+      nbrCoupon.setAttribute('max', max.length)
+      console.log(max)
+    })
+  }
   var generateSelectProd = function (arr) {
     var addSelect = function (array) {
       var result = ''
@@ -245,6 +358,8 @@ var Sales = (function (UISales) {
 
       // object of amouts coupons valide for the product
       var t = getValideCoupon(obj)
+      console.log('montant', t)
+
       // array of amout coupon valide
       var correctTable = t.map(el => el.montant)
       // return array without duplicated value
@@ -265,6 +380,7 @@ var Sales = (function (UISales) {
     arr.forEach(cat => {
       // add event click
       cat.addEventListener('click', function () {
+        UISales.generateBlockAddSale()
         // vars Dom elements
         var block = document.querySelector(Dom.formSales)
         var tittle = document.querySelector(Dom.selectedProd)
@@ -276,18 +392,14 @@ var Sales = (function (UISales) {
         productId = cat.id
         // add valid coupons on select
         generateSelectCostCoupon(productId)
-        // display block
-        block.classList.remove('d-none')
+
         // add name of product
-        tittle.innerHTML = `Le produit choisit (${cat.id})`
+        tittle.innerHTML = `Le produit choisit (${productId})`
 
         // calc amout on rows
         nbrCoupon.addEventListener('change', function () {
           totalCostCoupon.innerHTML = parseFloat(prixCoupon.value) * parseFloat(nbrCoupon.value)
-          Utils.getData('coupons', (obj) => {
-            var max = obj.filter(el => el.montant === prixCoupon.value)
-            nbrCoupon.setAttribute('max', max.length)
-          })
+          limitNbrCoupons(nbrCoupon, prixCoupon.value, cat.id)
         })
 
         Utils.getData('users', (obj) => {
@@ -316,7 +428,8 @@ var Sales = (function (UISales) {
           container.insertAdjacentHTML('beforeend', modal)
           Utils.getData(`coupons?produitRef=${recap.product}&valide=true`, obj => {
             var coupons = []
-            recap.details.forEach((cp, i) => {
+            recap.details.forEach((cp) => {
+              console.log('here')
               var filtre = obj.filter(el => {
                 return el.montant === cp.prix
               })
@@ -325,14 +438,14 @@ var Sales = (function (UISales) {
                 coupons.push(element)
               }
             })
-            console.log('go next')
-            productObj = fullobj.filter(el => el.ref === cat.id)
+            console.log('fullobj', fullobj)
+            var productObj = fullobj.filter(el => el.ref === `${cat.id}`)
             UISales.contentModal('#recapCommand', recap, coupons, productObj[0])
-            console.log('add content modal')
             var btnSave = document.querySelector('#recapCommand .alertSuccess')
             btnSave.addEventListener('click', (e) => {
               e.preventDefault()
               console.log(recap, coupons)
+              UISales.pushDataSale(recap, coupons)
             })
           })
 

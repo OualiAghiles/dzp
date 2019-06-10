@@ -10,49 +10,6 @@
         .card.mb-3
           .card-body.toSelect.py-2
             h4.card-header.mb-3 Choisir un produit
-        .card.d-none.formSales
-          .card-body
-            h4.card-header.mb-3 Détails de la commande
-              small.ml-2.text-info.selectedProd
-            form.needs-validation(novalidate)
-              .form-row
-                .input-group.col-6.mb-3
-                  .input-group-prepend
-                    span#basic-addon1.input-group-text N°
-                  input.form-control.idCommande(required = "required",type='text', placeholder='Numero de commande', aria-label='Username', aria-describedby='basic-addon1')
-                  .invalid-feedback le code de la commande est obligatoire
-                .col-6.mb-3
-                  select.custom-select.emailUser(required = "required", placeholder='Email Client')
-                  .invalid-feedback Example invalid custom select feedback
-                .col-6.mb-3
-                  .custom-file
-                    input#customFile.custom-file-input.proof(type='file')
-                    label.custom-file-label(for='customFile') Choisir la preuve de payement
-                    .invalid-feedback Example invalid custom select feedback
-          hr.m-0
-          .card-body
-              h5.card-header.mb-3 choisir les coupons
-              form.tableRow.d-flex.justify-content-between.align-items-center(novalidate)
-                div
-                  select.custom-select.prixCoupon(required = "required")
-
-                div
-                  .input-group
-                    .input-group-prepend
-                      span#basic-addon1.input-group-text N°
-                    input.form-control.nbrCoupon(required = "required", type='number',min="1", placeholder='nombre de coupon', aria-label='nbr Coupons', aria-describedby='basic-addon1')
-                div:span.totalCostCoupon - total
-                div:a.btn.btn-primary.addRow(href="#") +
-              .tableCoupons.d-none.mt-3
-                table.table.table-striped
-                  thead
-                    tr
-                      th(scope='col') Valeur Coupon
-                      th(scope='col') Nbr Coupon
-                      th(scope='col') Total
-                      th(scope='col') Actions
-                  tbody
-                .nextStep
-                  button.btn.btn-success.recapCommande.float-right(data-toggle="modal" data-target="#recapCommand") Recap
+        .card.formSales
 
 

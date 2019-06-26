@@ -7,9 +7,58 @@
       // Page Heading
       h1.h4.mb-4.text-gray-800 #{titlePage}
       .addSales.mb-3
-        .card.mb-3
-          .card-body.toSelect.py-2
-            h4.card-header.mb-3 Choisir un produit
-        .card.formSales
-
-
+        h4.mb-3 Choisir un produit
+        .formSales.row
+          .modal#addSales.fade(tabindex='-1', role='dialog')
+            .modal-dialog.modal-xl(role='document')
+              .modal-content
+                .modal-header
+                  h5.modal-title Modal title
+                  button.close(type='button', data-dismiss='modal', aria-label='Close')
+                    span(aria-hidden='true') ×
+                .modal-body
+                  .container-fluid
+                    .row
+                      h4.mb-3
+                        | Informations client
+                        small.ml-2.text-info.selectedProd
+                      form.col-12.needs-validation.addOrderFormUser(novalidate='novalidate')
+                        .form-row
+                          .col-12.col-md-6.mb-3
+                            input.form-control.emailUser(required='required', type='text', placeholder='Email', aria-label='emailUser', aria-describedby='email User')
+                            .invalid-feedback L'email est obligatoire
+                          .col-12.col-md-6.mb-3
+                            input.form-control.phoneUser(required='required', type='text', placeholder='Phone ', aria-label='phoneUser', aria-describedby='phone User')
+                            .invalid-feedback L'email est obligatoire
+                          .col-12.col-md-6.mb-3
+                            input.form-control.locationUser(required='required', type='text', placeholder='Adress ', aria-label='locationUser', aria-describedby='Location User')
+                            .invalid-feedback Le nom de la ville est obligatoire
+                          .col-12.col-md-6.mb-3
+                            .form-group
+                              textarea#exampleFormControlTextarea1.userNote.form-control(placeholder='Note', rows='3')
+                      hr.clearfix.col-12
+                      h5.mb-3 Choisir les coupons
+                      form.col-12.tableRow.d-flex.addOrderFormProd.justify-content-between.align-items-center(novalidate='novalidate')
+                        div
+                          select.custom-select.prixCoupon(required='required')
+                        div
+                          .input-group
+                            .input-group-prepend
+                              span#basic-addon1.input-group-text N°
+                            input.form-control.nbrCoupon(required='required', type='number', min='0', placeholder='nombre de coupon', aria-label='nbr Coupons', aria-describedby='basic-addon1')
+                        div:span.totalCostCoupon - total
+                        div:a.btn.btn-primary.addRow(href='#') +
+                      hr.clearfix.col-12
+                      .tableCoupons.col-12
+                        table.table.table-striped
+                          thead
+                            tr
+                              th(scope='col') Valeur Coupon
+                              th(scope='col') Nbr Coupon
+                              th(scope='col') Total
+                              th(scope='col') Actions
+                          tbody
+                .modal-footer
+                  button.btn.btn-secondary(type='button', data-dismiss='modal') Close
+                  button.btn.btn-info.otherProd(type='button', data-toggle="popover" data-placement="top") Ajouter un autre produit
+                  button.btn.btn-success.saveData(type='button', data-dismiss='modal') Save changes

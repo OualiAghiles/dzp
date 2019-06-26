@@ -10,20 +10,7 @@ var UISales = (function () {
     totalCoupon: '.nbrCoupon',
     totalCostCoupon: '.totalCostCoupon'
   }
-  var tableFoot = function (table, total) {
-    var tableCoupons = table.querySelector('table')
-    var tfoot = tableCoupons.querySelector('tfoot')
-    if (tfoot) {
-      tfoot.parentNode.removeChild(tfoot)
-    }
-    tableCoupons.insertAdjacentHTML('beforeend', `<tfoot><tr>
-                            <td>valeur des coupon</td>
-                            <td>total Nbr coupons </td>
-                            <td>${total}</td>
-                            <td>
-                            </td>
-            </tr></tfoot>`)
-  }
+
   var validForm = function (cls, event, cb) {
     var form = document.querySelector(cls);
     //Loop over them and prevent submission
@@ -197,33 +184,34 @@ var UISales = (function () {
         })
       })
     },
-    generateBlockAddSale: () => {
-      var content = document.querySelector('.formSales')
-      content.innerHTML = ""
-      var template = `<div class="card-body">
-  <h4 class="card-header mb-3">Détails de la commande<small class="ml-2 text-info selectedProd"></small></h4>
+    generateBlockAddSale: (content) => {
+      var cont = document.querySelector(content)
+      cont.innerHTML = ""
+      var template = `<div class="card-body col-12">
+  <h4 mb-3">Informations client<small class="ml-2 text-info selectedProd"></small></h4>
   <form class="needs-validation" novalidate="novalidate">
-    <div class="form-row">
-      <div class="input-group col-6 mb-3">
-        <div class="input-group-prepend"><span class="input-group-text" id="basic-addon1">N°</span></div>
-        <input class="form-control idCommande" required="required" type="text" placeholder="Numero de commande" aria-label="Username" aria-describedby="basic-addon1" />
-        <div class="invalid-feedback">le code de la commande est obligatoire</div>
-      </div>
-      <div class="col-6 mb-3">
-        <select class="custom-select emailUser" required="required" placeholder="Email Client"></select>
-        <div class="invalid-feedback">Example invalid custom select feedback</div>
-      </div>
-      <div class="col-6 mb-3">
-        <div class="custom-file">
-          <input class="custom-file-input proof" id="customFile" type="file" />
-          <label class="custom-file-label" for="customFile">Choisir la preuve de payement</label>
-          <div class="invalid-feedback">Example invalid custom select feedback</div>
+      <div class="form-row">
+        <div class=" col-12 col-md-6 mb-3">
+          <input class="form-control emailUser" required="required" type="text" placeholder="Email" aria-label="emailUser" aria-describedby="email User" />
+          <div class="invalid-feedback">L' email est obligatoire</div>
+        </div>
+        <div class=" col-12 col-md-6 mb-3">
+          <input class="form-control phoneUser" required="required" type="text" placeholder="Phone " aria-label="phoneUser" aria-describedby="phone User" />
+          <div class="invalid-feedback">L' email est obligatoire</div>
+        </div>
+        <div class=" col-12 col-md-6 mb-3">
+          <input class="form-control locationUser" required="required" type="text" placeholder="Adress " aria-label="locationUser" aria-describedby="Location User" />
+          <div class="invalid-feedback">Le nom de la ville est obligatoire</div>
+        </div>
+        <div class="col-12 col-md-6 mb-3">
+          <div class="form-group">
+            <textarea class="form-control" placeholder="Note" id="exampleFormControlTextarea1" rows="3"></textarea>
+          </div>
         </div>
       </div>
-    </div>
   </form>
 </div><hr class='m-0' />
-<div class="card-body">
+<div class="card-body col-12">
   <h5 class="card-header mb-3">choisir les coupons</h5>
   <form class="tableRow d-flex justify-content-between align-items-center" novalidate="novalidate">
     <div>
@@ -255,9 +243,63 @@ var UISales = (function () {
     </div>
   </div>
 </div>`
-      content.insertAdjacentHTML('beforeend', template)
+      cont.insertAdjacentHTML('beforeend', template)
 
-    }
+    },
+
+    /**
+     *
+     * @param obj
+     * @returns {string}
+     */
+    gereratCards: function (obj) {
+      data = obj
+
+      var html = `<div class="col-md-3 mb-3 ">
+                    <a data-toggle="modal" data-product="${data.ref}" data-target="#addSales" href='#' class="media addOrder bg-white shadow-sm p-3">
+                      <img src="${data.img}" class="align-self-center mr-3" width="70px" alt="${data.title}">
+                      <div class="media-body">
+                        <h5 class="mt-0">${data.title}</h5>
+                        <p>${data.desc}</p>
+                        <p class="mb-0">
+                          <span class='badge badge-light'>${data.ref}</span>
+                          <span class='badge badge-light'>${data.cat}</span>
+                        </p>
+                      </div>
+                    </a>
+                  </div>`
+      return html
+    },
+    clearModalForm: function() {
+      $('.addOrderFormUser').find('input[type=text], input[type=email], input[type=number], textarea').val('');
+      $('.addOrderFormProd').find('input[type=text], input[type=email], input[type=number], select, textarea').val('');
+
+    },
+    showSelectCat: function() {
+
+        var template = `
+                <div class="popover" role="tooltip">
+                  <div class="arrow"></div>
+                  <h3 class="popover-header">Choisir un Produit</h3>
+                  <div class="popover-body">
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur, sit!</p>
+                    <select class="chooseRef"> 
+                      <option value="0">0</option>
+                    </select>
+                  </div>
+                </div>`
+
+        //console.log(els)
+        $('.otherProd').popover({
+          html: true,
+          content: function(){
+            return template
+          }
+        })
+
+
+
+    },
   }
 
 })()
@@ -317,35 +359,6 @@ var Sales = (function (UISales) {
       console.log(max)
     })
   }
-  var generateSelectProd = function (arr) {
-    var addSelect = function (array) {
-      var result = ''
-      array.forEach(function (el) {
-        var templ = `<div
-                        class="custom-control custom-radio custom-control-inline" >
-                        <input
-                          class="custom-control-input"
-                          id="${el.ref}"
-                          type="radio"
-                          name= "categories"
-                           / >
-                        <label
-                          class="custom-control-label"
-                          for="${el.ref}">
-                            <img
-                              src="${el.img}"
-                              alt="${el.title}"
-                              width="50px" /></label>
-                      </div>`
-        result = result + templ
-      })
-      return result
-    }
-    var html = `<div class="selected--product d-flex justify-content-between">
-                    ${addSelect(arr)}
-                  </div>`
-    return html
-  };
   var getValideCoupon = function (obj) {
     return obj.filter(el => {
       if (el.valide !== false) {
@@ -380,7 +393,7 @@ var Sales = (function (UISales) {
     arr.forEach(cat => {
       // add event click
       cat.addEventListener('click', function () {
-        UISales.generateBlockAddSale()
+        //UISales.generateBlockAddSale()
         // vars Dom elements
         var block = document.querySelector(Dom.formSales)
         var tittle = document.querySelector(Dom.selectedProd)
@@ -453,13 +466,102 @@ var Sales = (function (UISales) {
       })
     })
   }
+
   window.onload = () => {
     Utils.getData('products', (obj) => {
-      document.querySelector('.toSelect').insertAdjacentHTML('beforeend', generateSelectProd(obj))
-      var products = document.querySelectorAll(Dom.slectProduct + ' input')
-      handleSelectProducts(products, Dom, obj)
+
+      var products = document.querySelector(Dom.formSales)
+      obj.forEach(el => {
+        var product = UISales.gereratCards(el)
+        products.insertAdjacentHTML('beforeend', product)
+      })
+
+      var cont = document.querySelector('.formSales')
+      var modal = cont.querySelector('.modal')
+      var products = document.querySelectorAll('.addOrder')
+      var prixCoupon = modal.querySelector(Dom.costCoupon)
+      var nbrCoupon = modal.querySelector(Dom.totalCoupon)
+      var totalCostCoupon = modal.querySelector(Dom.totalCostCoupon)
+
+      var emailUser = modal.querySelector('.emailUser')
+      var phoneUser = modal.querySelector('.phoneUser')
+      var locationUser = modal.querySelector('.locationUser')
+      var userNote = modal.querySelector('.userNote')
+      var ref  = ''
+      products.forEach(prod => {
+        prod.addEventListener('click', function () {
+          generateSelectCostCoupon(prod.dataset.product)
+          ref = prod.dataset.product
 
 
+          nbrCoupon.addEventListener('change', function () {
+            totalCostCoupon.innerHTML = parseFloat(prixCoupon.value) * parseFloat(nbrCoupon.value)
+            limitNbrCoupons(nbrCoupon, prixCoupon.value, prod.dataset.product)
+          })
+
+
+        })
+
+      })
+      var saveData = document.querySelector('.saveData')
+      var otherProd = document.querySelector('.otherProd')
+      var order  = {
+        ref: "",
+        prixCoupon: "",
+        nbrCoupon: ""
+      }
+      var orderBoj= {
+        email: '',
+        tel: "",
+        ville: "",
+        note: "",
+        orders: [ ]
+
+      }
+
+      /**
+       *
+       * @param product
+       */
+        var addOrderProduct = function(product) {
+        order  = {
+          ref: product,
+          prixCoupon: prixCoupon.value,
+          nbrCoupon: nbrCoupon.value
+        }
+        orderBoj.orders.push(order)
+      }
+      saveData.addEventListener('click', function (e) {
+        e.preventDefault()
+        orderBoj= {
+          email: emailUser.value,
+          tel: phoneUser.value,
+          ville: locationUser.value,
+          note: userNote.value,
+          orders: [
+          ]
+        }
+        addOrderProduct(ref)
+        console.log(orderBoj)
+        UISales.clearModalForm()
+        orderBoj= {
+          email: '',
+          tel: '',
+          ville: '',
+          note: '',
+          orders: [
+          ]
+        }
+        //console.log(orderBoj)
+      })
+      otherProd.addEventListener('click',function ()  {
+        // Afficher un select de choix du produit
+        console.log(this)
+        UISales.showSelectCat()
+
+        //addOrderProduct(el)
+      })
     })
+
   }
 })(UISales)

@@ -108,7 +108,8 @@ var Utils = (function () {
       </div>`
 
       var cont = document.querySelector(content)
-
+      console.log(content)
+      console.log(cont)
       cont.insertAdjacentHTML('beforeend', html)
 
     },
